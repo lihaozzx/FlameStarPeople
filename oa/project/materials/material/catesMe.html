@@ -8,28 +8,22 @@
 		<script src="../../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		<div class="y_body">
+		<div class="y_body" style="min-width: 900px;">
 			<div class="y_floatBox">
 				<!-- 名称 编号筛选 -->
-				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入材料名称" />
+				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入分类名称" />
 				<button class="y_btn prim y_rit10 serch">搜索</button>
 				<span class="y_btn y_reset y_rit10">重置</span>
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
-				<span class="y_btn gren y_floatRight y_newPop" style="margin-left: 10px;" data-title="材料分类管理" data-url="./project/materials/material/catesMe.html"><i class="y_icon add">分类管理</i></span>
-				<span class="y_btn gren y_floatRight y_newPop" data-title="添加材料清单" data-url="./project/materials/material/add.html"><i class="y_icon add">新增</i></span>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加材料分类" data-url="./project/materials/material/addCates.html"><i
+					 class="y_icon add">新增</i></span>
 			</div>
 			<div class="y_top10">
 				<table class="y_tab y_bordtr">
 					<thead class="y_textCenter">
 						<tr>
 							<td>编号</td>
-							<td>材料名称</td>
-							<td>规格</td>
-							<td>单位</td>
-							<td>单价</td>
-							<td>分类名称</td>
-							<td>最后操作人</td>
-							<td>备注</td>
+							<td>类名</td>
 							<td>操作</td>
 						</tr>
 					</thead>
@@ -50,11 +44,12 @@
 			function getList() {
 				loading();
 				$.ajax({
-					url: reqUrl + '/api/projects/material',
+					url: reqUrl + '/api/projects/Catestype',
 					type: 'post',
 					data: {
 						token: tokens,
-						title: title,
+						type: 1,
+						name: title,
 						p: pages
 					},
 					dataType: 'json',
@@ -75,15 +70,15 @@
 			}
 
 			function setList(data) {
+				console.log(data);
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
-					str += '<tr><td>' + v.number + '</td><td>' + v.name + '</td><td>' + v.norm + '</td><td>' + v.unit +
-						'</td><td>' + v.price + '</td><td>' + v.cname + '</td><td>' + v.optname + '</td><td>' + v.content + '</td>' +
+					str += '<tr><td>' + v.id + '</td><td>' + v.name + '</td>' +
 						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
 						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/material/change.html?id=' +
-						v.id + '"><a>修改</a></li><li class="y_slectItem y_newPop" data-title="删除" data-url="./project/del.html?id=' +
-						v.id + '"><a>删除</a></li></ul></div></td></tr>'
+						v.id + '"><a>修改</a></li><li class="y_slectItem" onClick="del(' + v.id +
+						')"><a>删除</a></li></ul></div></td></tr>'
 				});
 				if (str == '') {
 					$('.y_tab').hide();
@@ -94,7 +89,6 @@
 					$('.list').append(str);
 				}
 			}
-
 			/*页码跳转*/
 			$(document).on('click', '.y_page_item', function() {
 				var that = $(this);
@@ -114,6 +108,32 @@
 				getList();
 			})
 
-		})
+		});
+
+		function del(id) {
+			parent.window.Confirm('确认删除吗？', function(e) {
+				if (e) {
+					loading();
+					$.ajax({
+						url: reqUrl + '/api/projects/delCatesType',
+						type: 'post',
+						data: {
+							id: id
+						},
+						dataType: 'json',
+						success: function(res) {
+							if (res.status == 0) {
+								parent.window.Alert('分类已删除');
+							} else {
+								parent.window.Alert(res.msg);
+							}
+						},
+						complete: function() {
+							loading('none');
+						}
+					});
+				}
+			})
+		}
 	</script>
 </html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../../aaa/css/public.css" />
+		<script src="../../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>分类名称：</td>
+						<td colspan="5">
+							<input type="text" name="name" class="y_input block" />
+						</td>
+						<input type="hidden" name="type" class="y_input block" value="1"/>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">修 改</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		/*提交*/
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		})
+
+		function do_sub() {
+			parent.window.loading();
+			$.ajax({
+				type: "post",
+				url: reqUrl + '/api/projects/addCatesType',
+				data: $('#check_form').serialize(),
+				dataType: "json",
+				error: function(request) {
+					parent.window.loading('none');
+					parent.window.Alert('提交失败');
+				},
+				success: function(data) {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						if (data.status == 0) {
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							})
+						}
+					});
+				}
+			});
+		}
+	})
+</script>
