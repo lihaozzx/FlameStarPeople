@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>项目编号：</td>
+						<td colspan="5">
+							<span id="number"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>项目名称：</td>
+						<td colspan="5">
+							<span id="title"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>项目建筑单位：</td>
+						<td colspan="5">
+							<span id="danwei"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>项目施工地址：</td>
+						<td colspan="5">
+							<span id="dizhi"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>项目类型：</td>
+						<td colspan="5">
+							<span id="leixin"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>项目金额：</td>
+						<td colspan="5" style="position: relative;">
+							<span id="jine"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">开始日期：</td>
+						<td colspan="2">
+							<span id="kaishi"></span>
+						</td>
+						<td class="y_textRight">结束日期：</td>
+						<td colspan="2">
+							<span id="jieshu"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>负责人：</td>
+						<td colspan="5">
+							<span id="fuzeren"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>客户：</td>
+						<td colspan="5">
+							<span id="kehu"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>备注：</td>
+						<td colspan="5">
+							<textarea class="y_input long y_rit10" id="beizhu" readonly></textarea>
+						</td>
+					</tr>
+				</table>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		var urls = window.location.href;
+		var id = urls.slice(urls.indexOf('id=') + 3);
+		initInfos(id);
+	});
+
+	function initInfos(id) {
+		parent.window.loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/projects/proInfo",
+			data: {
+				token: tokens,
+				id: id
+			},
+			dataType: 'json',
+			success: function(res) {
+				if(res.status==0){
+					let o = res.data;
+					$('#number').html(o.number);
+					$('#title').html(o.title);
+					$('#danwei').html(o.company);
+					$('#dizhi').html(o.address);
+					$('#leixin').html(o.type);
+					$('#jine').html(o.money);
+					$('#kaishi').html(o.start);
+					$('#jieshu').html(o.end);
+					$('#fuzeren').html(o.chargename);
+					$('#kehu').html(o.custName);
+					$('#beizhu').html(o.content);
+					parent.window.loading('none');
+				}
+			}
+		});
+	}
+</script>

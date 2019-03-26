@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		
+		<link rel="stylesheet" type="text/css" href="../aaa/kindeditor/themes/default/default.css"/>
+		<script src="../aaa/js/ajaxfileupload.js"></script>
+		<script charset="utf-8" src="../aaa/kindeditor/kindeditor-min.js"></script>
+    	<script charset="utf-8" src="../aaa/kindeditor/lang/zh_CN.js"></script>
+	</head>
+	<body>
+		<div class="y_popBody small">
+			<h1 class="y_popTitle">任务详情</h1>
+			<table class="y_tab y_border">
+				<tr>
+					<td width="150" class="y_textRight">主题：</td>
+					<td class="title"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">发布人：</td>
+					<td class="uname"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">执行人：</td>
+					<td class="distname"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">部门：</td>
+					<td class="udeptname"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">等级：</td>
+					<td class="level"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">开始时间：</td>
+					<td class="start"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">截止时间：</td>
+					<td class="end"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">内容：</td>
+					<td class="explains"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">相关文件：</td>
+					<td class="files"></td>
+				</tr>
+			</table>
+			<div class="logs y_none y_top20">
+				<p class="y_popSpeed">处理记录</p>
+				<table class="y_tab y_bordtr y_textCenter">
+					<thead class="y_bgcPrim">
+						<tr>
+							<td>操作人</td>
+							<td>操作时间</td>
+							<td>操作状态</td>
+							<td>说明</td>
+						</tr>
+					</thead>
+					<tbody class="y_exchag y_hover list">
+					
+					</tbody>
+				</table>
+			</div>
+			<div class="y_none bill y_top20">
+				<p class="y_popSpeed">审核处理</p>
+	            <form id="check_form">
+	                <table  class="y_tab y_border">
+	                    <thead>
+	                        <tr>
+	                            <td class="y_textRight">状态：</td>
+	                            <td>待<i class="nowcheckname"></i>处理</td>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                        <tr>
+	                            <td class="y_textRight">处理流程：</td>
+	                            <td class="cllc"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="y_textRight"><span style="color:red;">*</span> 处理人：</td>
+	                            <td class="nowcheckname"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="y_textRight"><span style="color:red;">*</span> 处理动作：</td>
+	                            <td class="cldz"></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="y_textRight">说明：</td>
+	                            <td><textarea class="y_input" name="checksm"></textarea></td>
+	                        </tr>
+	                        <tr>
+	                            <td class="y_textRight">相关文件 ：</td>
+	                            <td>
+	                                <ul class="y_file">
+	                                </ul>
+	                                <input class="y_none addFileVal fileToUpload" id="fileToUpload1" name="fileToUpload1" type="file" name="" id="" value="" />
+	                                <span class="addFile">+添加文件</span>
+	                            </td>
+	                        </tr>
+	                        <tr>
+	                            <td>
+	                            	<input type="hidden" name="id" class="bill_id" value="" />
+	                            	<input type="hidden" name="token" class="tokens" value="" />
+	                            </td>
+	                            <td><a class="y_btn info" onclick="do_subcheck()">提交处理</a></td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+	            </form>
+			</div>
+			<div class="y_top20"></div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		var urls = window.location.href;
+		var id = urls.slice(urls.indexOf('id=')+3);
+		loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/work/workInfo",
+			data: {token: tokens, id: id},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					var result = res.data.result;
+					var logs = res.data.log;
+					var bill = res.data.bill;
+					var course = res.data.course;
+					$('.title').text(result.title);
+					$('.uname').text(result.uname);
+					$('.explains').text(result.explains);
+					$('.level').text(result.level);
+					$('.start').text(result.start);
+					$('.end').text(result.end);
+					$('.distname').text(result.distname);
+					$('.udeptname').text(result.udeptname);
+					var str = '';
+					for(var i = 0; i < logs.length; i++){
+						str += '<tr><td>'+logs[i].checkname+'</td><td>'+logs[i].optdt+'</td><td>'+logs[i].statusname+'</td><td>'+logs[i].explains+'</td></tr>'
+					}
+					if(str){
+						$('.logs').show();
+						$('.list').append(str)
+					}else{
+						$('.logs').hide();
+					}
+					if(bill.isAudit == 1){
+						$('.bill').show();
+						var str1 = '';
+						$('.nowcheckname').text(bill.nowcheckname);
+						$('.bill_id').val(bill.id);
+						$('.cllc').text(course.name);
+						$('.tokens').val(tokens);
+						for(var i = 0; i< course.courseact.length; i++){
+							str1 += '<label><span class="y_radio y_rit20">'+course.courseact[i][0]+'</span><input type="radio" class="y_none" name="status" value="'+course.courseact[i][1]+'" /></label>'
+						}
+						$('.cldz').append(str1)
+					}else{
+						$('.bill').hide();
+					}
+				}
+			},
+			complete: function(){
+				loading('none');
+			}
+		});
+		
+		/*初始化编辑器*/
+		KindEditor.ready(function(K) {
+	        K.create('textarea[name="content"]', {
+	            width: 500,
+	            autoHeightMode: true,
+	            items: [
+	                'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+	                'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+	                'insertunorderedlist', '|', 'emoticons', 'link'],
+	            afterCreate: function() {
+	            },
+	            afterBlur: function() {
+	                this.sync()
+	            },
+	        });
+	    });
+		
+	    /*上传文件*/
+		$(document).on('change', '.fileToUpload', function() {
+            var name = $(this).attr('name');
+            $.ajaxFileUpload({
+                url: '',
+                secureuri: false,
+                fileElementId: name,
+                dataType: 'json',
+                data: {name: name, id: name},
+                error: function(data, status, e) {
+                    parent.window.Alert(e);
+                },
+                success: function(data, status) {
+                    if (data.status == 1) {
+                        var txt = '<li class="y_fileItem"><span class="FileItemNam download" itemid="' + data.data.id + '">' + data.data.filename + '</span><input type="hidden" name="files[]" value="' + data.data.id + '"/><span class="y_fileDel">删除</span></li>';
+                        $('#' + name).parent().children('.y_file').append(txt);
+                        $('#' + name).val('');
+                    } else {
+                        $('#' + name).val('');
+                        parent.window.Alert(data.msg);
+                    }
+                },
+            });
+            return false;
+        });
+        
+	})
+    /*提交处理*/
+   	function do_subcheck(){
+   		parent.window.loading();
+   		$.ajax({
+			url: reqUrl + '/api/work/workAudit',
+			type: 'post',
+			data: $('#check_form').serialize(),
+			dataType: 'json',
+			success: function(res){
+				parent.window.Alert(res.msg, function(){
+            		if (res.status == 0) {
+            			parent.window.closePop('', function(){
+	            			parent.window.Reload();
+	            		})
+	                }
+            	});
+			},
+			complete: function(){
+				parent.window.loading('none');
+			}
+		});
+   	};
+</script>

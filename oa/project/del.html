@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../aaa/css/public.css" />
+		<script src="../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight" ><i class="y_colorRead">*</i>作废理由：</td>
+						<td colspan="5">
+							<textarea class="y_input" id="reson"></textarea>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">提 交</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	var urls = window.location.href;
+	var id = urls.slice(urls.indexOf('id=') + 3);
+	
+	$('.submit').on('click',function () {
+		parent.window.Confirm('确认作废此合同吗？',function (e) {
+			if(e){
+				//作废
+				loading();
+				$.ajax({
+					url: reqUrl + '/api/projects/delPro',
+					type: 'post',
+					data: {
+						token: tokens,
+						id: id,
+						content: $('#reson').val()
+					},
+					dataType: 'json',
+					success: function(res) {
+						if (res.status == 0) {
+							parent.window.Alert('合同已经作废');
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							})
+						} else {
+							parent.window.Alert(res.msg);
+						}
+					},
+					complete: function() {
+						loading('none');
+					}
+				})
+			}
+		})
+	})
+</script>

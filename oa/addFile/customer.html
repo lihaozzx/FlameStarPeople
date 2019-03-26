@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody small">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>客户名称：</td>
+						<td colspan="3">
+							<input type="text" name="name" class="y_input block ct_name" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>客户地址：</td>
+						<td colspan="3">
+							<input type="text" name="address" class="y_input block ct_address" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>客户状态：</td>
+						<td>
+							<div class="y_inpSect">
+								<span class="y_inpSect_tex ct_status_name" data-int="请选择">请选择</span>
+								<input type="text" name="status" class="y_inpSect_val ct_status" />
+								<div class="y_inpSect_box">
+									<div class="y_inpSect_scroll">
+										<ul class="y_inpSect_itmBox khzt"></ul>
+									</div>
+								</div>
+							</div>
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>客户类型：</td>
+						<td>
+							<div class="y_inpSect">
+								<span class="y_inpSect_tex ct_type_name" data-int="请选择">请选择</span>
+								<input type="text" name="type" class="y_inpSect_val ct_type" />
+								<div class="y_inpSect_box">
+									<div class="y_inpSect_scroll">
+										<ul class="y_inpSect_itmBox khlx"></ul>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>联系人：</td>
+						<td colspan="3">
+							<label class="ch y_rit20">
+								<input type="text" readonly="readonly" class="y_input y_rit10 contacts_name ct_contacts_name" style="width: 50%;" />
+								<input type="hidden" name="contacts" class="contacts ct_contacts" value="" />
+								<span class="y_btn prim">选择</span>
+							</label>
+							<span class="y_btn gren y_inPop" data-popid="xjlxr">新建联系人</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">客户传真：</td>
+						<td>
+							<input type="text" name="tel" class="y_input ct_tel"/>
+						</td>
+						<td class="y_textRight">客户邮编：</td>
+						<td>
+							<input type="text" name="zipCode" class="y_input ct_zipCode"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">客户级别：</td>
+						<td>
+							<label class="zdkh">
+								<span class="y_check">重点客户</span>
+								<input type="checkbox" name="isstat" class="y_none" value="1"/>
+							</label>
+						</td>
+						<td class="y_textRight">官网地址：</td>
+						<td>
+							<input type="text" name="url" class="y_input ct_url"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">工程名称：</td>
+						<td>
+							<input type="text" name="proName" class="y_input ct_proName"/>
+						</td>
+						<td class="y_textRight">工程规模：</td>
+						<td>
+							<input type="text" name="proScale" class="y_input ct_proScale"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">工程需求：</td>
+						<td colspan="3">
+							<textarea class="y_input ct_proDemand" name="proDemand"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">备注：</td>
+						<td colspan="3">
+							<textarea name="explains" class="y_input ct_explains"></textarea>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<input type="hidden" name="id" class="id" value="" />
+					<span class="y_btn lg y_rit20 prim submit">保 存</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+		<!--新建联系人-->
+		<div class="y_inPops" id="xjlxr">
+			<div class="y_mark"></div>
+			<div class="y_inPopBox">
+				<div class="y_inPopTit">
+					<span>新建联系人</span>
+					<span class="y_inPopClose y_otPop" data-popid="xjlxr"></span>
+				</div>
+				<div class="y_inPopCont">
+					<form id="lxr">
+						<table class="y_tab">
+							<tr>
+								<td width="150" class="y_textRight">姓名：</td>
+								<td><input type="text" name="name" class="y_input block" /></td>
+							</tr>
+							<tr>
+								<td class="y_textRight">电话：</td>
+								<td><input type="text" name="phone" class="y_input block" /></td>
+							</tr>
+							<tr>
+								<td class="y_textRight">职位：</td>
+								<td><input type="text" name="pos" class="y_input block" /></td>
+							</tr>
+							<tr>
+								<td class="y_textRight">是否主联系人：</td>
+								<td>
+									<label>
+										<span class="y_check">是</span>
+										<input type="checkbox" name="mater"  class="y_none" value="1" />
+									</label>
+								</td>
+							</tr>
+						</table>
+						<div class="y_inPopFoot">
+							<span class="y_btn y_otPop y_rit20" data-popid="xjlxr">取 消</span>
+							<span class="y_btn prim changPasd">确 认</span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		
+		/*判断是否修改*/
+		var urls = window.location.href;
+		if(urls.indexOf('id=') > -1){
+			var id = urls.slice(urls.indexOf('id=')+3);
+			$('.id').val(id);
+			$.ajax({
+	            type: "POST",
+	            url: reqUrl + "/api/customer/CustInfo",
+	            data: {token: tokens, id: id},
+	            dataType: "json",
+	            success: function(res) {
+            		if (res.status == 0) {
+            			console.log(res)
+            			$.each(res.data, function(k, v){
+            				$('.ct_' + k).val(v)
+            			})
+            			if(res.data.isstat == 1){
+            				$('.zdkh .y_check').click()
+            			}
+            			$('.ct_status_name').text(res.data.status);
+            			$('.ct_type_name').text(res.data.type);
+            			$.ajax({
+							type: "post",
+							url: reqUrl + "/api/public/addressBook",
+							data: {token: tokens, cid: res.data.id},
+							dataType: 'json',
+							success: function(dat){
+								if(dat.status == 0){
+									var id_str = '';
+									var na_str = '';
+									$.each(dat.data, function(k, v){
+										if(id_str){
+											id_str += ',' + v.id;
+											na_str += ',' + v.name;
+										}else{
+											id_str += v.id;
+											na_str += v.name;
+										}
+									})
+									$('.ct_contacts').val(id_str)
+									$('.ct_contacts_name').val(na_str)
+								}
+							}
+						});
+	                }
+	            }
+	        });
+		}
+		
+		/*获取客户状态*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/custType",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					var str = '';
+					$.each(res.data, function(k, v) {
+						str += '<li class="y_inpSect_item" data-val="'+v+'">'+v+'</li>';
+					});
+					$('.khzt').append(str)
+				}
+			}
+		});
+		
+		/*获取客户类型*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/custType2",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					var str = '';
+					$.each(res.data, function(k, v) {
+						str += '<li class="y_inpSect_item" data-val="'+v+'">'+v+'</li>';
+					});
+					$('.khlx').append(str)
+				}
+			}
+		});
+		
+		/*获取人员信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/addressBook",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					var Use = {}
+		            Use.status = 1;
+		            Use.data = [];
+		            $.each(res.data, function(k, v) {
+		            	Use.data.push({id: v.id, name: v.name, positionname: ""})
+		            });
+		            $('.ch').click(function(){
+				   		parent.window.ChousPerson(Use, 'two', $('.contacts').val(), function(tex, val){
+				   			$('.contacts_name').val(tex);
+				   			$('.contacts').val(val);
+				   		})
+				   	})
+				}
+			}
+		});
+		
+		/*新建联系人*/
+		$('.changPasd').click(function(){
+			loading();
+	        $.ajax({
+	            type: "POST",
+	            url: reqUrl + '/api/customer/custContacts',
+	            data: $('#lxr').serialize(),
+	            dataType: "json",
+	            error: function(request) {
+	            	loading('none');
+	                Alert('提交失败');
+	            },
+	            success: function(data) {
+	            	loading('none');
+	            	parent.window.Alert(data.msg, function(){
+	            		if (data.status == 0) {
+	            			otPop('xjlxr');
+	            			Reset('.y_inPops');
+	            			Refresh();
+		                }
+	            	});
+	            }
+	        });
+		})
+        
+        /*提交*/
+       	$('.submit').click(function(){
+       		$('.token').val(tokens);
+       		do_sub();
+       	})
+       	function do_sub() {
+	    	parent.window.loading();
+	        $.ajax({
+	            type: "POST",
+	            url: reqUrl + '/api/customer/AddCust',
+	            data: $('#check_form').serialize(),
+	            dataType: "json",
+	            error: function(request) {
+	            	parent.window.loading('none');
+	                parent.window.Alert('提交失败');
+	            },
+	            success: function(data) {
+	            	parent.window.loading('none');
+	            	parent.window.Alert(data.msg, function(){
+	            		if (data.status == 0) {
+	            			parent.window.closePop('', function(){
+		            			parent.window.Reload();
+		            		})
+		                }
+	            	});
+	            }
+	        });
+	    }
+	})
+</script>

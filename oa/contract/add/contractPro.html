@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../aaa/css/public.css" />
+		<script src="../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同编号：</td>
+						<td colspan="5">
+							<input type="text" name="number" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同名称：</td>
+						<td colspan="5">
+							<input type="text" name="name" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同类型：</td>
+						<td colspan="5">
+							<span>项目合同</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属员工：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 distname2" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="aid" class="distid2" />
+							<span class="y_btn prim ch2">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属客户：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 khDistname1" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="custid" class="khDistid1" />
+							<span class="y_btn prim kh1">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属项目：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 proDistname" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="proid" class="proDistid" />
+							<span class="y_btn prim pro">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同金额：</td>
+						<td colspan="5" style="position: relative;">
+							<input type="number" name="money" class="y_input block" /><span style="position: absolute;top: 15px;right: 50px;">元</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">签约时间：</td>
+						<td>
+							<input type="text" name="signTime" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+						<td class="y_textRight">开始日期：</td>
+						<td>
+							<input type="text" name="starTime" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+						<td class="y_textRight">到期时间：</td>
+						<td>
+							<input type="text" name="endTime" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>我方签约人：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 distname1" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="signid" class="distid1" />
+							<span class="y_btn prim ch1">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>客户签约人：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 khDistname2" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="signcid" class="khDistid2" />
+							<span class="y_btn prim kh2">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>上传文件：</td>
+						<td colspan="5">
+							<input type="file" name="file" id="fileH" style="display: none;" />
+							<input type="text" readonly class="y_input file_name" />
+							<span class="y_btn prim fileC">选择</span>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+				<input type="hidden" name="files" id="asdasdsadasdasdasd"/>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		$('.pro').click(function() {
+			parent.window.Alert('请先选择所属员工');
+		});
+		/*获取人员信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/users",
+			data: {
+				token: tokens
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					Use = {}
+					Use.status = 2;
+					Use.data = res.data;
+					$('.ch1').click(function() {
+						parent.window.ChousPerson(Use, 'one', $('.distid1').val(), function(tex, val) {
+							$('.distname1').val(tex);
+							$('.distid1').val(val);
+						})
+					});
+					$('.ch2').click(function() {
+						parent.window.ChousPerson(Use, 'one', $('.distid2').val(), function(tex, val) {
+							$('.distname2').val(tex);
+							$('.distid2').val(val);
+							getProInfoByAid(val);
+						})
+					});
+				}
+			}
+		});
+		// 获取客户信息
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/customer/CustList",
+			data: {
+				token: tokens
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					Use2 = {}
+					Use2.status = 2;
+					Use2.data = res.data;
+					$('.kh1').click(function() {
+						parent.window.ChousCustomer(Use2, 'one', $('.khDistid1').val(), function(tex, val) {
+							$('.khDistname1').val(tex);
+							$('.khDistid1').val(val);
+						})
+					});
+					$('.kh2').click(function() {
+						parent.window.ChousCustomer(Use2, 'one', $('.khDistid2').val(), function(tex, val) {
+							$('.khDistname2').val(tex);
+							$('.khDistid2').val(val);
+						})
+					});
+				}
+			}
+		});
+
+		/* 上传*/
+		$('.fileC').on('click', function() {
+			$('#fileH').trigger('click');
+		});
+		$('#fileH').on('change', function(e) {
+			let name = e.target.value.split('\\')[2];
+			$('.file_name').val(name);
+			var formData = new FormData();
+			formData.append("file", document.getElementById("fileH").files[0]);
+			formData.append("name", 'file');
+			$.ajax({
+				url: reqUrl + "/api/public/uploadFile",
+				secureuri: false,
+				type: 'post',
+				dataType: 'json', //返回数据的类型
+				data: formData,
+				cache: false,
+				processData: false,
+				contentType: false,
+				success: function(res) {
+					$('#asdasdsadasdasdasd').val(res.data.id)
+				},
+				error: function(data, status, e) {}
+			});
+		})
+
+		/*提交*/
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		})
+
+		function do_sub() {
+			parent.window.loading();
+			$.ajax({
+				type: "GET",
+				url: reqUrl + '/api/contract/savePro',
+				fileElementId: 'fileH',
+				data: $('#check_form').serialize(),
+				dataType: "json",
+				error: function(request) {
+					parent.window.loading('none');
+					parent.window.Alert('提交失败');
+				},
+				success: function(data) {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						if (data.status == 0) {
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							})
+						}
+					});
+				}
+			});
+		}
+
+		function getProInfoByAid(aid) {
+			$('.pro').unbind();
+			/* 获取项目信息*/
+			$.ajax({
+				type: "post",
+				url: reqUrl + "/api/public/projects",
+				data: {
+					token: tokens,
+					aid: aid
+				},
+				dataType: 'json',
+				success: function(res) {
+					if (res.status == 0) {
+						Pro = {}
+						Pro.status = 2;
+						Pro.data = res.data;
+						$('.pro').click(function() {
+							parent.window.ChousProject(Pro, 'one', $('.proDistid').val(), function(tex, val) {
+								$('.proDistname').val(tex);
+								$('.proDistid').val(val);
+							})
+						});
+					} else {
+						parent.window.Alert('此员工名下没有项目');
+					}
+				}
+			});
+		}
+	})
+</script>

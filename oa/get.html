@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+</html>
+<script type="text/javascript">
+	var data = {
+		type: '日报',
+		cust: '1',
+		pro: '15',
+		content: '阿斯顿发斯蒂芬阿斯蒂芬阿斯蒂芬',
+		'images[]': '/uploads/15522874051487.png',
+		token: '86fcb6ef0c86c7d3e67fa072d6d22d14',
+	};
+	var str = '?';
+	for(var i in data){
+		if(str == '?'){
+			str += i + '=' + data[i];
+		}else{
+			str += '&' + i + '=' + data[i];
+		}
+	}
+	console.log(str)
+</script>

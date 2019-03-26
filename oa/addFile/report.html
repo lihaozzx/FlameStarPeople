@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody small">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>汇报类型：</td>
+						<td colspan="3">
+							<div class="y_inpSect">
+								<span class="y_inpSect_tex type_name" data-int="--请选择--">--请选择--</span>
+								<input type="text" class="y_inpSect_val type_val" name="type" value="">
+								<div class="y_inpSect_box">
+									<div class="y_inpSect_scroll">
+										<ul class="y_inpSect_itmBox typ_str"></ul>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">相关客户：</td>
+						<td colspan="3">
+							<label class="ch_kh">
+								<input type="text" readonly="readonly" class="y_input y_rit10 cust_name" style="width: 60%;" />
+								<input type="hidden" name="cust" class="cust_id" value="" />
+								<span class="y_btn prim">选择</span>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">相关项目：</td>
+						<td colspan="3">
+							<label class="ch_xm">
+								<input type="text" readonly="readonly" class="y_input y_rit10 pro_name" style="width: 60%;" />
+								<input type="hidden" name="pro" class="pro_id" value="" />
+								<span class="y_btn prim">选择</span>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>汇报内容：</td>
+						<td colspan="3">
+							<textarea name="content" class="y_input content"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">汇报图片：</td>
+						<td colspan="3">
+							<ul class="y_file"></ul>
+	                        <input class="y_none addFileVal fileToUpload" id="fileToUpload1" name="fileToUpload1" type="file" accept="image/*" />
+	                        <span class="y_fileAdd">+添加文件</span>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<input type="hidden" name="id" class="id" value="" />
+					<span class="y_btn lg y_rit20 prim submit">保 存</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		
+		/*判断是否修改*/
+		var urls = window.location.href;
+		if(urls.indexOf('id=') > -1){
+			var id = urls.slice(urls.indexOf('id=')+3);
+			$.ajax({
+	            type: "POST",
+	            url: reqUrl + "/api/report/dailyInfo",
+	            data: {token: tokens, id: id},
+	            dataType: "json",
+	            success: function(res) {
+            		if (res.status == 0) {
+            			$('.id').val(id);
+            			$('.type_name').text(res.data.type);
+            			$('.type_val').val(res.data.type);
+            			$('.cust_name').val(res.data.custName);
+            			$('.pro_name').val(res.data.proName);
+            			$('.content').val(res.data.content);
+	                }
+	            }
+	        });
+		}
+		
+		/*获取客户列表信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/customer",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					var Use = {};
+		            Use.status = 1;
+		            Use.data = [];
+		            $.each(res.data, function(k, v) {
+		            	Use.data.push({id: v.id, name: v.name, positionname: ""})
+		            });
+		            $('.ch_kh').click(function(){
+				   		parent.window.ChousPerson(Use, 'one', $('.cust_id').val(), function(tex, val){
+				   			$('.cust_name').val(tex);
+				   			$('.cust_id').val(val);
+				   		})
+				   	})
+				}
+			}
+		});
+		
+		/*获取项目列表信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/projects",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					var Use = {};
+		            Use.status = 1;
+		            Use.data = [];
+		            $.each(res.data, function(k, v) {
+		            	Use.data.push({id: v.id, name: v.title, positionname: ""})
+		            });
+		            $('.ch_xm').click(function(){
+				   		parent.window.ChousPerson(Use, 'one', $('.pro_id').val(), function(tex, val){
+				   			$('.pro_name').val(tex);
+				   			$('.pro_id').val(val);
+				   		})
+				   	})
+				}
+			}
+		});
+		
+		/*获取汇报分类信息*/
+		$.ajax({
+			url: reqUrl + '/api/public/dailyCates',
+			type: 'post',
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					var typ_str = '';
+					$.each(res.data, function(k, v){
+						typ_str += '<li class="y_inpSect_item" data-val="'+v+'">'+v+'</li>'
+					})
+					$('.typ_str').append(typ_str)
+				}
+			},
+		});
+		
+		
+	    /*上传文件*/
+		$(document).on('change', '.fileToUpload', function() {
+            var name = $(this).attr('name');
+            imgBase(this.files[0], function(img){
+				$.ajax({
+					url: reqUrl + '/api/public/uploadImg',
+					type: 'post',
+					data: {token: tokens, img: img},
+					dataType: 'json',
+					success: function(dat){
+						parent.window.Alert(dat.msg, function(){
+							if(dat.status == 0){
+								var txt = '<li class="y_fileItem"><span class="FileItemNam">' + dat.data + '</span><input type="hidden" name="images[]" value="' +dat.data + '"/><span class="y_fileDel">删除</span></li>';
+		                        $('#' + name).parent().children('.y_file').append(txt);
+		                        $('#' + name).val('');
+							}else{
+								$('#' + name).val('');
+							}
+						})
+					}
+				})
+			})
+        });
+        
+        /*提交*/
+       	$('.submit').click(function(){
+       		$('.token').val(tokens);
+       		do_sub();
+       	})
+       	function do_sub() {
+	    	parent.window.loading();
+	        $.ajax({
+	            type: "POST",
+	            url: reqUrl + '/api/report/saveDaily',
+	            data: $('#check_form').serialize(),
+	            dataType: "json",
+	            error: function(request) {
+	            	parent.window.loading('none');
+	                parent.window.Alert('提交失败');
+	            },
+	            success: function(data) {
+	            	parent.window.loading('none');
+	            	parent.window.Alert(data.msg, function(){
+	            		if (data.status == 0) {
+	            			parent.window.closePop('', function(){
+		            			parent.window.Reload();
+		            		})
+		                }
+	            	});
+	            }
+	        });
+	    }
+	})
+</script>

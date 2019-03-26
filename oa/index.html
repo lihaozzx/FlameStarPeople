@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>峰源智能办公系统</title>
+		<link rel="stylesheet" type="text/css" href="aaa/css/public.css" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<script src="aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script src="aaa/js/index.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body style="overflow: hidden;">
+		<!--背景色-->
+		<div class="y_bgc y_imgBg"></div>
+		<!--头部-->
+		<div class="y_header">
+			<span class="y_head_date">2018年01月02日 星期四</span>
+			<div class="y_head_logo">
+				<img class="y_head_logo_img" src="aaa/images/icon/index_logo.png" alt="峰源智能办公系统" />
+				<div class="y_head_logo_tex">
+					<p>峰源办公系统</p>
+					<p>FENG YUAN</p>
+				</div>
+			</div>
+			<div class="y_head_menu">
+				<ul class="y_head_menu_box">
+					<li class="y_head_menu_item">
+						<span class="y_hd_daib">待办事项（<i class="upcoming">0</i>）</span>
+						<span class="y_hd_zuix">新消息（<i class="todos">0</i>）</span>
+					</li>
+					<li class="y_head_menu_item user">
+						<div class="y_head_img_box"><img class="head" src="" /></div>
+						<span class="name"></span>
+						<i class="y_head_user_icon"></i>
+						<ul class="y_hd_user_box">
+							<li class="y_user_box_sq"></li>
+							<li class="y_hd_user_item msg y_inPop" data-popid="grxx"><a>个人信息</a></li>
+							<!--<li class="y_hd_user_item chang"><a>修改资料</a></li>-->
+							<li class="y_hd_user_item pasd y_inPop" data-popid="xgmm"><a>修改密码</a></li>
+						</ul>
+					</li>
+					<li class="y_head_menu_item out userout">退出</li>
+				</ul>
+			</div>
+		</div>
+		<!--左侧导航-->
+		<div class="y_nav">
+			<div class="y_nav_scroll">
+				<ul class="y_nav_box">
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name home on a_1 y_newHtml" data-class="a_1" data-title="工作台" data-url="./main/home.html">
+							<span>工作台</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_2 y_newHtml" data-class="a_2" data-title="通知公告" data-url="./info/notice.html">
+							<span>通知公告</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_3 y_newHtml" data-class="a_3" data-title="全部任务" data-url="./work/allwork.html">
+							<span>全部任务</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_4 y_newHtml" data-class="a_4" data-title="我的任务" data-url="./work/mywork.html">
+							<span>我的任务</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_5 y_newHtml" data-class="a_5" data-title="下属任务" data-url="./work/subwork.html">
+							<span>下属任务</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_6 y_newHtml" data-class="a_6" data-title="任务统计" data-url="./work/totalwork.html">
+							<span>任务统计</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_7 y_newHtml" data-class="a_7" data-title="日程管理" data-url="./plans/plan.html">
+							<span>日程管理</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_8 y_newHtml" data-class="a_8" data-title="我的打卡记录" data-url="./atten/myatten.html">
+							<span>我的打卡记录</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_9 y_newHtml" data-class="a_9" data-title="外出打卡记录" data-url="./atten/outatten.html">
+							<span>外出打卡记录</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_9 y_newHtml" data-class="a_9" data-title="客户列表" data-url="./customer/customer.html">
+							<span>客户列表</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_10 y_newHtml" data-class="a_10" data-title="我的汇报" data-url="./report/myreport.html">
+							<span>我的汇报</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_11 y_newHtml" data-class="a_11" data-title="我的下属汇报" data-url="./report/mysureport.html">
+							<span>我的下属汇报</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_12 y_newHtml" data-class="a_12" data-title="我的外勤记录" data-url="./atten/kqdk.html">
+							<span>我的外勤记录</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_13 y_newHtml" data-class="a_13" data-title="下属外勤记录" data-url="./atten/xsdk.html">
+							<span>下属外勤记录</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_14 y_newHtml" data-class="a_14" data-title="项目合同" data-url="./contract/projectContract.html">
+							<span>项目合同</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_15 y_newHtml" data-class="a_15" data-title="外包合同" data-url="./contract/outsourceContract.html">
+							<span>外包合同</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_16 y_newHtml" data-class="a_16" data-title="人事合同" data-url="./contract/personnelContract.html">
+							<span>人事合同</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_17 y_newHtml" data-class="a_16" data-title="项目管理" data-url="./project/manage.html">
+							<span>我的项目</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_17 y_newHtml" data-class="a_17" data-title="项目物料管理" data-url="./project/materials/material/manage.html">
+							<span>项目材料管理</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_17 y_newHtml" data-class="a_17" data-title="项目物料管理" data-url="./project/materials/staff/manage.html">
+							<span>项目人工管理</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_17 y_newHtml" data-class="a_17" data-title="项目物料管理" data-url="./project/materials/machine/manage.html">
+							<span>项目机械管理</span><i class="y_nav_icon"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!--内容区域-->
+		<div class="y_main">
+			<div class="y_main_head">
+				<div class="y_main_head_scroll">
+					<ul class="y_mhd">
+						<li class="y_mhd_item a_1 home active" data-class="a_1">
+							<a><span class="y_mhd_tx a_1">工作台</span></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="y_main_body">
+				<iframe class="y_html a_1 active" src="./main/home.html" data-class="a_1"></iframe>
+			</div>
+		</div>
+		<!--修改密码-->
+		<div class="y_inPops" id="xgmm">
+			<div class="y_mark"></div>
+			<div class="y_inPopBox">
+				<div class="y_inPopTit">
+					<span>修改密码</span>
+					<span class="y_inPopClose y_otPop" data-popid="xgmm"></span>
+				</div>
+				<div class="y_inPopCont">
+					<table class="y_tab">
+						<tr>
+							<td width="150" class="y_textRight">原密码：</td>
+							<td><input type="password" class="y_input block ypassword" /></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">新密码：</td>
+							<td><input type="password" class="y_input block password" /></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">确认密码：</td>
+							<td><input type="password" class="y_input block com_password" /></td>
+						</tr>
+					</table>
+					<div class="y_inPopFoot">
+						<span class="y_btn y_otPop y_rit20" data-popid="xgmm">取 消</span>
+						<span class="y_btn prim changPasd">确 认</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--个人信息-->
+		<div class="y_inPops" id="grxx">
+			<div class="y_mark"></div>
+			<div class="y_inPopBox">
+				<div class="y_inPopTit">
+					<span>个人信息</span>
+					<span class="y_inPopClose y_otPop" data-popid="grxx"></span>
+				</div>
+				<div class="y_inPopCont">
+					<table class="y_tab y_border">
+						<tr>
+							<td class="y_textRight">姓名 ：</td>
+							<td class="name"></td>
+							<td class="y_textRight" rowspan="2">头像 ：</td>
+							<td rowspan="2" class="">
+								<img class="head y_inline y_rit10" src="" />
+								<label>
+									<input type="file" class="y_none upfile" />
+									<span class="y_btn xs prim">修改</span>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td class="y_textRight">昵称 ：</td>
+							<td class="">
+								<span class="y_inline nickname y_rit10"></span>
+								<input type="text" class="nickname y_input y_rit10" style="display: none; width: 100px;" value="" />
+								<span class="y_btn xs prim ncxg">修改</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="y_textRight">编号 ：</td>
+							<td class="number"></td>
+							<td class="y_textRight">部门 ：</td>
+							<td class="departmentname"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">职务 ：</td>
+							<td class="positionname"></td>
+							<td class="y_textRight">员工状态 ：</td>
+							<td class="dirname"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">入职日期 ：</td>
+							<td class="workdate"></td>
+							<td class="y_textRight">转正日期 ：</td>
+							<td class="positivedt"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">手机号码 ：</td>
+							<td class="phone"></td>
+							<td class="y_textRight">短号 ：</td>
+							<td class="trumpet"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">身份证号 ：</td>
+							<td class="idCard"></td>
+							<td class="y_textRight">生日 ：</td>
+							<td class="birthday"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">邮箱 ：</td>
+							<td class="email"></td>
+							<td class="y_textRight">QQ ：</td>
+							<td class="QQ"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
+<script type="text/javascript">
+	/*图片地址*/
+	var imgUrl = './aaa/';
+	/*页面路径地址*/
+	var pagUrl = './';
+
+	/*退出登录*/
+	$('.userout').click(function() {
+		Confirm('确定退出？', function(e) {
+			if (e) {
+				deleteCookie('isLogin');
+				deleteCookie('tokens');
+				window.location.href = './main/login.html';
+			}
+		})
+	})
+
+	/*修改昵称*/
+	$('.ncxg').click(function() {
+		var that = $(this);
+		if (that.text() == '修改') {
+			that.text('保存')
+			$('input.nickname').show();
+			$('span.nickname').hide();
+		} else {
+			var val = $('input.nickname').val();
+			$.ajax({
+				url: reqUrl + '/api/user/NickName',
+				type: 'post',
+				data: {
+					token: tokens,
+					nickname: val
+				},
+				dataType: 'json',
+				success: function(dat) {
+					Alert(dat.msg, function() {
+						if (dat.status == 0) {
+							$('input.nickname').hide();
+							$('span.nickname').show().text(val);
+							that.text('修改')
+						}
+					})
+				}
+			})
+		}
+	})
+
+	/*修改头像*/
+	$('.upfile').change(function() {
+		imgBase(this.files[0], function(img) {
+			Confirm('确认修改？', function(e) {
+				if (e) {
+					$.ajax({
+						url: reqUrl + '/api/user/Head',
+						type: 'post',
+						data: {
+							token: tokens,
+							img: img
+						},
+						dataType: 'json',
+						success: function(dat) {
+							Alert(dat.msg, function() {
+								if (dat.status == 0) {
+									$('.head').attr({
+										src: reqUrl + '/' + dat.data
+									})
+								}
+							})
+						}
+					})
+				}
+			})
+		})
+	})
+
+	/*获取个人信息*/
+	$.ajax({
+		url: reqUrl + '/api/user/userInfo',
+		type: 'post',
+		data: {
+			token: tokens
+		},
+		dataType: 'json',
+		success: function(res) {
+			$.each(res.data, function(k, v) {
+				$('.' + k).text(v)
+			});
+			$('.head').attr({
+				src: reqUrl + res.data.head
+			});
+			$('.name').text(res.data.name)
+		}
+	})
+
+	/*修改密码接口*/
+	$('.changPasd').click(function() {
+		var ypassword = $('.ypassword').val();
+		var password = $('.password').val();
+		var com_password = $('.com_password').val();
+		if (!ypassword) {
+			Alert('原密码不能为空');
+		} else if (!password) {
+			Alert('新密码不能为空');
+		} else if (!com_password) {
+			Alert('确认密码不能为空');
+		} else {
+			loading();
+			$.ajax({
+				url: reqUrl + '/api/user/UpPwd',
+				type: 'post',
+				data: {
+					token: tokens,
+					ypassword: ypassword,
+					password: password,
+					com_password: com_password
+				},
+				dataType: 'json',
+				success: function(res) {
+					Alert(res.msg, function() {
+						if (res.status == 0) {
+							$('.ypassword').val('');
+							$('.password').val('');
+							$('.com_password').val('');
+							otPop('xgmm');
+						}
+					})
+				},
+				complete: function() {
+					loading('none');
+				}
+			});
+		}
+	})
+
+	/*获取新消息*/
+	setInterval(getmsg, 120000);
+	getmsg()
+
+	function getmsg() {
+		$.ajax({
+			url: reqUrl + '/api/user/MessageCenter',
+			type: 'get',
+			data: {
+				token: tokens
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					$('.todos').text(res.data.todos);
+					$('.upcoming').text(res.data.upcoming);
+				}
+			}
+		})
+	};
+
+	/*获取导航菜单*/
+	/*loading('', '.y_nav');
+	$.ajax({
+		url: reqUrl + '/api/main/meun',
+		type: 'post',
+		data: {token: tokens},
+		dataType: 'json',
+		success: function(res){
+			if(res.status == 0){
+				var arr = res.data;
+				var str = ''
+				$.each(arr, function(k, v) {
+					if(v.children[0]){
+						str += '<li class="y_nav_item has"><i class="y_nav_item_bg"></i><div class="y_nav_name"><span>'+v.title+'</span><i class="y_nav_has"></i></div>'
+								+'<ul class="y_nav_item_box">'
+						$.each(v.children, function(k1, v1) {
+							if(v1.children[0]){
+								str += '<li class="y_nav_item end"><div class="y_nav_names"><span class="y_nav_tex">'+v1.title+'</span><i class="y_nav_hass"></i></div>'
+										+'<ul class="y_nav_items_box">'
+								$.each(v1.children, function(k2, v2) {
+									str += '<li class="y_nav_item"><a class="y_nav_name a_'+v2.id+' y_newHtml" data-class="a_'+v2.id+'" data-title="'+v2.title+'" data-url="./'+v2.control+'/'+v2.way+'.html">'
+											+'<span class="y_nav_names_tx a_'+v2.id+'">'+v2.title+'</span><i class="y_nav_icon"></i></a></li>'
+								});
+								str += '</ul>'
+							}else{
+								str += '<li class="y_nav_item"><a class="y_nav_name a_'+v1.id+' y_newHtml" data-class="a_'+v1.id+'" data-title="'+v1.title+'" data-url="./'+v1.control+'/'+v1.way+'.html">'
+										+'<span class="y_nav_tex a_'+v1.id+'">'+v1.title+'</span><i class="y_nav_icon"></i></a></li>'
+							}
+						});
+						str += '</ul>'
+					}else{
+						str += '<li class="y_nav_item not"><i class="y_nav_item_bg"></i><a class="y_nav_name a_'+v.id+' y_newHtml" data-class="a_'+v.id+'" data-title="'+v.title+'" data-url="'+v.control+'">'
+								+'<span>'+v.title+'</span><i class="y_nav_icon"></i></a></li>'
+					}
+				});
+				$('.y_nav_box').append(str);
+				navInt();
+			}
+		},
+		complete: function(){
+			loading('none', '.y_nav');
+		}
+	});*/
+	navInt();
+</script>

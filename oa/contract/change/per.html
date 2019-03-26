@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../aaa/css/public.css" />
+		<script src="../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<input type="hidden" name="id" id="hetongbianhao" />
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同编号：</td>
+						<td colspan="5">
+							<input type="text" name="number" class="y_input block" id="bianhao" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同名称：</td>
+						<td colspan="5">
+							<input type="text" name="name" class="y_input block" id="hetongmin" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同类型：</td>
+						<td colspan="5">
+							<span>人事合同</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属员工：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 distname2" readonly="readonly" placeholder="点击按钮选择" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同金额：</td>
+						<td colspan="5">
+							<input type="number" name="money" class="y_input block" id='jine' />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">签约时间：</td>
+						<td>
+							<input type="text" name="signTime" readonly="readonly" class="y_input" id="qianyueshijian" />
+						</td>
+						<td class="y_textRight">开始日期：</td>
+						<td>
+							<input type="text" name="starTime" readonly="readonly" class="y_input" id="kaishishijian" />
+						</td>
+						<td class="y_textRight">到期时间：</td>
+						<td>
+							<input type="text" name="endTime" readonly="readonly" class="y_input y_dat_opens" id="daoqishijian" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>我方签约人：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 distname1" readonly="readonly" placeholder="点击按钮选择" />
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">续 约</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	(function() {
+		var urls = window.location.href;
+		var id = urls.slice(urls.indexOf('id=') + 3);
+		loading();
+		$.ajax({ //项目信息
+			type: "post",
+			url: reqUrl + "/api/contract/perInfo",
+			data: {
+				token: tokens,
+				id: id
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					setInfo(res.data);
+				} else {
+					parent.window.Alert('消息丟失');
+				}
+			},
+			complete: function() {
+				loading('none');
+			}
+		});
+		/*提交*/
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		});
+	})();
+
+	function setInfo(p) {
+		console.log(p);
+		// {id,number:'合同编号',name:'合同名称',money:'薪资',signTime:'签字日期',starTime:'开始日期',endTime:'结束日期',perName:'员工名称',tName:'操作人'}
+		$('#hetongbianhao').val(p.id);
+		$('#bianhao').val(p.number);
+		$('#hetongmin').val(p.name);
+		$('.distname2').val(p.perName);
+		$('#jine').val(p.money);
+		$('#qianyueshijian').val(p.signTime);
+		$('#kaishishijian').val(p.starTime);
+		$('#daoqishijian').val(p.endTime);
+		$('.distname1').val(p.tName);
+		$('.khDistname2').val(p.signCustName);
+	}
+
+	function do_sub() {
+		parent.window.loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/contract/upPer',
+			data: $('#check_form').serialize(),
+			dataType: "json",
+			error: function(request) {
+				parent.window.loading('none');
+				parent.window.Alert('更新失败');
+			},
+			success: function(data) {
+				parent.window.loading('none');
+				parent.window.Alert(data.msg, function() {
+					if (data.status == 0) {
+						parent.window.closePop('', function() {
+							parent.window.Reload();
+						})
+					}
+				});
+			}
+		});
+	}
+
+</script>

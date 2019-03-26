@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody small">
+			<table class="y_tab y_border y_top20">
+				<tr>
+					<td class="y_textRight" width="150">客户名称：</td>
+					<td colspan="3" class="ct_name"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">客户地址：</td>
+					<td colspan="3" class="ct_address"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">客户状态：</td>
+					<td class="ct_status_name"></td>
+					<td class="y_textRight" width="150">客户类型：</td>
+					<td class="ct_type_name"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">联系人：</td>
+					<td colspan="3" class="ct_contacts_name"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">客户传真：</td>
+					<td class="ct_tel"></td>
+					<td class="y_textRight">客户邮编：</td>
+					<td class="ct_zipCode"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">客户级别：</td>
+					<td class="zdkh"></td>
+					<td class="y_textRight">官网地址：</td>
+					<td class="ct_url"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">工程名称：</td>
+					<td class="ct_proName"></td>
+					<td class="y_textRight">工程规模：</td>
+					<td class="ct_proScale"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">工程需求：</td>
+					<td colspan="3" class="ct_proDemand"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">备注：</td>
+					<td colspan="3" class="ct_explains"></td>
+				</tr>
+			</table>
+			<div class="logs y_none y_top20" style="display: none;">
+				<p class="y_popSpeed">跟进记录</p>
+				<table class="y_tab y_bordtr y_textCenter">
+					<thead class="y_bgcPrim">
+						<tr>
+							<td>跟进日期</td>
+							<td>下次跟进日期</td>
+							<td>跟进内容</td>
+						</tr>
+					</thead>
+					<tbody class="y_exchag y_hover list">
+					
+					</tbody>
+				</table>
+			</div>
+			<div class="y_top20"></div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		
+		/*判断是否修改*/
+		var urls = window.location.href;
+		if(urls.indexOf('id=') > -1){
+			var id = urls.slice(urls.indexOf('id=')+3);
+			$('.id').val(id);
+			$.ajax({
+	            type: "POST",
+	            url: reqUrl + "/api/customer/CustInfo",
+	            data: {token: tokens, id: id},
+	            dataType: "json",
+	            success: function(res) {
+            		if (res.status == 0) {
+            			$.each(res.data, function(k, v){
+            				$('.ct_' + k).text(v)
+            			})
+            			if(res.data.isstat == 1){
+            				$('.zdkh').text('重点客户')
+            			}else{
+            				$('.zdkh').text('普通客户')
+            			}
+            			$('.ct_status_name').text(res.data.status);
+            			$('.ct_type_name').text(res.data.type);
+            			$.ajax({
+							type: "post",
+							url: reqUrl + "/api/public/addressBook",
+							data: {token: tokens, cid: res.data.id},
+							dataType: 'json',
+							success: function(dat){
+								if(dat.status == 0){
+									var na_str = '';
+									$.each(dat.data, function(k, v){
+										if(na_str){
+											na_str += ',' + v.name;
+										}else{
+											na_str += v.name;
+										}
+									})
+									$('.ct_contacts_name').text(na_str)
+								}
+							}
+						});
+	                }
+	            }
+	        });
+	        
+	        $.ajax({
+	        	url: reqUrl + '	/api/customer/custLogs',
+	        	type: 'post',
+	        	data: {token: tokens, cid: id},
+	        	dataType: 'json',
+	        	success: function(res){
+	        		if(res.status == 0){
+	        			var str = '';
+	        			$.each(res.data, function(k, v) {
+	        				str += '<tr><td>'+v.dt+'</td><td>'+v.nextTime+'</td><td>'+v.content+'</td></tr>'
+	        			});
+	        			if(str){
+	        				$('.logs').show();
+	        				$('.list').append(str);
+	        			}
+	        		}
+	        	}
+	        })
+		}
+	})
+</script>

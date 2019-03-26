@@ -1,0 +1,120 @@
+
+.project{overflow: hidden;}
+.pro_item{float: left;margin-bottom: 14px;margin-right: 20px;}
+.pro_item_name{background-color: #f9f9f9;border-right: 1px solid #dcdcdc;}
+.menu .y_inpSect{width: 100px;background-position: 80px center;}
+.menu .y_inpSect_tex{width: 60px;}
+.menu .y_inpSect_box{width: 100px;}
+.menu .y_inpSect_scroll{width: 100px;}
+.menu .y_inpSect_itmBox{width: 100px;}
+.chang{display: inline-block;vertical-align: middle;width: 32px;height: 30px;background-position: center;background-repeat: no-repeat;cursor: pointer;}
+.chang.left{background-image: url(../images/icon/plan_left.png);margin-right: 8px;}
+.chang.rigt{background-image: url(../images/icon/plan_rigt.png);}
+
+
+
+.bg-red{background: #D9534F;color: #fff;}
+.bg-primary{background: #83b266;color: #fff;}
+.bg-green{background: #A8BC7B;color: #fff;}
+
+.dat{
+	 -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    /* No support for these yet, use at own risk */
+    -o-user-select: none;
+    user-select: none;
+}
+.w-100{width: 100px;}
+
+.form-control.form-block{width: 100%;}
+.dat-event-box{padding: 15px 10px;border-radius: 4px;background-color: #eee;}
+.dat-event{padding: 0 4px;}
+.event-box-title{font-size: 16px;}
+.event-item{padding:4px;border-radius: 4px;margin-bottom: 6px;font-size:12px;cursor: pointer;height: 12px;overflow: hidden;line-height: 12px;}
+.event-item:hover{height: auto;}
+.event-item p{margin: 0;margin-bottom: 6px;}
+.dat-nav{overflow: hidden;text-align: center;margin-bottom: 10px;}
+.dat-nav .btn.btn-default{outline: none;padding: 2px 10px;}
+.dat-nav-left{}
+.dat-nav-right{}
+.dat-nav-center{font-size: 20px;}
+.dat-month{width: 100%;}
+.dat-month th{border: 1px solid #ddd;text-align: center;cursor: pointer;}
+.dat-month .dat-week-item{border: 1px solid #ddd;cursor: pointer;vertical-align: top;}
+.dat-month .dat-date{text-align: right;padding-right: 4px;}
+.dat-month .date-other-month{color: #ddd;}
+.dat-weekAll{width: 100%;}
+.dat-dayAll{width: 100%;}
+.dat-weekAll td{border: 1px solid #e1e1e1;position: relative;}
+.dat-dayAll td{border: 1px solid #e1e1e1;position: relative;}
+.dat-weekAll thead{text-align: center;font-weight: bold;}
+.dat-dayAll thead{text-align: center;font-weight: bold;}
+.dat-weekAll .event-item{height: auto;}
+.dat-dayAll .event-item{height: auto;}
+.dat-weekAll tbody .dat-event{height: 600px;padding-top: 20px;}
+.dat-dayAll tbody .dat-event{height: 600px;padding-top: 20px;}
+.dat-weekAll tbody td:nth-child(2n+1){background-color: #fff;}
+.dat-weekAll tbody td:nth-child(2n+2){background-color: #f9f9f9;}
+.dat-dayAll tbody .event-item{float: left;margin-right: 20px;padding: 10px;min-width: 200px;min-height: 150px;}
+
+.date{}
+.date .dateTit{position: relative;margin-bottom: 20px;}
+.date .dateTitCenter{position: absolute;top: 0;left: 50%;margin-left: -130px;}
+.date .dateTitR{float: right;}
+
+.date .dat-month tr td:nth-child(2n+2){background-color: #f9f9f9;}
+/*.date .dat-month tr:nth-child(2n+1) td:nth-child(2n+1){background-color: #fff;}*/
+/*.date .dat-month tr:nth-child(2n+1) td:nth-child(2n+2){background-color: #eeeeee;}*/
+/*.date .dat-month tr:nth-child(2n+2) td:nth-child(2n+1){background-color: #eeeeee;}*/
+/*.date .dat-month tr:nth-child(2n+2) td:nth-child(2n+2){background-color: #fff;}*/
+.addDateTit{text-align: center;padding: 20px 0;}
+.addDateCont{padding: 0 30px;}
+.addDateCont .FrameGroupInput{width: 300px;height: 40px;margin-bottom: 10px;}
+.addDateCont .FrameGroupInput.level{width: 312px;}
+.addDateCont .FrameGroupInput.time{width: 50px;border-radius: 6px;margin: 0 4px;height: 34px;margin-bottom: 10px;}
+
+.dat-week-body.has{background-image: url(../images/icon/plan_add.png);background-repeat: no-repeat;background-position: center;}
+
+.green{background-color: #31cc80;color: #fff;}
+
+.add_plan{position: fixed;width: 100%;height: 100%;left: 0;top: 0;z-index: 99;display: none;}
+.add_box{position: absolute;width: 670px;background-color: #fff;overflow: hidden;z-index: 99;border-radius: 10px;left: 50%;margin-left: -335px;top: -900px;}
+.add_tit{position: relative;text-align: center;color: #fff;font-size: 16px;height: 40px;line-height: 40px;background-color: #628ab2;}
+.add_close{width: 20px;height: 20px;position: absolute;right: 10px;top: 10px;background-image: url(../images/icon/close.png);}
+.add_cont{padding: 10px;}
+.cont{overflow: hidden;font-size: 12px;}
+.cont_item.no{float: none;}
+.cont_item{float: left;margin-bottom: 16px;}
+/*.cont .y_input{width: 180px;}*/
+/*.cont .y_input.small{width: 80px;float: left;margin-right: 20px;}
+.cont .y_input.small.last{margin-right: 0px;}
+.cont .y_input.small.btn input{width: 40px;}
+.cont .y_input.small.btn .btn{width: 30px;}
+.cont textarea.y_input{width: 80%;}
+.cont .y_input.btn input{width: 130px;}
+.cont .y_input.dat{background-position: 160px center;}
+.cont .y_input.dat input{width: 130px;}*/
+.cont_name{display: inline-block;vertical-align: top;height: 32px;line-height: 32px;width: 60px;text-align: right;}
+.cont_val{display: inline-block;vertical-align: top;overflow: hidden;}
+.pers{width: 580px;}
+.add_plan .y_inpSect{width: 570px;background-position:550px center;}
+.add_plan .y_inpSect_tex{width: 530px;}
+.add_plan .y_inpSect_box{width: 570px;}
+.add_plan .y_inpSect_scroll{width: 570px;}
+.add_plan .y_inpSect_itmBox{width: 570px;}
+.y_inPops .y_inpSect{width: 520px;background-position:500px center;}
+.y_inPops .y_inpSect_tex{width: 480px;}
+.y_inPops .y_inpSect_box{width: 520px;}
+.y_inPops .y_inpSect_scroll{width: 520px;}
+.y_inPops .y_inpSect_itmBox{width: 520px;}
+/*.y_input.sm{width: 16px;}*/
+.jg{display: inline-block;width: 16px;text-align: center;}
+.r{margin-right: 15px;}
+.add_more{width: 32px;height: 32px;background-image: url(../images/icon/plan_addmore.png);background-repeat: no-repeat;background-position: center;display: inline-block;cursor: pointer;}
+.add_more.del{width: 32px;height: 32px;background-image: url(../images/icon/plan_dellmore.png);background-repeat: no-repeat;background-position: center;display: inline-block;cursor: pointer;}
+.add_btns{text-align: center;margin-bottom: 6px;}
+.add_btns .y_btn{width: 90px;}
+.add_btns .y_btn.info{margin-left: 60px;}
+
+.dates_title{text-align: center;line-height: 32px;height: 32px;font-size: 20px;}

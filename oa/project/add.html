@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>项目编号：</td>
+						<td colspan="5">
+							<input type="text" name="number" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>项目名称：</td>
+						<td colspan="5">
+							<input type="text" name="title" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>项目建筑单位：</td>
+						<td colspan="5">
+							<input type="text" name="company" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>项目施工地址：</td>
+						<td colspan="5">
+							<input type="text" name="address" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>项目类型：</td>
+						<td colspan="5">
+							<select name="type" id="sel">
+
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>项目金额：</td>
+						<td colspan="5" style="position: relative;">
+							<input type="number" name="money" class="y_input block" /><span style="position: absolute;top: 15px;right: 50px;">元</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">开始日期：</td>
+						<td colspan="2">
+							<input type="text" name="start" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+						<td class="y_textRight">结束日期：</td>
+						<td colspan="2">
+							<input type="text" name="end" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>负责人：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 distname1" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="charge" class="distid1" />
+							<span class="y_btn prim ch1">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>客户：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 khDistname2" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="cid" class="khDistid2" />
+							<span class="y_btn prim kh2">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>备注：</td>
+						<td colspan="5">
+							<textarea class="y_input long y_rit10" name="content"></textarea>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		initInfos();
+
+
+		/*提交*/
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		})
+
+	});
+	/* 提交 */
+	function do_sub() {
+		parent.window.loading();
+		$.ajax({
+			type: "GET",
+			url: reqUrl + '/api/projects/savePro',
+			data: $('#check_form').serialize(),
+			dataType: "json",
+			error: function(request) {
+				parent.window.loading('none');
+				parent.window.Alert('提交失败');
+			},
+			success: function(data) {
+				parent.window.loading('none');
+				parent.window.Alert(data.msg, function() {
+					if (data.status == 0) {
+						parent.window.closePop('', function() {
+							parent.window.Reload();
+						})
+					}
+				});
+			}
+		});
+	}
+
+	function initInfos() {
+		parent.window.loading();
+		/* 获取项目类型信息 */
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/proType",
+			data: {
+				token: tokens
+			},
+			dataType: 'json',
+			success: function(res) {
+				let str = ''
+				if (res.status == 0) {
+					res.data.forEach(k => {
+						str += '<option value="' + k + '">' + k + '</option>'
+					});
+					$('#sel').append(str);
+					parent.window.loading('none');
+				}
+			}
+		})
+		/*获取人员信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/users",
+			data: {
+				token: tokens
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					Use = {}
+					Use.status = 2;
+					Use.data = res.data;
+					$('.ch1').click(function() {
+						parent.window.ChousPerson(Use, 'one', $('.distid1').val(), function(tex, val) {
+							$('.distname1').val(tex);
+							$('.distid1').val(val);
+						})
+					});
+				}
+			}
+		});
+		// 获取客户信息
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/customer",
+			data: {
+				token: tokens
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					Use2 = {}
+					Use2.status = 2;
+					Use2.data = res.data;
+					$('.kh2').click(function() {
+						parent.window.ChousCustomer(Use2, 'one', $('.khDistid2').val(), function(tex, val) {
+							$('.khDistname2').val(tex);
+							$('.khDistid2').val(val);
+						})
+					});
+				}
+			}
+		});
+	}
+</script>
