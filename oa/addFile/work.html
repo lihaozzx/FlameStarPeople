@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody small">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>标题：</td>
+						<td colspan="3">
+							<input type="text" name="title" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>发送部门：</td>
+						<td colspan="3">
+							<input type="text" class="y_input long y_rit10 distname" readonly="readonly" placeholder="点击按钮选择"/>
+							<input type="hidden" name="distid" class="distid" />
+							<span class="y_btn prim ch">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>任务等级：</td>
+						<td colspan="3">
+							<div class="y_inpSect">
+								<span class="y_inpSect_tex" data-int="--请选择--">--请选择--</span>
+								<input type="text" class="y_inpSect_val" name="level" value="">
+								<div class="y_inpSect_box">
+									<div class="y_inpSect_scroll">
+										<ul class="y_inpSect_itmBox">
+											<li class="y_inpSect_item" data-val="普通">普通</li>
+											<li class="y_inpSect_item" data-val="紧急">紧急</li>
+											<li class="y_inpSect_item" data-val="非常紧急">非常紧急</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">开始时间：</td>
+						<td>
+							<input type="text" name="start" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+						<td class="y_textRight">结束时间：</td>
+						<td>
+							<input type="text" name="end" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>内容：</td>
+						<td colspan="3">
+							<textarea class="y_input" name="explain"></textarea>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		
+		/*获取人员信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/users",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					Use = {}
+		            Use.status = 2;
+		            Use.data = res.data;
+		            $('.ch').click(function(){
+				   		parent.window.ChousPerson(Use, 'one', $('.distid').val(), function(tex, val){
+				   			$('.distname').val(tex);
+				   			$('.distid').val(val);
+				   		})
+				   	})
+				}
+			}
+		});
+        
+        /*提交*/
+       	$('.submit').click(function(){
+       		$('.token').val(tokens);
+       		do_sub();
+       	})
+       	function do_sub() {
+	    	parent.window.loading();
+	        $.ajax({
+	            type: "POST",
+	            url: reqUrl + '',
+	            data: $('#check_form').serialize(),
+	            dataType: "json",
+	            error: function(request) {
+	            	parent.window.loading('none');
+	                parent.window.Alert('提交失败');
+	            },
+	            success: function(data) {
+	            	parent.window.loading('none');
+	            	parent.window.Alert(data.msg, function(){
+	            		if (data.status == 0) {
+	            			parent.window.closePop('', function(){
+		            			parent.window.Reload();
+		            		})
+		                }
+	            	});
+	            }
+	        });
+	    }
+	})
+</script>

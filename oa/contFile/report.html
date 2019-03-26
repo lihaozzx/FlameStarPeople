@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		
+		<link rel="stylesheet" type="text/css" href="../aaa/kindeditor/themes/default/default.css"/>
+		<script src="../aaa/js/ajaxfileupload.js"></script>
+		<script charset="utf-8" src="../aaa/kindeditor/kindeditor-min.js"></script>
+    	<script charset="utf-8" src="../aaa/kindeditor/lang/zh_CN.js"></script>
+	</head>
+	<body>
+		<div class="y_popBody small">
+			<table class="y_tab y_border y_top20">
+				<tr>
+					<td width="150" class="y_textRight">汇报类型：</td>
+					<td colspan="3" class="ct_type"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">相关客户：</td>
+					<td colspan="3" class="ct_custName"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">相关项目：</td>
+					<td colspan="3" class="ct_proName"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">汇报内容：</td>
+					<td colspan="3" class="ct_content"></td>
+				</tr>
+				<tr>
+					<td class="y_textRight">汇报图片：</td>
+					<td colspan="3"></td>
+				</tr>
+			</table>
+			<div class="y_top20"></div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		var urls = window.location.href;
+		var id = urls.slice(urls.indexOf('id=')+3);
+		loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/report/dailyInfo",
+			data: {token: tokens, id: id},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					$.each(res.data, function(k, v){
+						$('.ct_' + k).text(v);
+					})
+				}
+			},
+			complete: function(){
+				loading('none');
+			}
+		});
+        
+	})
+</script>

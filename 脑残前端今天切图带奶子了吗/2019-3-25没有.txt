@@ -1,0 +1,4 @@
+﻿jq做文件上传 <input type='file' id='file' name='file'/>
+js 必须用document.getElementById('file').files[0]
+然后 var form = new formData();
+然后data：form

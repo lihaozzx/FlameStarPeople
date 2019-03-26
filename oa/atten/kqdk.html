@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>首页</title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_floatBox">
+				<label class="y_inpSect y_rit10 btn">
+					<span class="y_inpSect_tex" data-int="--请选择--">--请选择--</span>
+					<input type="text" class="y_inpSect_val year" value="">
+					<div class="y_inpSect_box">
+						<div class="y_inpSect_scroll">
+							<ul class="y_inpSect_itmBox year_str"></ul>
+						</div>
+					</div>
+					<span class="btn y_bgcPrim">年</span>
+				</label>
+				<label class="y_inpSect y_rit10 btn">
+					<span class="y_inpSect_tex" data-int="--请选择--">--请选择--</span>
+					<input type="text" class="y_inpSect_val month" value="">
+					<div class="y_inpSect_box">
+						<div class="y_inpSect_scroll">
+							<ul class="y_inpSect_itmBox mont_str"></ul>
+						</div>
+					</div>
+					<span class="btn y_bgcPrim">月</span>
+				</label>
+				<button class="y_btn prim y_rit10 serch">搜索</button>
+				<span class="y_btn y_reset y_rit10">重置</span>
+				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+			</div>
+			<div class="y_top10">
+				<table class="y_tab y_border">
+					<thead class="y_textCenter">
+						<tr>
+							<td>序号</td>
+							<td>打卡时间</td>
+							<td>对应项目</td>
+							<td>对应客户</td>
+							<td>地址</td>
+							<td>备注</td>
+						</tr>
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list"></tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	
+	$(function(){
+		var dat = new Date();
+		var years = dat.getFullYear();
+		var year_str = '';
+		var mont_str = '';
+		var year,month;
+		
+		for(var i = 2019; i <= years; i++){
+			year_str += '<li class="y_inpSect_item" data-val="'+i+'">'+i+'</li>';
+		}
+		for(var i = 1; i < 13; i++){
+			mont_str += '<li class="y_inpSect_item" data-val="'+(i<10?'0'+i:i)+'">'+i+'</li>';
+		}
+		$('.year_str').append(year_str);
+		$('.mont_str').append(mont_str);
+		
+		var pages,dt;
+		getList();
+		
+		function getList(){
+			loading();
+			$.ajax({
+				url: reqUrl + '/api/atten/kqdkjl',
+				type: 'post',
+				data: {token: tokens, dt: dt, p: pages},
+				dataType: 'json',
+				success: function(res){
+					if(res.status == 0){
+						setList(res.data);
+						setPage('.page', res.pager);
+					}else{
+						$('.y_tab').hide();
+						noData('.y_body');
+						setPage('.page', false);
+					}
+				},
+				complete: function(){
+					loading('none');
+				}
+			});
+		}
+		
+		function setList(data){
+			$('.list').children().remove();
+			var str = '';
+			var i = 0;
+			$.each(data, function(k, v){
+				++i
+				str += 	'<tr><td>'+i+'</td><td>'+v.dkdt+'</td><td>'+v.proname+'</td><td>'+v.ctname+'</td><td>'+v.address+'</td><td>'+v.explains+'</td></tr>'
+			})
+			if(str == ''){
+				$('.y_tab').hide();
+				noData('.y_body');
+			}else{
+				$('.y_tab').show();
+				$('.y_noData').remove();
+				$('.list').append(str)
+			}
+		}
+		
+		/*页码跳转*/
+		$(document).on('click', '.y_page_item', function(){
+			var that = $(this);
+			var cut_page = $('.y_page_item.active').attr('data-page');
+			if(that.attr('data-page') == cut_page){
+				return
+			}else{
+				pages = that.attr('data-page')-0;
+				getList()
+			}
+		})
+		
+		/*标题搜索*/
+		$('.serch').click(function(){
+			if($('.year').val() && $('.month').val()){
+				dt = $('.year').val() + '-' + $('.month').val();
+			}else{
+				dt = '';
+			}
+			getList();
+		})
+	})
+</script>

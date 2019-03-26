@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody small">
+			<h1 class="y_popTitle"></h1>
+			<p class="y_popSubTit"></p>
+			<div class="y_popContent"></div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		var urls = window.location.href;
+		var id = urls.slice(urls.indexOf('id=')+3);
+		loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/infor/infors",
+			data: {token: tokens, id: id},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					$('.y_popTitle').text(res.data.title);
+					$('.y_popSubTit').text( res.data.optname+' '+res.data.date);
+					$('.y_popContent')[0].innerHTML = res.data.content;
+				}
+			},
+			complete: function(){
+				loading('none');
+			}
+		});
+	})
+</script>

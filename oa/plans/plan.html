@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/plan.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/date.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_row y_top10">
+				<div class="y_col6">
+					<div class="y_rowBox">
+						<div class="date">
+			                <div class="dateTit">
+			                	<span class="y_btn gren y_inPop" data-popid="tjrc" onclick="Reset('.tjrc')">添加日程</span>
+			                    <div class="dateTitCenter">
+			                        <select class="y_input nian year_str" style="width: 80px;">
+			                        </select>
+			                        <select class="y_input yue mont_str" style="width: 80px;">
+			                        </select>
+			                    </div>
+			                    <div class="dateTitR dat-nav-left">
+			                        <span class="chang left prev"></span>
+			                        <span class="chang rigt next"></span>
+			                    </div>
+			                    <div class="y_clear"></div>
+			                </div>
+			
+			                <div class="row dat y_top10">
+			                    <div class="col-sm-12 col-lg-12 dat-right">
+			                        <table class="dat-month">
+			                            <tr class="lcItemTit" style="line-height: 30px;">
+			                                <th>周日</th>
+			                                <th>周一</th>
+			                                <th>周二</th>
+			                                <th>周三</th>
+			                                <th>周四</th>
+			                                <th>周五</th>
+			                                <th>周六</th>
+			                            </tr>
+			                        </table>
+			                        <div class="dat-week">
+			                            <table class="dat-weekAll">
+			                                <thead class="lcItemTit"style="line-height: 30px;">
+			                                    <tr class="dat-week-allDay"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			                                </thead>
+			                                <tbody>
+			                                    <tr>
+			                                        <td ><div class="dat-event"></div></td>
+			                                        <td ><div class="dat-event"></div></td>
+			                                        <td ><div class="dat-event"></div></td>
+			                                        <td ><div class="dat-event"></div></td>
+			                                        <td ><div class="dat-event"></div></td>
+			                                        <td ><div class="dat-event"></div></td>
+			                                        <td ><div class="dat-event"></div></td>
+			                                    </tr>
+			                                </tbody>
+			                            </table>
+			                        </div>
+			                        <div class="dat-day">
+			                            <table class="dat-dayAll">
+			                                <thead class="lcItemTit"style="line-height: 30px;">
+			                                    <tr class="dat-day-allDay"><td>周六</td></tr>
+			                                </thead>
+			                                <tbody>
+			                                    <tr>
+			                                        <td ><div class="dat-event"></div></td>
+			                                    </tr>
+			                                </tbody>
+			                            </table>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+					</div>
+				</div>
+				<div class="y_col6">
+					<div class="y_rowBox load_box">
+						<div class="dates_title">日程列表</div>
+						<div class="lists y_top20">
+							<table class="y_tab y_bordtr y_textCenter">
+								<thead>
+									<tr>
+										<td>序号</td>
+										<td>标题</td>
+										<td>开始时间</td>
+										<td>结束时间</td>
+										<td>处理结果</td>
+										<td>操作</td>
+									</tr>
+								</thead>
+								<tbody class="y_exchag y_hover rc_list">
+									<!--<tr>
+										<td>序号</td>
+										<td>标题</td>
+										<td>日期</td>
+										<td>开始时间</td>
+										<td>结束时间</td>
+										<td>
+											<div class="y_slectMenu ">
+												操作  ＋
+												<ul class="y_slect">
+							                        <li class="y_slectItem"><a>详情</a></li>
+							                        <li class="y_slectItem"><a>编辑</a></li>
+							                        <li class="y_slectItem"><a>禁用</a></li>
+							                        <li class="y_slectItem read"><a>删除</a></li>
+							                    </ul>
+											</div>
+										</td>
+									</tr>-->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--添加日程-->
+		<div class="y_inPops tjrc" id="tjrc">
+			<div class="y_mark"></div>
+			<div class="y_inPopBox">
+				<div class="y_inPopTit">
+					<span>添加日程</span>
+					<span class="y_inPopClose y_otPop" data-popid="tjrc"></span>
+				</div>
+				<div class="y_inPopCont">
+					<form id="updat">
+						<div class="y_row">
+							<div class="y_col2">
+								<div class="y_rowBox y_textRight"><i class="y_top10 y_colorRead">*</i>日期：</div>
+							</div>
+							<div class="y_col10">
+								<div class="y_rowBox">
+									<input type="text" class="y_input y_dat_open" readonly="readonly" name="dat" />
+								</div>
+							</div>
+							<div class="y_top10 y_col2">
+								<div class="y_rowBox y_textRight"><i class="y_top10 y_colorRead">*</i>主题：</div>
+							</div>
+							<div class="y_top10 y_col10">
+								<div class="y_rowBox">
+									<input type="text" class="y_input block" name="title" />
+								</div>
+							</div>
+							<div class="y_top10 y_col2">
+								<div class="y_rowBox y_textRight">地点：</div>
+							</div>
+							<div class="y_top10 y_col10">
+								<div class="y_rowBox">
+									<input type="text" class="y_input block" name="address" />
+								</div>
+							</div>
+							<div class="y_top10 y_col2">
+								<div class="y_rowBox y_textRight"><i class="y_top10 y_colorRead">*</i>开始时间：</div>
+							</div>
+							<div class="y_top10 y_col4">
+								<div class="y_rowBox">
+									<input type="text" class="y_input y_dat_time_open" readonly="readonly" name="time1" />
+								</div>
+							</div>
+							<div class="y_top10 y_col2">
+								<div class="y_rowBox y_textRight"><i class="y_top10 y_colorRead">*</i>结束时间：</div>
+							</div>
+							<div class="y_top10 y_col4">
+								<div class="y_rowBox">
+									<input type="text" class="y_input y_dat_time_open" readonly="readonly" name="time2" />
+								</div>
+							</div>
+							<div class="y_top10 y_col2">
+								<div class="y_rowBox y_textRight">关联客户：</div>
+							</div>
+							<div class="y_top10 y_col10">
+								<div class="y_rowBox">
+									<label class="ch_kh block y_input btn">
+										<input type="text" class="custname y_input long y_rit10" readonly="readonly" value="">
+										<input type="hidden" class="custid" name="custid" value="">
+										<span class="btn y_bgcPrim">选择</span>
+									</label>
+								</div>
+							</div>
+							<div class="y_top10 y_col2">
+								<div class="y_rowBox y_textRight">关联项目：</div>
+							</div>
+							<div class="y_top10 y_col10">
+								<div class="y_rowBox">
+									<label class="ch_xm block y_input btn">
+										<input type="text" class="proname y_input long y_rit10" readonly="readonly" value="">
+										<input type="hidden" class="proid" name="proid" value="">
+										<span class="btn y_bgcPrim">选择</span>
+									</label>
+								</div>
+							</div>
+							<div class="y_top10 y_col2">
+								<div class="y_rowBox y_textRight">邀请人：</div>
+							</div>
+							<div class="y_top10 y_col10">
+								<div class="y_rowBox">
+									<label class="ch block y_input btn">
+										<input type="text" class="yqids_name y_input long y_rit10" readonly="readonly" value="">
+										<input type="hidden" class="yqids_id" name="yqids" value="">
+										<span class="btn y_bgcPrim">选择</span>
+									</label>
+								</div>
+							</div>
+							<div class="y_top10 y_col2">
+								<div class="y_rowBox y_textRight">备注：</div>
+							</div>
+							<div class="y_top10 y_col10">
+								<div class="y_rowBox">
+									<textarea class="y_input" name="explain"></textarea>
+								</div>
+							</div>
+						</div>
+						<!--<table class="y_tab">
+							<tr>
+								<td class="y_textRight"></td>
+								<td colspan="3"></td>
+							</tr>
+							<tr>
+								<td class="y_textRight"></td>
+								<td colspan="3"></td>
+							</tr>
+							<tr>
+								<td class="y_textRight"></td>
+								<td colspan="3"></td>
+							</tr>
+							<tr>
+								<td class="y_textRight"></td>
+								<td>
+									
+								</td>
+								<td class="y_textRight"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td class="y_textRight"></td>
+								<td colspan="3">
+									
+								</td>
+							</tr>
+							<tr>
+								<td class="y_textRight"></td>
+								<td colspan="3">
+									
+								</td>
+							</tr>
+							<tr>
+								<td class="y_textRight"></td>
+								<td colspan="3">
+									
+								</td>
+							</tr>
+							<tr>
+								<td class="y_textRight"></td>
+								<td colspan="3">
+									
+								</td>
+							</tr>
+						</table>-->
+						<div class="y_inPopFoot">
+							<input type="hidden" name="token" class="tokens" value="" />
+							<span class="y_btn y_otPop y_rit20" data-popid="tjrc">取 消</span>
+							<span class="y_btn prim changPasd">确 认</span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!--日程详情-->
+		<div class="y_inPops" id="rcxq">
+			<div class="y_mark"></div>
+			<div class="y_inPopBox">
+				<div class="y_inPopTit">
+					<span>上报日程</span>
+					<span class="y_inPopClose y_otPop" data-popid="rcxq"></span>
+				</div>
+				<div class="y_inPopCont">
+					<table class="y_tab y_border">
+						<tr>
+							<td width="150" class="y_textRight">主题：</td>
+							<td colspan="3" class="rc_title"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">地点：</td>
+							<td colspan="3" class="rc_address"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">日期：</td>
+							<td colspan="3" class="rc_dat"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">开始时间：</td>
+							<td class="rc_time1"></td>
+							<td width="150" class="y_textRight">结束时间：</td>
+							<td class="rc_time2"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">关联客户：</td>
+							<td colspan="3" class="rc_custname"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">关联项目：</td>
+							<td colspan="3" class="rc_proname"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">邀请人：</td>
+							<td colspan="3" class="rc_yqnames"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">备注：</td>
+							<td colspan="3" class="rc_explain"></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">处理结果：</td>
+							<td colspan="3" class="rc_fankui"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!--上报日程-->
+		<div class="y_inPops" id="sbrc">
+			<div class="y_mark"></div>
+			<div class="y_inPopBox">
+				<div class="y_inPopTit">
+					<span>日程详情</span>
+					<span class="y_inPopClose y_otPop" data-popid="sbrc"></span>
+				</div>
+				<div class="y_inPopCont">
+					<form id="do_sbrc">
+						<table class="y_tab">
+							<tr>
+								<td width="150" class="y_textRight">处理结果：</td>
+								<td colspan="3">
+									<textarea class="y_input rc_content" name="content"></textarea>
+								</td>
+							</tr>
+						</table>
+						<div class="y_inPopFoot">
+							<input type="hidden" name="token" class="tokens" value="" />
+							<input type="hidden" name="id" class="sbrc_id" value="" />
+							<span class="y_btn y_otPop y_rit20" data-popid="sbrc">取 消</span>
+							<span class="y_btn prim" onclick="do_sb()">确 认</span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	var dat = new Date();
+	var years = dat.getFullYear();
+	var months = dat.getMonth();
+	var year_str = '';
+	var mont_str = '';
+	var year,month;
+	
+	for(var i = 2019; i <= years; i++){
+		year_str += '<option value="'+i+'" '+(i==years?"selected=selected":"")+'>'+i+'</option>';
+	}
+	for(var i = 0; i < 12; i++){
+		mont_str += '<option value="'+(i<10?'0'+i:i)+'" >'+(i+1)+'</option>';
+	}
+	$('.year_str').append(year_str);
+	$('.mont_str').append(mont_str);
+	
+	/*获取人员信息*/
+	$.ajax({
+		type: "post",
+		url: reqUrl + "/api/public/users",
+		data: {token: tokens},
+		dataType: 'json',
+		success: function(res){
+			if(res.status == 0){
+				Use = {}
+	            Use.status = 2;
+	            Use.data = res.data;
+	            $('.ch').click(function(){
+			   		parent.window.ChousPerson(Use, 'two', $('.yqids_id').val(), function(tex, val){
+			   			$('.yqids_name').val(tex);
+			   			$('.yqids_id').val(val);
+			   		})
+			   	})
+			}
+		}
+	});
+	/*获取客户信息*/
+	$.ajax({
+		type: "post",
+		url: reqUrl + "/api/public/customer",
+		data: {token: tokens},
+		dataType: 'json',
+		success: function(res){
+			if(res.status == 0){
+				var data = {status: 1};
+				data.data = [];
+				$.each(res.data, function(k, v) {
+					data.data.push({id: v.id, name: v.name, positionname: ""})
+				});
+				$('.ch_kh').click(function(){
+			   		parent.window.ChousPerson(data, 'one', $('.custid').val(), function(tex, val){
+			   			$('.custname').val(tex);
+			   			$('.custid').val(val);
+			   		})
+			   	})
+			}
+		}
+	});
+	/*获取项目信息*/
+	$.ajax({
+		type: "post",
+		url: reqUrl + "/api/public/projects",
+		data: {token: tokens},
+		dataType: 'json',
+		success: function(res){
+			if(res.status == 0){
+				var data = {status: 1};
+				data.data = [];
+				$.each(res.data, function(k, v) {
+					data.data.push({id: v.id, name: v.title, positionname: ""})
+				});
+				$('.ch_xm').click(function(){
+			   		parent.window.ChousPerson(data, 'one', $('.proid').val(), function(tex, val){
+			   			$('.proname').val(tex);
+			   			$('.proid').val(val);
+			   		})
+			   	})
+			}
+		}
+	});
+	
+	//添加日程
+	$('.changPasd').click(function(){
+		$('.tokens').val(tokens);
+		parent.window.loading();
+		$.ajax({
+            type: "POST",
+            url: reqUrl + '/api/plans/savePlan',
+            data: $('#updat').serialize(),
+            dataType: "json",
+            error: function(request) {
+            	parent.window.loading('none');
+                parent.window.Alert('提交失败');
+            },
+            success: function(data) {
+            	parent.window.loading('none');
+            	parent.window.Alert(data.msg, function(){
+            		if (data.status == 0) {
+            			otPop('tjrc');
+            			var dates = $('.y_dat_open').val().split('-');
+            			$('.dat-week-item').each(function(k, v){
+            				if ($(v).attr('data-d') == dates[2]-0 && $(v).attr('data-y') == dates[0]-0 && $(v).attr('data-m') == (dates[1] - 1)) {
+	                        	$(v).children('.dat-week-body').addClass('has');
+	                        }
+            			})
+	                }
+            	});
+            }
+        });
+	})
+	
+	
+    //获取数据
+    function getdatly(req){
+    	$('.event-item').remove()
+        $('.dat-week-body').removeClass('has')
+        $.ajax({
+            type: 'GET',
+            url: reqUrl + '/api/plans/myPlans',
+            data: {token: tokens, dt: req.dt},
+            dataType: "json",
+            success: function(msg) {
+                if (msg.status == 0) {
+	                for (var i = 0; i < msg.data.length; i++) {
+	                	var dates = msg.data[i].date.split('-');
+	                    req.req_obj.each(function(k, v) {
+	                        if ($(v).attr('data-d') == dates[2]-0 && $(v).attr('data-y') == dates[0]-0 && $(v).attr('data-m') == (dates[1] - 1)) {
+	                        	$(v).children('.dat-week-body').addClass('has');
+	                        }
+	                    })
+	                };
+                }
+            }
+        });
+    };
+    function reQ(req) {
+        req.req_data.token = tokens;
+        if(req.req_data.date){
+        	req.req_data.dt = req.req_data.date.substr(0, req.req_data.date.length -3);
+        }
+    };
+    
+    function setlis(dats){
+    	loading('', '.load_box')
+    	$('.rc_list').children().remove();
+    	$.ajax({
+            type: "POST",
+            url: reqUrl + '/api/plans/dayPlan',
+            data: {token: tokens, dt: dats},
+            dataType: "json",
+            success: function(res) {
+        		if (res.status == 0) {
+        			var str = '';
+        			var dat1 = new Date(Format(new Date(),'yyyy-MM-dd'));
+        			var dat2 = new Date(dats);
+        			$.each(res.data, function(key, val) {
+        				str += '<tr><td>'+(key+1)+'</td><td>'+val.title+'</td><td>'+val.time1+'</td><td>'+val.time2+'</td><td>'+val.fankui+'</td><td><div class="y_slectMenu ">操作  ＋'
+								+'<ul class="y_slect"><li class="y_slectItem rc_cont" data-id="'+val.id+'"><a>详情</a></li>'
+								+'<li class="y_slectItem addfk" data-id="'+val.id+'"><a>上报日程</a></li>'
+						
+						if(dat1 < dat2){
+							str += '<li class="y_slectItem read delfk" data-id="'+val.id+'"><a>删除</a></li>';
+						}
+						str += '</ul></div></td></tr>';
+        			});
+        			$('.rc_list').append(str);
+                }
+            },
+            complete: function(){
+            	loading('none', '.load_box');
+            }
+        });
+    };
+    //删除日程
+    $(document).on('click', '.delfk', function(){
+    	var that = $(this);
+    	parent.window.Confirm('确定删除该日程？', function(e){
+    		if(e){
+    			parent.window.loading();
+				$.ajax({
+		            type: "POST",
+		            url: reqUrl + '/api/plans/delPlan',
+		            data: {token: tokens, id: that.attr('data-id')},
+		            dataType: "json",
+		            success: function(res) {
+		            	parent.window.Alert(res.msg, function(){
+		            		if(res.status == 0){
+		            			that.parent().parent().parent().parent().remove();
+		            		}
+		            	})
+		            },
+		            complete: function(){
+		            	parent.window.loading('none');
+		            }
+		        });
+    		}
+    	})
+    })
+    //获取日程列表
+    $(document).on('click', '.has', function(){
+    	$('.rc_list').children().remove();
+    	var that = $(this).parent();
+    	dats = that.attr('data-y') + '-' + ((that.attr('data-m')-0+1) < 10 ? '0'+(that.attr('data-m')-0+1) : (that.attr('data-m')-0+1)) + '-' + (that.attr('data-d') < 10 ? '0'+that.attr('data-d') : that.attr('data-d'))
+    	setlis(dats)
+    })
+    //获取日程详情
+    $(document).on('click', '.rc_cont', function(){
+    	$('.rc_title').text('');
+		$('.rc_address').text('');
+		$('.rc_dat').text('');
+		$('.rc_time1').text('');
+		$('.rc_time2').text('');
+		$('.rc_custname').text('');
+		$('.rc_proname').text('');
+		$('.rc_yqnames').text('');
+		$('.rc_explain').text('');
+		$('.rc_fankui').text('');
+    	var id = $(this).attr('data-id');
+    	inPop('rcxq');
+    	parent.window.loading();
+		$.ajax({
+            type: "POST",
+            url: reqUrl + '/api/plans/planInfo',
+            data: {token: tokens, id: id},
+            dataType: "json",
+            success: function(res) {
+            	if(res.status == 0){
+            		$('.rc_title').text(res.data.title);
+            		$('.rc_address').text(res.data.address);
+            		$('.rc_dat').text(res.data.date);
+            		$('.rc_time1').text(res.data.time1);
+            		$('.rc_time2').text(res.data.time2);
+            		$('.rc_custname').text(res.data.custname);
+            		$('.rc_proname').text(res.data.proName);
+            		$('.rc_yqnames').text(res.data.yqNames);
+            		$('.rc_explain').text(res.data.content);
+            		$('.rc_fankui').text(res.data.fankui);
+            	}
+            },
+            complete: function(){
+            	parent.window.loading('none');
+            }
+        });
+    })
+    //上报日程
+    $(document).on('click', '.addfk', function(){
+    	var that = $(this);
+    	$('.rc_content').val('');
+    	$('.tokens').val(tokens);
+    	$('.sbrc_id').val(that.attr('data-id'));
+    	inPop('sbrc')
+    })
+    function do_sb(){
+    	parent.window.loading();
+		$.ajax({
+            type: "POST",
+            url: reqUrl + '/api/plans/upPlan',
+            data: $('#do_sbrc').serialize(),
+            dataType: "json",
+            success: function(res) {
+            	parent.window.Alert(res.msg, function(){
+            		if(res.status == 0){
+            			otPop('sbrc');
+            			setlis(dats)
+            		}
+            	})
+            },
+            complete: function(){
+            	parent.window.loading('none');
+            }
+        });
+    };
+</script>

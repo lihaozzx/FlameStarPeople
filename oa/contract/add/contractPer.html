@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../aaa/css/public.css"/>
+		<script src="../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同编号：</td>
+						<td colspan="5">
+							<input type="text" name="number" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同名称：</td>
+						<td colspan="5">
+							<input type="text" name="name" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同类型：</td>
+						<td colspan="5">
+							<span>人事合同</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同金额：</td>
+						<td colspan="5">
+							<input type="number" name="money" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">签约时间：</td>
+						<td>
+							<input type="text" name="signTime" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+						<td class="y_textRight">开始日期：</td>
+						<td>
+							<input type="text" name="starTime" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+						<td class="y_textRight">到期时间：</td>
+						<td>
+							<input type="text" name="endTime" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属员工：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 distname2" readonly="readonly" placeholder="点击按钮选择"/>
+							<input type="hidden" name="per" class="distid2" />
+							<span class="y_btn prim ch2">选择</span>
+						</td>
+					</tr>
+					<input type="hidden" name="yes" id="isMore" value="0" />
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">提 交</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		$('.pro').click(function(){
+			parent.window.Alert('请先选择所属员工');
+		});
+		/*获取人员信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/users",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					Use = {}
+		            Use.status = 2;
+		            Use.data = res.data;
+		            $('.ch1').click(function(){
+				   		parent.window.ChousPerson(Use, 'one', $('.distid1').val(), function(tex, val){
+				   			$('.distname1').val(tex);
+				   			$('.distid1').val(val);
+				   		})
+				   	});
+					$('.ch2').click(function(){
+						parent.window.ChousPerson(Use, 'one', $('.distid2').val(), function(tex, val){
+							$('.distname2').val(tex);
+							$('.distid2').val(val);
+							getProInfoByAid(val);
+						})
+					});
+				}
+			}
+		});
+		// 获取客户信息
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/customer/CustList",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					Use2 = {}
+		            Use2.status = 2;
+		            Use2.data = res.data;
+		            $('.kh1').click(function(){
+						console.log(Use2)
+				   		parent.window.ChousCustomer(Use2, 'one', $('.khDistid1').val(), function(tex, val){
+				   			$('.khDistname1').val(tex);
+				   			$('.khDistid1').val(val);
+				   		})
+				   	});
+					$('.kh2').click(function(){
+						parent.window.ChousCustomer(Use2, 'one', $('.khDistid2').val(), function(tex, val){
+							$('.khDistname2').val(tex);
+							$('.khDistid2').val(val);
+						})
+					});
+				}
+			}
+		});
+		
+        
+        /*提交*/
+       	$('.submit').click(function(){
+       		$('.token').val(tokens);
+       		do_sub();
+       	})
+       	function do_sub() {
+	    	parent.window.loading();
+	        $.ajax({
+	            type: "get",
+	            url: reqUrl + '/api/contract/savePer',
+	            data: $('#check_form').serialize(),
+	            dataType: "json",
+	            error: function(request) {
+	            	parent.window.loading('none');
+	                parent.window.Alert('提交失败');
+	            },
+	            success: function(data) {
+	            	parent.window.loading('none');
+	            	parent.window.Alert(data.msg, function(){
+	            		if (data.status == 0) {
+	            			parent.window.closePop('', function(){
+		            			parent.window.Reload();
+		            		})
+		                }else if(data.status == 2){
+							//覆盖当前合同
+							
+						}else{
+							
+						}
+	            	});
+	            }
+	        });
+	    }
+		function getProInfoByAid(aid) {
+			$('.pro').unbind();
+			/* 获取项目信息*/
+			$.ajax({
+				type: "post",
+				url: reqUrl + "/api/public/projects",
+				data: {token: tokens,aid:aid},
+				dataType: 'json',
+				success: function(res){
+					if(res.status == 0){
+						Pro = {}
+			            Pro.status = 2;
+			            Pro.data = res.data;
+			            $('.pro').click(function(){
+					   		parent.window.ChousProject(Pro, 'one', $('.proDistid').val(), function(tex, val){
+								console.log(tex,val)
+					   			$('.proDistname').val(tex);
+					   			$('.proDistid').val(val);
+					   		})
+					   	});
+					}
+				}
+			});
+		}
+	})
+</script>

@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_floatBox">
+				<ul class="y_grpBtn prim y_rit10">
+					<li class="y_grpItem active type_1"><a>跟进中</a></li>
+					<li class="y_grpItem type_2"><a>已签约</a></li>
+					<li class="y_grpItem type_3"><a>重点关注</a></li>
+				</ul>
+				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入搜索内容"/>
+				<button class="y_btn prim y_rit10 serch">搜索</button>
+				<span class="y_btn y_reset y_rit10">重置</span>
+				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+				<span class="y_btn gren y_floatRight y_newPop" data-url="./addFile/customer.html" data-title="添加客户">添加客户</span>
+			</div>
+			<div class="y_top10">
+				<table class="y_tab y_bordtr">
+					<thead class="y_textCenter">
+						<tr>
+							<td>序号</td>
+							<td>客户名称</td>
+							<td>最后添加</td>
+							<td>最后添加人</td>
+							<td>官网地址</td>
+							<td>地址</td>
+							<td>邮编</td>
+							<td>工程名称</td>
+							<td>联系人</td>
+							<td>联系电话</td>
+							<td>联系人职位</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list"></tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+		<!--添加跟进-->
+		<div class="y_inPops" id="tjgj">
+			<div class="y_mark"></div>
+			<div class="y_inPopBox">
+				<div class="y_inPopTit">
+					<span>添加跟进</span>
+					<span class="y_inPopClose y_otPop" data-popid="tjgj"></span>
+				</div>
+				<div class="y_inPopCont">
+					<table class="y_tab">
+						<tr>
+							<td width="150" class="y_textRight">下次跟进时间：</td>
+							<td><input type="text" readonly="readonly" class="y_input block nextTime y_dat_open" /></td>
+						</tr>
+						<tr>
+							<td class="y_textRight">备注：</td>
+							<td><textarea class="y_input content"></textarea></td>
+						</tr>
+					</table>
+					<div class="y_inPopFoot">
+						<span class="y_btn y_otPop y_rit20" data-popid="tjgj">取 消</span>
+						<span class="y_btn prim changPasd">确 认</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	
+	$(function(){
+		var title,pages;
+		var typ = '';
+		getList();
+		
+		function getList(){
+			loading();
+			$.ajax({
+				url: reqUrl + '/api/customer/CustList',
+				type: 'post',
+				data: {token: tokens, name: title, p: pages, typ: typ},
+				dataType: 'json',
+				success: function(res){
+					if(res.status == 0){
+						setList(res.data);
+						setPage('.page', res.pager);
+					}else{
+						$('.y_tab').hide();
+						noData('.y_body');
+						setPage('.page', false);
+					}
+				},
+				complete: function(){
+					loading('none');
+				}
+			});
+		}
+		
+		function setList(data){
+			$('.list').children().remove();
+			var str = '';
+			var i = 0;
+			$.each(data, function(k, v){
+				++i;
+				str += 	'<tr><td>'+i+'</td><td>'+v.name+'</td><td>'+v.optdt+'</td><td>'+v.optname+'</td><td>'+v.url+'</td>'
+						+'<td>'+v.address+'</td><td>'+v.zipCode+'</td><td>'+v.proName+'</td><td>'+v.lxname+'</td><td>'+v.lxphone+'</td><td>'+v.lxposition+'</td>'
+						+'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">'
+						+'<li class="y_slectItem y_newPop" data-title="客户详情" data-url="./contFile/customer.html?id='+v.id+'"><a>详情</a></li>'
+				        +'<li class="y_slectItem y_newPop" data-title="编辑客户" data-url="./addFile/customer.html?id='+v.id+'"><a>编辑</a></li>'
+				        +'<li class="y_slectItem gj" data-id="'+v.id+'"><a>添加跟进</a></li>'
+				        +'<li class="y_slectItem y_newPop" data-title="相关联系人" data-url="./contFile/customer.html?id='+v.id+'"><a>相关联系人</a></li>'
+				        +'<li class="y_slectItem y_newPop" data-title="相关客户" data-url="./contFile/customer.html?id='+v.id+'"><a>相关客户</a></li>'
+				        +'<li class="y_slectItem y_newPop" data-title="相关项目" data-url="./contFile/customer.html?id='+v.id+'"><a>相关项目</a></li>'
+				        +'<li class="y_slectItem y_newPop" data-title="相关合同" data-url="./contFile/customer.html?id='+v.id+'"><a>相关合同</a></li>'
+						+'</ul></div></td></tr>'
+			})
+			if(str == ''){
+				$('.y_tab').hide();
+				noData('.y_body');
+			}else{
+				$('.y_tab').show();
+				$('.y_noData').remove();
+				$('.list').append(str)
+			}
+		}
+		
+		/*页码跳转*/
+		$(document).on('click', '.y_page_item', function(){
+			var that = $(this);
+			var cut_page = $('.y_page_item.active').attr('data-page');
+			if(that.attr('data-page') == cut_page){
+				return
+			}else{
+				pages = that.attr('data-page')-0;
+				getList()
+			}
+		})
+		
+		/*标题搜索*/
+		$('.serch').click(function(){
+			title = $('.serch_title').val().trim();
+			pages = 1;
+			getList();
+		})
+		
+		/*添加跟进*/
+		$(document).on('click', '.gj', function(){
+			gjid = $(this).attr('data-id');
+			inPop('tjgj');
+		})
+		
+		$('.changPasd').click(function(){
+			parent.window.loading();
+			$.ajax({
+				url: reqUrl + '/api/customer/addCustLogs',
+				type: 'post',
+				data: {token: tokens, cid: gjid, content: $('.content').val(), nextTime: $('.nextTime').val()},
+				dataType: 'json',
+				error: function(){
+					parent.window.loading('none');
+					parent.window.Alert('提交失败')
+				},
+				success: function(res){
+					parent.window.loading('none');
+					parent.window.Alert(res.msg, function(){
+						if(res.status == 0){
+							otPop('#tjgj');
+							Reset('.y_inPops');
+						}
+					})
+				}
+			});
+		})
+		
+		/*类型切换*/
+		$('.type_1').click(function(){
+			typ = '';
+			pages = 1;
+			getList();
+		})
+		$('.type_2').click(function(){
+			typ = 1;
+			pages = 1;
+			getList();
+		})
+		$('.type_3').click(function(){
+			typ = 2;
+			pages = 1;
+			getList();
+		})
+	})
+</script>

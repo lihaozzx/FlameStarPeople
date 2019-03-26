@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_floatBox">
+				<!-- 名称 编号筛选 -->
+				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入项目名称" />
+				<button class="y_btn prim y_rit10 serch">搜索</button>
+				<span class="y_btn y_reset y_rit10">重置</span>
+				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加项目" data-url="./project/add.html"><i class="y_icon add">新增</i></span>
+			</div>
+			<div class="y_top10">
+				<table class="y_tab y_bordtr">
+					<thead class="y_textCenter">
+						<tr>
+							<td>项目名称</td>
+							<td>项目分类</td>
+							<td>建筑单位</td>
+							<td>施工地址</td>
+							<td>合同金额</td>
+							<td>项目开始时间</td>
+							<td>项目截止时间</td>
+							<td>负责人</td>
+							<td>客户姓名</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list">
+
+					</tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			var title, pages;
+			var types = 1;
+			getList();
+
+			function getList() {
+				loading();
+				$.ajax({
+					url: reqUrl + '/api/projects/myPro',
+					type: 'post',
+					data: {
+						token: tokens,
+						title: title,
+						p: pages
+					},
+					dataType: 'json',
+					success: function(res) {
+						if (res.status == 0) {
+							setList(res.data);
+							setPage('.page', res.pager);
+						} else {
+							$('.y_tab').hide();
+							noData('.y_body');
+							setPage('.page', false);
+						}
+					},
+					complete: function() {
+						loading('none');
+					}
+				});
+			}
+
+			function setList(data) {
+				$('.list').children().remove();
+				var str = '';
+				$.each(data, function(k, v) {
+					str += '<tr><td>' + v.title + '</td><td>' + v.type + '</td><td>' + v.company + '</td><td>' + v.address +
+						'</td><td>' + v.money + '</td>' +
+						'<td>' + v.start + '</td><td>' + v.end + '</td><td>' + v.chargename + '</td><td>' + v.custName + '</td>' +
+						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="项目详情" data-url="./project/info.html?id='+v.id+'"><a>详情</a></li><li class="y_slectItem y_newPop" data-title="续约合同" data-url="./contract/change/per.html?id='+v.id+'"><a>续约</a></li><li class="y_slectItem y_newPop" data-title="删除理由" data-url="./project/del.html?id='+v.id+'"><a>删除</a></li></ul></div></td></tr>'
+				});
+				if (str == '') {
+					$('.y_tab').hide();
+					noData('.y_body');
+				} else {
+					$('.y_tab').show();
+					$('.y_noData').remove();
+					$('.list').append(str);
+				}
+			}
+
+			/*页码跳转*/
+			$(document).on('click', '.y_page_item', function() {
+				var that = $(this);
+				var cut_page = $('.y_page_item.active').attr('data-page');
+				if (that.attr('data-page') == cut_page) {
+					return
+				} else {
+					pages = that.attr('data-page') - 0;
+					getList()
+				}
+			})
+
+			/*标题搜索*/
+			$('.serch').click(function() {
+				title = $('.serch_title').val().trim();
+				pages = 1;
+				getList();
+			})
+
+		})
+	</script>
+</html>

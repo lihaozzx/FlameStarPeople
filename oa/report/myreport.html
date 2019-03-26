@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_floatBox">
+				<ul class="y_grpBtn prim y_rit10">
+					<li class="y_grpItem active" data-val="一般汇报"><a>一般</a></li>
+					<li class="y_grpItem" data-val="日报"><a>日报</a></li>
+					<li class="y_grpItem" data-val="周报"><a>周报</a></li>
+					<li class="y_grpItem" data-val="月报"><a>月报</a></li>
+				</ul>
+				<label class="y_inpSect y_rit10 btn">
+					<span class="y_inpSect_tex" data-int="--请选择--">--请选择--</span>
+					<input type="text" class="y_inpSect_val year" value="">
+					<div class="y_inpSect_box">
+						<div class="y_inpSect_scroll">
+							<ul class="y_inpSect_itmBox year_str"></ul>
+						</div>
+					</div>
+					<span class="btn y_bgcPrim">年</span>
+				</label>
+				<label class="y_inpSect y_rit10 btn">
+					<span class="y_inpSect_tex" data-int="--请选择--">--请选择--</span>
+					<input type="text" class="y_inpSect_val month" value="">
+					<div class="y_inpSect_box">
+						<div class="y_inpSect_scroll">
+							<ul class="y_inpSect_itmBox mont_str"></ul>
+						</div>
+					</div>
+					<span class="btn y_bgcPrim">月</span>
+				</label>
+				<div class="y_inpSect y_rit10">
+					<span class="y_inpSect_tex" data-int="选择类型">选择类型</span>
+					<input type="text" class="y_inpSect_val types" value="">
+					<div class="y_inpSect_box">
+						<div class="y_inpSect_scroll">
+							<ul class="y_inpSect_itmBox typ_str"></ul>
+						</div>
+					</div>
+				</div>
+				<button class="y_btn prim y_rit10 serch">搜索</button>
+				<span class="y_btn y_reset y_rit10">重置</span>
+				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+				<span class="y_btn gren y_floatRight y_newPop" data-url="./addFile/report.html" data-title="添加汇报">添加汇报</span>
+			</div>
+			<div class="y_top10">
+				<table class="y_tab y_bordtr">
+					<thead class="y_textCenter">
+						<tr>
+							<td>序号</td>
+							<td>客户名称</td>
+							<td>项目名称</td>
+							<td>汇报类型</td>
+							<td>汇报日期</td>
+							<td>汇报内容</td>
+							<td>部门</td>
+							<td>职位名称</td>
+							<td>周报最后日期</td>
+							<td>上报图片集</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list"></tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		var dat = new Date();
+		var years = dat.getFullYear();
+		var year_str = '';
+		var mont_str = '';
+		var year,month;
+		
+		for(var i = 2018; i <= years; i++){
+			year_str += '<li class="y_inpSect_item" data-val="'+i+'">'+i+'</li>';
+		}
+		for(var i = 1; i < 13; i++){
+			mont_str += '<li class="y_inpSect_item" data-val="'+(i<10?'0'+i:i)+'">'+i+'</li>';
+		}
+		$('.year_str').append(year_str);
+		$('.mont_str').append(mont_str);
+		
+		$.ajax({
+			url: reqUrl + '/api/public/dailyCates',
+			type: 'post',
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					var typ_str = '';
+					$.each(res.data, function(k, v){
+						typ_str += '<li class="y_inpSect_item" data-val="'+v+'">'+v+'</li>'
+					})
+					$('.typ_str').append(typ_str)
+				}
+			},
+		});
+		
+		var pages,dt,types;
+		types = '一般汇报';
+		getList();
+		
+		function getList(){
+			loading();
+			$.ajax({
+				url: reqUrl + '/api/report/myDaily',
+				type: 'post',
+				data: {token: tokens, dt: dt, p: pages, type: types},
+				dataType: 'json',
+				success: function(res){
+					if(res.status == 0){
+						setList(res.data);
+						setPage('.page', res.pager);
+					}else{
+						$('.y_tab').hide();
+						noData('.y_body');
+						setPage('.page', false);
+					}
+				},
+				complete: function(){
+					loading('none');
+				}
+			});
+		}
+		
+		function setList(data){
+			$('.list').children().remove();
+			var str = '';
+			var i = 0;
+			$.each(data, function(k, v){
+				++i;
+				str += 	'<tr><td>'+i+'</td><td>'+v.custName+'</td><td>'+v.proName+'</td><td>'+v.type+'</td><td>'+v.date+'</td>'
+						+'<td>'+v.content+'</td><td>'+v.depName+'</td><td>'+v.posName+'</td><td>'+v.enddt+'</td><td>'+v.images+'</td><td>'
+						+'<div class="y_slectMenu ">操作  ＋<ul class="y_slect">'
+                        +'<li class="y_slectItem y_newPop" data-url="./contFile/report.html?id='+v.id+'" data-title="汇报详情"><a>详情</a></li>'
+                if(types != '一般汇报'){
+                	str += '<li class="y_slectItem y_newPop" data-url="./addFile/report.html?id='+v.id+'" data-title="编辑汇报"><a>编辑</a></li>'
+                	
+                }
+                str +='<li class="y_slectItem read dell" data-id="'+v.id+'"><a>删除</a></li>'
+            		+'</ul></div></td></tr>'
+			})
+			if(str == ''){
+				$('.y_tab').hide();
+				noData('.y_body');
+			}else{
+				$('.y_tab').show();
+				$('.y_noData').remove();
+				$('.list').append(str)
+			}
+		}
+		
+		
+		/*列表删除*/
+		$(document).on('click', '.dell', function(){
+			var that = $(this);
+			parent.window.Confirm('确定删除？', function(e){
+				if(e){
+					parent.window.loading();
+					$.ajax({
+						url: reqUrl + '/api/report/delDaily',
+						type: 'post',
+						data: {token: tokens, id: that.attr('data-id')},
+						dataType: 'json',
+						success: function(res){
+							parent.window.Alert(res.msg, function(){
+								if(res.status == 0){
+									that.parent().parent().parent().parent().remove();
+								}
+							})
+						},
+						complete: function(){
+							parent.window.loading('none');
+						}
+					});
+				}
+			})
+		})
+		
+		/*页码跳转*/
+		$(document).on('click', '.y_page_item', function(){
+			var that = $(this);
+			var cut_page = $('.y_page_item.active').attr('data-page');
+			if(that.attr('data-page') == cut_page){
+				return
+			}else{
+				pages = that.attr('data-page')-0;
+				getList()
+			}
+		})
+		
+		/*类型选择*/
+		$('.y_grpItem').click(function(){
+			types = $(this).attr('data-val');
+			getList();
+		})
+		
+		/*标题搜索*/
+		$('.serch').click(function(){
+			if($('.year').val() && $('.month').val()){
+				dt = $('.year').val() + '-' + $('.month').val();
+			}else{
+				dt = '';
+			}
+			getList();
+		})
+	})
+</script>

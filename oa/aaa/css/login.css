@@ -1,0 +1,25 @@
+
+.login{position: fixed;width: 100%;height: 100%;left: 0;top: 0;}
+.login_left{position: absolute;height: 100%;width: 70%;left: 0;top: 0;}
+.login_right{position: absolute;width: 50%;height: 100%;right: 0;top: 0;background-color: #F0F5FF;}
+.login_icon_1{position: absolute;width: 230px;height: 160px;left: 18px;top: 19px;}
+.login_icon_2{position: absolute;width: 260px;height: 250px;right: 0;top: 35px;}
+.login_icon_3{position: absolute;width: 64px;height: 64px;left: 29px;top: 50%;margin-top: -32px;}
+.login_icon_4{position: absolute;width: 140px;height: 100px;left: 19px;bottom: 40px;}
+.login_icon_5{position: absolute;width: 44px;height: 44px;right: 53px;bottom: 43px;}
+.login_box{position: absolute;width: 370px;height: 490px;background-color: #fff;left: 50%;margin-left: -225px;top: 50%;margin-top: -290px;box-shadow:0px 3px 6px rgba(0,0,0,0.16);padding: 60px 40px 30px 40px;}
+.login_title{text-align: center;font-size:33px;font-weight:400;line-height:33px;color:rgba(0,0,0,0.85);margin-bottom: 4px;}
+.login_subtit{text-align: center;font-size:14px;line-height:22px;color:rgba(0,0,0,0.45);margin-bottom: 30px;}
+.login_inp{height:40px;background:rgba(255,255,255,1);border:1px solid rgba(217,217,217,1);border-radius:4px;padding: 0 12px;line-height: 40px;padding-left: 36px;position: relative;margin-bottom: 24px;}
+.inp_icon{position: absolute;width: 16px;height: 16px;background-repeat: no-repeat;background-position: center;left: 12px;top: 50%;margin-top: -8px;}
+.inp_icon.name{background-image: url(../images/icon/login_name.png);}
+.inp_icon.pasd{background-image: url(../images/icon/login_pasd.png);}
+.inp_val::-webkit-input-placeholder{color:#D9D9D9;}
+.inp_val::-moz-placeholder{color:#D9D9D9;}
+.inp_val::-moz-placeholder{color:#D9D9D9;}
+.inp_val::-ms-input-placeholder{color:#D9D9D9;}
+.inp_val{border: none;outline: none;height: 40px;line-height: 40px;display: block;width: 320px;color: #000;font-size: 16px;}
+.rember{margin-bottom: 24px;}
+.y_btn{background-color: #1890FF;color: #fff;font-size: 16px;margin-bottom: 42px;}
+.y_btn:hover{background-color: #1683e8;}
+.login_img{display: block;margin: 0 auto;width: 166px;}

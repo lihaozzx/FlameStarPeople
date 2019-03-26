@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../aaa/css/public.css" />
+		<script src="../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同编号：</td>
+						<td colspan="2">
+							<input type="text" name="number" class="y_input block" readonly id="bianhao"/>
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同名称：</td>
+						<td colspan="2">
+							<input type="text" name="name" class="y_input block" readonly id="hetongmin"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同类型：</td>
+						<td colspan="2">
+							<span class="y_input block">项目合同</span>
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>合同金额：</td>
+						<td colspan="2">
+							<input type="number" name="money" class="y_input block" readonly id="jine"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属员工：</td>
+						<td colspan="2">
+							<input type="text" class="y_input block distname2" readonly="readonly" id="suoshuyuangong" />
+							<input type="hidden" name="aid" class="distid2" />
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属客户：</td>
+						<td colspan="2">
+							<input type="text" class="y_input block khDistname1" readonly="readonly" id="suoshukehu" />
+							<input type="hidden" name="custid" class="khDistid1" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属项目：</td>
+						<td colspan="5">
+							<input type="text" class="y_input block proDistname" readonly="readonly" id="xiangmu"/>
+							<input type="hidden" name="proid" class="proDistid" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">签约时间：</td>
+						<td>
+							<input type="text" name="signTime" readonly="readonly" class="y_input" id="qianyueshijian"/>
+						</td>
+						<td class="y_textRight">开始日期：</td>
+						<td>
+							<input type="text" name="starTime" readonly="readonly" class="y_input" id="kaishishijian"/>
+						</td>
+						<td class="y_textRight">到期时间：</td>
+						<td>
+							<input type="text" name="endTime" readonly="readonly" class="y_input" id="daoqishijian"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>我方签约人：</td>
+						<td colspan="2">
+							<input type="text" class="y_input block distname1" readonly="readonly" id="myqianyueren"/>
+							<input type="hidden" name="signid" class="distid1" />
+						</td>
+						<td class="y_textRight"><i class="y_colorRead" colspan="1">*</i>客户签约人：</td>
+						<td colspan="2">
+							<input type="text" class="y_input block khDistname2" readonly="readonly" id="khqianyueren"/>
+							<input type="hidden" name="signcid" class="khDistid2" />
+						</td>
+					</tr>
+				</table>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	(function() {
+		var urls = window.location.href;
+		var id = urls.slice(urls.indexOf('id=') + 3);
+		loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/contract/projectsInfo",
+			data: {
+				token: tokens,
+				id: id
+			},
+			dataType: 'json',
+			success: function(res) {
+				if(res.status == 0){
+					setInfo(res.data);
+				}else{
+					parent.window.Alert('消息丟失');
+				}
+			},
+			complete: function() {
+				loading('none');
+			}
+		});
+	})();
+	function setInfo(p) {
+		$('#bianhao').val(p.number);
+		$('#hetongmin').val(p.name);
+		$('#suoshuyuangong').val(p.uname);
+		$('#suoshukehu').val(p.custName);
+		$('#xiangmu').val(p.proName);
+		$('#jine').val(p.money);
+		$('#qianyueshijian').val(p.signTime);
+		$('#kaishishijian').val(p.starTime);
+		$('#daoqishijian').val(p.endTime);
+		$('#myqianyueren').val(p.signName);
+		$('#khqianyueren').val(p.signCustName);
+	}
+</script>

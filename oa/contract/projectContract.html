@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_floatBox">
+				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入合同名称" />
+				<button class="y_btn prim y_rit10 serch">搜索</button>
+				<button class="y_btn prim y_rit10 kh">按客户搜索</button>
+				<button class="y_btn prim y_rit10 xm">按项目搜索</button>
+				<div style="display: none;" id="choseDiv">
+					<span class="y_reset y_rit10">当前选择：</span>
+					<span class="y_btn y_reset y_rit10 xs info" style="display: none;" id="cnameasd"></span>
+					<span class="y_btn y_reset y_rit10 xs purp" style="display: none;" id="pnameasd"></span>
+				</div>
+				<span class="y_btn y_reset y_rit10">重置</span>
+				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加项目合同" data-url="./contract/add/contractPro.html"><i
+					 class="y_icon add">新增</i></span>
+			</div>
+			<div class="y_top10">
+				<table class="y_tab y_bordtr">
+					<thead class="y_textCenter">
+						<tr>
+							<td>合同编号</td>
+							<td>合同名称</td>
+							<td>客户名称</td>
+							<td>项目名称</td>
+							<td>合同金额</td>
+							<td>签约时间</td>
+							<td>合同开始执行时间</td>
+							<td>合同到期时间</td>
+							<td>我方签约人</td>
+							<td>客户签约人</td>
+							<td>所属员工</td>
+							<td>操作人</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list">
+
+					</tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			var title, pages, proid, custid;
+			getList();
+			var cuName,proName;
+			function getList() {
+				loading();
+				loadSeaech();
+				$.ajax({
+					url: reqUrl + '/api/contract/projects',
+					type: 'post',
+					data: {
+						token: tokens,
+						title: title,
+						proid:proid,
+						custid:custid,
+						p: pages
+					},
+					dataType: 'json',
+					success: function(res) {
+						if (res.status == 0) {
+							setList(res.data);
+							setPage('.page', res.pager);
+							setSerachInfo();
+						} else {
+							$('.y_tab').hide();
+							noData('.y_body');
+							setPage('.page', false);
+							setSerachInfo();
+						}
+					},
+					complete: function() {
+						loading('none');
+					}
+				});
+			}
+			function setSerachInfo() {
+				$('#choseDiv').css('display','none');
+				$('#cnameasd').css('display','none')
+				$('#pnameasd').css('display','none')
+				$('#cnameasd').text('');
+				$('#pnameasd').text('');
+				if(cuName||proName){
+					$('#choseDiv').css('display','inline');
+					if(cuName){
+						$('#cnameasd').css('display','inline')
+						$('#cnameasd').text(cuName);
+						$('#cnameasd').on('click',function () {
+							custid=undefined;
+							cuName=undefined;
+							getList();
+						});
+					}
+					if(proName){
+						$('#pnameasd').css('display','inline');
+						$('#pnameasd').text(proName);
+						$('#pnameasd').on('click',function () {
+							proid = undefined;
+							proName=undefined;
+							getList();
+						});
+					}
+				}
+			}
+			function setList(data) {
+				$('.list').children().remove();
+				var str = '';
+				$.each(data, function(k, v) {
+					str += '<tr><td>' + v.number + '</td><td>' + v.name + '</td><td>' + v.custName + '</td><td>' + v.proName +
+						'</td><td>' + v.money + '</td>' + '<td>' + v.signTime + '</td><td>' + v.starTime + '</td><td>' + v.endTime +
+						'</td><td>' + v.signName + '</td><td>' +
+						v.signCustName + '</td>' + '<td>' + v.uname + '</td><td>' + v.tName + '</td>' +
+						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
+						'<li class="y_slectItem y_newPop" data-title="合同详情" data-url="./contract/info/pro.html?id=' + v.id + '">' +
+						'<a>详情</a></li><li class="y_slectItem y_newPop" data-title="修改合同" data-url="./contract/change/pro.html?id=' +
+						v.id +
+						'"><a>修改</a></li><li class="y_slectItem y_newPop" data-title="作废理由" data-url="./contract/del/pro.html?id=' +
+						v.id + '"><a>作废</a></li></ul></div></td></tr>'
+				});
+				if (str == '') {
+					$('.y_tab').hide();
+					noData('.y_body');
+				} else {
+					$('.y_tab').show();
+					$('.y_noData').remove();
+					$('.list').append(str)
+				}
+			}
+
+			/*页码跳转*/
+			$(document).on('click', '.y_page_item', function() {
+				var that = $(this);
+				var cut_page = $('.y_page_item.active').attr('data-page');
+				if (that.attr('data-page') == cut_page) {
+					return
+				} else {
+					pages = that.attr('data-page') - 0;
+					getList()
+				}
+			})
+
+			/*标题搜索*/
+			$('.serch').click(function() {
+				title = $('.serch_title').val().trim();
+				pages = 1;
+				getList();
+			})
+
+			/* 初始化客户、项目搜索 */
+			function loadSeaech() {
+				$('.serch_title').val('')
+				/* 获取项目信息*/
+				$.ajax({
+					type: "post",
+					url: reqUrl + "/api/public/projects",
+					data: {
+						token: tokens
+					},
+					dataType: 'json',
+					success: function(res) {
+						if (res.status == 0) {
+							Pro = {}
+							Pro.status = 2;
+							Pro.data = res.data;
+							$('.xm').click(function() {
+								parent.window.ChousProject(Pro, 'one', $('.proDistid').val(), function(tex, val) {
+									proid = val;
+									proName = tex;
+									getList();
+								})
+							});
+						} 
+					}
+				});
+				// 获取客户信息
+				$.ajax({
+					type: "post",
+					url: reqUrl + "/api/customer/CustList",
+					data: {
+						token: tokens
+					},
+					dataType: 'json',
+					success: function(res) {
+						if (res.status == 0) {
+							Use2 = {}
+							Use2.status = 2;
+							Use2.data = res.data;
+							$('.kh').click(function() {
+								parent.window.ChousCustomer(Use2, 'one', $('.khDistid1').val(), function(tex, val) {
+									custid = val;
+									cuName = tex;
+									getList();
+								})
+							});
+						}
+					}
+				});
+			}
+		})
+	</script>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		
+		<link rel="stylesheet" type="text/css" href="../aaa/kindeditor/themes/default/default.css"/>
+		<script src="../aaa/js/ajaxfileupload.js"></script>
+		<script charset="utf-8" src="../aaa/kindeditor/kindeditor-min.js"></script>
+    	<script charset="utf-8" src="../aaa/kindeditor/lang/zh_CN.js"></script>
+	</head>
+	<body>
+		<div class="y_popBody small">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>标题：</td>
+						<td colspan="3">
+							<input type="text" name="title" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">发送部门：</td>
+						<td colspan="3">
+							<input type="text" class="y_input long y_rit10 uname" readonly="readonly" name="" placeholder="不选默认发给全部部门"/>
+							<input type="hidden" name="yuangong" class="uid" />
+							<span class="y_btn prim ch">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>公告内容：</td>
+						<td colspan="3">
+							<textarea class="y_input" name="content"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">公告文件：</td>
+						<td colspan="3">
+							<ul class="y_file"></ul>
+	                        <input class="y_none addFileVal fileToUpload" id="fileToUpload1" name="fileToUpload1" type="file" name="" id="" value="" />
+	                        <span class="y_fileAdd">+添加文件</span>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" class="linshi" name="linshi" value="" />
+					<input type="hidden" class="token" name="token" value="" />
+					<input type="hidden" class="id" name="id" value="" />
+					<span class="y_btn lg y_rit20 info keep">保 存</span>
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		/*判断是否修改*/
+		var urls = window.location.href;
+		if(urls.indexOf('id=') > -1){
+			var id = urls.slice(urls.indexOf('id=')+3);
+			$.ajax({
+	            type: "POST",
+	            url: reqUrl + "/api/infor/infors",
+	            data: {token: tokens, id: id},
+	            dataType: "json",
+	            success: function(res) {
+            		if (res.status == 0) {
+            			$('input[name=id]').val(res.data.id);
+            			$('input[name=title]').val(res.data.title);
+            			$('textarea[name=content]').html(res.data.content);
+            			$('input[name=recename]').val(res.data.recename);
+            			$('input[name=receid]').val(res.data.receid);
+	                }
+	            }
+	        });
+		}
+		
+		/*获取人员信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/public/users",
+			data: {token: tokens},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					Use = {}
+		            Use.status = 2;
+		            Use.data = res.data;
+		            $('.ch').click(function(){
+				   		parent.window.ChousPerson(Use, 'two', $('.uid').val(), function(tex, val){
+				   			$('.uname').val(tex);
+				   			$('.uid').val(val);
+				   		})
+				   	})
+				}
+			}
+		});
+		
+		/*初始化编辑器*/
+		KindEditor.ready(function(K) {
+	        K.create('textarea[name="content"]', {
+	            width: 500,
+	            autoHeightMode: true,
+	            items: [
+	                'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+	                'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+	                'insertunorderedlist', '|', 'emoticons', 'link'],
+	            afterCreate: function() {
+	            },
+	            afterBlur: function() {
+	                this.sync()
+	            },
+	        });
+	    });
+		
+	    /*上传文件*/
+		$(document).on('change', '.fileToUpload', function() {
+            var name = $(this).attr('name');
+            $.ajaxFileUpload({
+                url: '',
+                secureuri: false,
+                fileElementId: name,
+                dataType: 'json',
+                data: {name: name, id: name},
+                error: function(data, status, e) {
+                    parent.window.Alert(e);
+                },
+                success: function(data, status) {
+                    if (data.status == 1) {
+                        var txt = '<li class="y_fileItem"><span class="FileItemNam download" itemid="' + data.data.id + '">' + data.data.filename + '</span><input type="hidden" name="files[]" value="' + data.data.id + '"/><span class="y_fileDel">删除</span></li>';
+                        $('#' + name).parent().children('.y_file').append(txt);
+                        $('#' + name).val('');
+                    } else {
+                        $('#' + name).val('');
+                        parent.window.Alert(data.msg);
+                    }
+                },
+            });
+            return false;
+        });
+        
+        /*提交*/
+       	$('.keep').click(function(){
+			$('.linshi').val(1);
+			$('.token').val(tokens);
+			do_sub();
+       	})
+       	$('.submit').click(function(){
+       		$('.token').val(tokens);
+       		$('.linshi').val(0);
+       		do_sub();
+       	})
+       	function do_sub() {
+	    	parent.window.loading();
+	    	if(id){
+	    		var urls = '/api/infor/editInfor';
+	    	}else{
+	    		var urls = '/api/infor/saveInfor';
+	    	}
+	        $.ajax({
+	            type: "POST",
+	            url: reqUrl + urls,
+	            data: $('#check_form').serialize(),
+	            dataType: "json",
+	            error: function(request) {
+	            	parent.window.loading('none');
+	                parent.window.Alert('提交失败');
+	            },
+	            success: function(data) {
+	            	parent.window.loading('none');
+	            	parent.window.Alert(data.msg, function(){
+	            		if (data.status == 0) {
+	            			parent.window.closePop('', function(){
+		            			parent.window.Reload();
+		            		})
+		                }
+	            	});
+	            }
+	        });
+	    }
+	})
+</script>

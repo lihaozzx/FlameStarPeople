@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>登录</title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css"/>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/login.css"/>
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="login">
+			<img src="../aaa/images/img/login_bg.png" class="login_left" />
+			<div class="login_right">
+				<img class="login_icon_1" src="../aaa/images/img/login_bg_1.png"/>
+				<img class="login_icon_2" src="../aaa/images/img/login_bg_2.png"/>
+				<img class="login_icon_3" src="../aaa/images/img/login_bg_3.png"/>
+				<img class="login_icon_4" src="../aaa/images/img/login_bg_4.png"/>
+				<img class="login_icon_5" src="../aaa/images/img/login_bg_5.png"/>
+				<div class="login_box">
+					<h2 class="login_title">峰源智能办公系统</h2>
+					<p class="login_subtit">项目管理不再烦恼</p>
+					<div class="login_inp">
+						<i class="inp_icon name"></i>
+						<input type="text" class="inp_val username" placeholder="账户"/>
+					</div>
+					<div class="login_inp">
+						<i class="inp_icon pasd"></i>
+						<input type="password" class="inp_val userpasd" placeholder="密码"/>
+					</div>
+					<div class="rember">
+						<label>
+							<span class="y_check">记住密码</span>
+						</label>
+					</div>
+					<div class="y_btn block submit">登 录</div>
+					<img class="login_img" src="../aaa/images/img/login_img.png"/>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		var username = getCookie('username');
+		var userpasd = getCookie('userpasd');
+		if(username && userpasd){
+			$('.y_check').addClass('active');
+			$('.username').val(username);
+			$('.userpasd').val(userpasd);
+		}
+		document.onkeydown = function(e){
+			if(e.keyCode == 13){
+				$('.submit').click();
+			}
+		}
+		$('.submit').click(function(){
+			username = $('.username').val();
+			userpasd = $('.userpasd').val();
+			if(!username){
+				Alert('用户名不能为空');
+			}else if(!userpasd){
+				Alert('密码不能为空');
+			}else{
+				loading();
+				$.ajax({
+		        	type: "POST",
+				    url: reqUrl + "/api/Login/Login",
+				    data: { username: username, password: userpasd },
+				    dataType: "json",
+				    success: function(res){
+				    	Alert(res.msg, function(){
+				    		if(res.status == 0){
+					    		if($('.y_check').hasClass('active')){
+					    			setCookie('username', $('.username').val());
+					    			setCookie('userpasd', $('.userpasd').val());
+					    		}else{
+					    			deleteCookie('username');
+					    			deleteCookie('userpasd');
+					    		}
+					    		setCookie('isLogin', 'true');
+					    		setCookie('tokens', res.data);
+				    			window.location.href = '../index.html';
+					    	}
+				    	});
+				    },
+				    complete: function(){
+				    	loading('none');
+				    }
+				})
+			}
+			
+		})
+	})
+</script>

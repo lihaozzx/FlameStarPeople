@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../../aaa/css/public.css" />
+		<script src="../../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20" id="showsometable">
+					<tr>
+						<td colspan="6" class="y_textCenter">修改前内容</td>
+					</tr>
+				</table>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	var urls = window.location.href;
+	var id = urls.slice(urls.indexOf('id=') + 3);
+	(function() {
+		loading();
+		$.ajax({
+			type: "get",
+			url: reqUrl + "/api/contract/ProLogsInfo",
+			data: {
+				token: tokens,
+				id: id
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					addTable(res.data)
+				} else {
+					parent.window.Alert('消息丟失');
+				}
+			},
+			complete: function() {
+				loading('none');
+			}
+		});
+	})()
+
+	function addTable(d) {
+		var str = '';
+		Object.keys(d).forEach(function(k) {
+			str += '<tr><td class="y_textRight"><span>' + enToCn(k) + '</span></td><td class="y_textLeft"><span>' + d[k] + '</span></td></tr>';
+		});
+		$('#showsometable').append(str);
+	}
+
+	function enToCn(s) {
+		switch (s) {
+			case 'number':
+				return '合同编号';
+			case 'name':
+				return '合同名称';
+			case 'custName':
+				return '客户名称';
+			case 'proName':
+				return '项目名称';
+			case 'money':
+				return '合同金额';
+			case 'signTime':
+				return '签约时间';
+			case 'starTime':
+				return '合同开始执行时间';
+			case 'endTime':
+				return '合同到期时间';
+			case 'signName':
+				return '我方签约人';
+			case 'signCustName':
+				return '客户签约人';
+			case 'uname':
+				return '所属员工';
+		}
+	}
+</script>
