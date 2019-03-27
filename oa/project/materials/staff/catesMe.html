@@ -8,28 +8,24 @@
 		<script src="../../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		<div class="y_body">
+		<div class="y_body" style="min-width: 900px;">
 			<div class="y_floatBox">
 				<!-- 名称 编号筛选 -->
-				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入材料名称" />
+				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入分类名称" />
 				<button class="y_btn prim y_rit10 serch">搜索</button>
 				<span class="y_btn y_reset y_rit10">重置</span>
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
-				<span class="y_btn gren y_floatRight y_newPop" data-class="secondaryWindow" style="margin-left: 10px;" data-title="机械分类管理" data-url="./project/materials/machine/catesMe.html"><i class="y_icon add">分类管理</i></span>
-				<span class="y_btn gren y_floatRight y_newPop" data-title="添加机械清单" data-url="./project/materials/machine/add.html"><i class="y_icon add">新增</i></span>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加人工分类" data-url="./project/materials/staff/addCates.html"><i
+					 class="y_icon add">新增</i></span>
 			</div>
 			<div class="y_top10">
 				<table class="y_tab y_bordtr">
 					<thead class="y_textCenter">
 						<tr>
 							<td>编号</td>
-							<td>机械名称</td>
-							<td>规格</td>
-							<td>单位</td>
-							<td>单价</td>
-							<td>分类</td>
+							<td>类名</td>
+							<td>添加时间</td>
 							<td>最后操作人</td>
-							<td>备注</td>
 							<td>操作</td>
 						</tr>
 					</thead>
@@ -44,17 +40,17 @@
 	<script type="text/javascript">
 		$(function() {
 			var title, pages;
-			var types = 1;
 			getList();
 
 			function getList() {
 				loading();
 				$.ajax({
-					url: reqUrl + '/api/projects/machine',
+					url: reqUrl + '/api/projects/Catestype',
 					type: 'post',
 					data: {
 						token: tokens,
-						title: title,
+						type: 3,
+						name: title,
 						p: pages
 					},
 					dataType: 'json',
@@ -75,14 +71,14 @@
 			}
 
 			function setList(data) {
+				console.log(data);
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
-					str += '<tr><td>' + v.number + '</td><td>' + v.name + '</td><td>' + v.norm + '</td><td>' + v.unit +
-						'</td><td>' + v.price + '</td><td>' + v.cname + '</td><td>' + v.optname + '</td><td>' + v.content + '</td>' +
+					str += '<tr><td>' + v.id + '</td><td>' + v.name + '</td><td>'+v.adddt+'</td><td>'+v.optname+'</td>' +
 						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
-						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/machine/change.html?id=' +
-						v.id + '"><a>修改</a></li><li class="y_slectItem" data-title="删除" onClick="del(' + v.id +
+						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/staff/change.html?id=' +
+						v.id + '"><a>修改</a></li><li class="y_slectItem" onClick="del(' + v.id +
 						')"><a>删除</a></li></ul></div></td></tr>'
 				});
 				if (str == '') {
@@ -94,7 +90,6 @@
 					$('.list').append(str);
 				}
 			}
-
 			/*页码跳转*/
 			$(document).on('click', '.y_page_item', function() {
 				var that = $(this);
@@ -115,22 +110,22 @@
 			})
 
 		});
+
 		function del(id) {
 			parent.window.Confirm('确认删除吗？', function(e) {
 				if (e) {
 					loading();
 					$.ajax({
-						url: reqUrl + '/api/projects/delCate',
+						url: reqUrl + '/api/projects/delCatesType',
 						type: 'post',
 						data: {
-							id: id,
-							mod:3
+							id: id
 						},
 						dataType: 'json',
 						success: function(res) {
 							if (res.status == 0) {
 								parent.window.Alert('分类已删除');
-								parent.window.Reload();
+								parent.window.Reload('secondaryWindow');
 							} else {
 								parent.window.Alert(res.msg);
 							}

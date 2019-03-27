@@ -16,7 +16,7 @@
 						<td colspan="5">
 							<input type="text" name="name" class="y_input block" />
 						</td>
-						<input type="hidden" name="type" class="y_input block" value="1"/>
+						<input type="hidden" name="type" class="y_input block" value="2"/>
 					</tr>
 				</table>
 				<div class="y_inPopFoot">
@@ -52,7 +52,7 @@
 					parent.window.Alert(data.msg, function() {
 						if (data.status == 0) {
 							parent.window.closePop('', function() {
-								parent.window.Reload('secondaryWindow');
+								parent.window.Reload();
 							})
 						}
 					});

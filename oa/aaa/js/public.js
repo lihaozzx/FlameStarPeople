@@ -480,11 +480,20 @@ $(function() {
 		var that = $(this);
 		var title = that.attr('data-title');
 		var url = that.attr('data-url');
+		var name = that.attr('data-class');
 		/*判断是否父级页面*/
 		if ($('.y_main_body')[0]) {
-			newPop(title, url);
+			if(name != undefined){
+				newPop(title, url ,name);
+			}else{
+				newPop(title, url);
+			}
 		} else {
-			parent.window.newPop(title, url);
+			if(name != undefined){
+				parent.window.newPop(title, url ,name);
+			}else{
+				parent.window.newPop(title, url);
+			}
 		}
 	})
 
@@ -639,13 +648,13 @@ function closeHtml(clas, cutclas) {
 };
 
 /*弹窗页面*/
-function newPop(title, url) {
+function newPop(title, url,name) {
 	var pop = document.createElement('div');
 	pop.className = 'y_pop';
 	$(pop).append(
 		'<div class="y_mark"></div><div class="y_popBox"><div class="y_popTit">' +
 		'<span>' + title + '</span><span class="y_popClose"></span></div><div class="y_popCont">' +
-		'<iframe class="y_popHtml" src="' + url + '"></iframe></div></div>'
+		'<iframe class="y_popHtml" src="' + url + '" name="'+name+'"></iframe></div></div>'
 	)
 	$('body').append(pop);
 	$(pop).children('.y_popBox').animate({
@@ -2305,3 +2314,9 @@ function imgBase(file, call) {
 		}
 	}
 };
+
+/* url截取id */
+function getIdFromUrl() {
+	var urls = window.location.href;
+	return decodeURI(urls.slice(urls.indexOf('id=') + 3));
+}

@@ -81,7 +81,7 @@
 					str += '<tr><td>' + v.title + '</td><td>' + v.type + '</td><td>' + v.company + '</td><td>' + v.address +
 						'</td><td>' + v.money + '</td>' +
 						'<td>' + v.start + '</td><td>' + v.end + '</td><td>' + v.chargename + '</td><td>' + v.custName + '</td>' +
-						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="项目详情" data-url="./project/info.html?id='+v.id+'"><a>详情</a></li><li class="y_slectItem y_newPop" data-title="续约合同" data-url="./contract/change/per.html?id='+v.id+'"><a>续约</a></li><li class="y_slectItem y_newPop" data-title="删除理由" data-url="./project/del.html?id='+v.id+'"><a>删除</a></li></ul></div></td></tr>'
+						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="项目详情" data-url="./project/info.html?id='+v.id+'"><a>详情</a></li><li class="y_slectItem y_newPop" data-class="secondaryWindow" data-title="项目预计材料信息" data-url="./project/materialManagement.html?id='+v.id+'"><a>材料预计</a></li><li class="y_slectItem y_newPop" data-title="删除理由" data-url="./project/del.html?id='+v.id+'"><a>删除</a></li></ul></div></td></tr>'
 				});
 				if (str == '') {
 					$('.y_tab').hide();

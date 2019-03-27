@@ -12,7 +12,7 @@
 			<form id="check_form">
 				<table class="y_tab y_border y_top20">
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料分类：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>工种分类：</td>
 						<td colspan="5">
 							<select name="cid">
 
@@ -20,33 +20,33 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料编号：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>职工编号：</td>
 						<td colspan="5">
 							<input type="text" name="number" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料名称：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>姓名：</td>
 						<td colspan="5">
 							<input type="text" name="name" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料规格：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>部门：</td>
 						<td colspan="5">
-							<input type="text" name="norm" class="y_input block" />
+							<input type="text" name="department" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料单价：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>日薪：</td>
 						<td colspan="5">
 							<input type="text" name="price" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料单位：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>身份证：</td>
 						<td colspan="5">
-							<input type="text" name="unit" class="y_input block" />
+							<input type="text" name="cert" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
@@ -80,7 +80,7 @@
 			parent.window.loading();
 			$.ajax({
 				type: "post",
-				url: reqUrl + '/api/projects/upMaterial',
+				url: reqUrl + '/api/projects/upstaff',
 				data: $('#check_form').serialize(),
 				dataType: "json",
 				error: function(request) {
@@ -107,7 +107,7 @@
 		/* 材料信息 */
 		$.ajax({
 			type: "post",
-			url: reqUrl + '/api/projects/materialInfo',
+			url: reqUrl + '/api/projects/staffInfo',
 			data: {
 				id: id
 			},
@@ -115,12 +115,13 @@
 			success: function(res) {
 				if (res.status == 0) {
 					let o = res.data;
+						// {id,number:'编号',name:'人工名称',department:'部门',cert:'身份证',price:'日薪',cname:'分类',optname:'编辑人',content:'备注',cid:'分类ID'}
 					$('input[name="id"]').val(o.id);
 					$('input[name="number"]').val(o.number);
 					$('input[name="name"]').val(o.name);
-					$('input[name="norm"]').val(o.norm);
+					$('input[name="department"]').val(o.department);
 					$('input[name="price"]').val(o.price);
-					$('input[name="unit"]').val(o.unit);
+					$('input[name="cert"]').val(o.cert);
 					$('textarea[name="content"]').val(o.content);
 					str += '<option value="">--' + o.cname + '--</option>'
 					/* 分类信息 */
@@ -128,7 +129,7 @@
 						type: "post",
 						url: reqUrl + '/api/projects/Catestype',
 						data: {
-							type: 1
+							type: 3
 						},
 						dataType: "json",
 						success: function(res) {

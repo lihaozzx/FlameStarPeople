@@ -14,7 +14,8 @@
 					<tr>
 						<td class="y_textRight"><i class="y_colorRead">*</i>材料分类：</td>
 						<td colspan="5">
-							<select name="cid" id="type">
+							<select name="cid">
+
 							</select>
 						</td>
 					</tr>
@@ -38,8 +39,8 @@
 					</tr>
 					<tr>
 						<td class="y_textRight"><i class="y_colorRead">*</i>材料单价：</td>
-						<td colspan="5" style="position: relative;">
-							<input type="text" name="price" class="y_input block" /><span style="position: absolute;top: 15px;right: 50px;">元</span>
+						<td colspan="5">
+							<input type="text" name="price" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
@@ -56,8 +57,9 @@
 					</tr>
 				</table>
 				<div class="y_inPopFoot">
+					<input type="hidden" name="id" />
 					<input type="hidden" name="token" class="token" value="" />
-					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+					<span class="y_btn lg y_rit20 prim submit">修 改</span>
 				</div>
 				<div class="y_top20"></div>
 			</form>
@@ -66,25 +68,9 @@
 </html>
 <script type="text/javascript">
 	$(function() {
+		var id = getIdFromUrl();
 		/*提交*/
-		parent.window.loading();
-		$.ajax({
-			type: "post",
-			url: reqUrl + '/api/public/cates',
-			data: {type:1},
-			dataType: "json",
-			success: function(res) {
-				if(res.status == 0){
-					let str = '';
-					res.data.forEach(k=>{
-						str+='<option value ="'+k.id+'" class="y_input block">'+k.name+'</option>'
-					});
-					$('#type').append(str);
-				}
-				parent.window.loading('none');
-			}
-		});
-		
+		initInfo(id);
 		$('.submit').click(function() {
 			$('.token').val(tokens);
 			do_sub();
@@ -94,7 +80,7 @@
 			parent.window.loading();
 			$.ajax({
 				type: "post",
-				url: reqUrl + '/api/projects/saveMaterial',
+				url: reqUrl + '/api/projects/upMachine',
 				data: $('#check_form').serialize(),
 				dataType: "json",
 				error: function(request) {
@@ -113,5 +99,50 @@
 				}
 			});
 		}
-	})
+	});
+
+	function initInfo(id) {
+		parent.window.loading();
+		let str = '';
+		/* 材料信息 */
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/projects/machineInfo',
+			data: {
+				id: id
+			},
+			dataType: "json",
+			success: function(res) {
+				if (res.status == 0) {
+					let o = res.data;
+					$('input[name="id"]').val(o.id);
+					$('input[name="number"]').val(o.number);
+					$('input[name="name"]').val(o.name);
+					$('input[name="norm"]').val(o.norm);
+					$('input[name="price"]').val(o.price);
+					$('input[name="unit"]').val(o.unit);
+					$('textarea[name="content"]').val(o.content);
+					str += '<option value="">--' + o.cname + '--</option>'
+					/* 分类信息 */
+					$.ajax({
+						type: "post",
+						url: reqUrl + '/api/projects/Catestype',
+						data: {
+							type: 2
+						},
+						dataType: "json",
+						success: function(res) {
+							if (res.status == 0) {
+								res.data.forEach(k => {
+									str += '<option value ="' + k.id + '">' + k.name + '</option>'
+								})
+							}
+							$('select[name="cid"]').append(str);
+							parent.window.loading('none');
+						}
+					});
+				}
+			}
+		});
+	}
 </script>

@@ -12,47 +12,12 @@
 			<form id="check_form">
 				<table class="y_tab y_border y_top20">
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料分类：</td>
-						<td colspan="5">
-							<select name="cid" id="type">
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料编号：</td>
-						<td colspan="5">
-							<input type="text" name="number" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料名称：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>分类名称：</td>
 						<td colspan="5">
 							<input type="text" name="name" class="y_input block" />
 						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料规格：</td>
-						<td colspan="5">
-							<input type="text" name="norm" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料单价：</td>
-						<td colspan="5" style="position: relative;">
-							<input type="text" name="price" class="y_input block" /><span style="position: absolute;top: 15px;right: 50px;">元</span>
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料单位：</td>
-						<td colspan="5">
-							<input type="text" name="unit" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>备注：</td>
-						<td colspan="5">
-							<textarea class="y_input block" name="content"></textarea>
-						</td>
+						<input type="hidden" name="type" value="1"/>
+						<input type="hidden" name="id"/>
 					</tr>
 				</table>
 				<div class="y_inPopFoot">
@@ -66,25 +31,27 @@
 </html>
 <script type="text/javascript">
 	$(function() {
-		/*提交*/
+		let id = getIdFromUrl();
 		parent.window.loading();
 		$.ajax({
 			type: "post",
-			url: reqUrl + '/api/public/cates',
-			data: {type:1},
+			url: reqUrl + '/api/projects/Catestype',
+			data: {
+				type:1,
+				name:id
+			},
 			dataType: "json",
 			success: function(res) {
 				if(res.status == 0){
-					let str = '';
-					res.data.forEach(k=>{
-						str+='<option value ="'+k.id+'" class="y_input block">'+k.name+'</option>'
-					});
-					$('#type').append(str);
+					$('input[name="name"]').val(res.data[0].name);
+					$('input[name="id"]').val(res.data[0].id);
 				}
 				parent.window.loading('none');
 			}
 		});
 		
+		
+		/*提交*/
 		$('.submit').click(function() {
 			$('.token').val(tokens);
 			do_sub();
@@ -94,7 +61,7 @@
 			parent.window.loading();
 			$.ajax({
 				type: "post",
-				url: reqUrl + '/api/projects/saveMaterial',
+				url: reqUrl + '/api/projects/upCatesType',
 				data: $('#check_form').serialize(),
 				dataType: "json",
 				error: function(request) {

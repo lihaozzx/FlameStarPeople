@@ -102,7 +102,7 @@
 	    	parent.window.loading();
 	        $.ajax({
 	            type: "POST",
-	            url: reqUrl + '',
+	            url: reqUrl + '/api/work/saveWork',
 	            data: $('#check_form').serialize(),
 	            dataType: "json",
 	            error: function(request) {

@@ -12,38 +12,38 @@
 			<form id="check_form">
 				<table class="y_tab y_border y_top20">
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料分类：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>机械分类：</td>
 						<td colspan="5">
 							<select name="cid" id="type">
 							</select>
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料编号：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>机械编号：</td>
 						<td colspan="5">
 							<input type="text" name="number" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料名称：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>机械名称：</td>
 						<td colspan="5">
 							<input type="text" name="name" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料规格：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>机械规格：</td>
 						<td colspan="5">
 							<input type="text" name="norm" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料单价：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>机械单价：</td>
 						<td colspan="5" style="position: relative;">
-							<input type="text" name="price" class="y_input block" /><span style="position: absolute;top: 15px;right: 50px;">元</span>
+							<input type="number" name="price" class="y_input block" /><span style="position: absolute;top: 15px;right: 50px;">元</span>
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料单位：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>机械单位：</td>
 						<td colspan="5">
 							<input type="text" name="unit" class="y_input block" />
 						</td>
@@ -56,6 +56,7 @@
 					</tr>
 				</table>
 				<div class="y_inPopFoot">
+					<input type="hidden" name="model" value="machine" />
 					<input type="hidden" name="token" class="token" value="" />
 					<span class="y_btn lg y_rit20 prim submit">发 布</span>
 				</div>
@@ -71,7 +72,7 @@
 		$.ajax({
 			type: "post",
 			url: reqUrl + '/api/public/cates',
-			data: {type:1},
+			data: {type:2},
 			dataType: "json",
 			success: function(res) {
 				if(res.status == 0){
@@ -94,7 +95,7 @@
 			parent.window.loading();
 			$.ajax({
 				type: "post",
-				url: reqUrl + '/api/projects/saveMaterial',
+				url: reqUrl + 'api/projects/cateApply',
 				data: $('#check_form').serialize(),
 				dataType: "json",
 				error: function(request) {

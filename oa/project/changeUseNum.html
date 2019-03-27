@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>项目名称：</td>
+						<td colspan="5">
+							<input type="text" id="jbqnwf" class="y_input block" readonly />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>分类：</td>
+						<td colspan="5">
+							<span id="mnwsts"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>材料：</td>
+						<td colspan="5">
+							<span id="qwbretnj"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>预计使用量：</td>
+						<td colspan="5">
+							<input type="number" name="num" class="y_input block"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>已用量：</td>
+						<td colspan="5">
+							<input type="number" id="niqgfv" class="y_input block" readonly/>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>备注：</td>
+						<td colspan="5">
+							<textarea type="number" name="content" class="y_input block"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>修改记录：</td>
+						<td colspan="5">
+							<ul id="logs">
+							
+							</ul>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="id"/>
+					<input type="hidden" name="token" class="token" />
+					<span class="y_btn lg y_rit20 prim submit">修 改</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		let id = getIdFromUrl();
+		initInfos(id);
+
+		/*提交*/
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		})
+
+	});
+	/* 提交 */
+	function do_sub() {
+		parent.window.loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/projects/upStock',
+			data: $('#check_form').serialize(),
+			dataType: "json",
+			error: function(request) {
+				parent.window.loading('none');
+				parent.window.Alert('提交失败');
+			},
+			success: function(data) {
+				parent.window.loading('none');
+				parent.window.Alert(data.msg, function() {
+					if (data.status == 0) {
+						parent.window.closePop('', function() {
+							parent.window.Reload('secondaryWindow');
+						})
+					}
+				});
+			}
+		});
+	}
+
+	function initInfos(id) {
+		parent.window.loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/projects/proStockInfo',
+			data: {
+				id: id
+			},
+			dataType: "json",
+			success: function(res) {
+				if (res.status == 0) {
+					let o = res.data;
+					$('#mnwsts').html(o.model=='material'?'材料':o.model=='machine'?'机械':o.model=='staff'?'人工':'未知');
+					$('#qwbretnj').html(o.name)
+					$('#niqgfv').val(o.chuku)
+					$('input[name="num"]').val(o.yuji)
+					$('input[name="id"]').val(o.id)
+					$.ajax({
+						type: "post",
+						url: reqUrl + '/api/projects/stockLogs',
+						data: {
+							id: id
+						},
+						dataType: "json",
+						success: function(res) {
+							if (res.status == 0) {
+								setLogs(res.data);
+							} else {
+								setLogs(null);
+							}
+							parent.window.loading('none');
+						}
+					});
+				} else {
+					parent.window.Alert(res.msg);
+					parent.window.loading('none');
+				}
+
+			}
+		});
+	}
+	function setLogs(l) {
+		$('#logs').empty();
+		let aDom = '';
+		if (l != null) {
+			l.forEach((v, k) => {
+				aDom += '<li style="height:35px"><i class="y_icon add">' + v.optname + ' 于 ' + v.optdt +
+					' 的修改 <span class="y_floatRight y_btn xs info" data-title="修改记录" data-url="./contract/change/detile/out.html?id=' + v
+					.id + '">'+v.content+'</span></i></span></li>'
+			})
+		} else {
+			aDom += '<li>暂无修改信息</li>';
+		}
+		$('#logs').append(aDom);
+	}
+</script>

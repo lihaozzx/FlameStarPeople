@@ -15,20 +15,20 @@
 				<button class="y_btn prim y_rit10 serch">搜索</button>
 				<span class="y_btn y_reset y_rit10">重置</span>
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
-				<span class="y_btn gren y_floatRight y_newPop" data-class="secondaryWindow" style="margin-left: 10px;" data-title="机械分类管理" data-url="./project/materials/machine/catesMe.html"><i class="y_icon add">分类管理</i></span>
-				<span class="y_btn gren y_floatRight y_newPop" data-title="添加机械清单" data-url="./project/materials/machine/add.html"><i class="y_icon add">新增</i></span>
+				<span class="y_btn gren y_floatRight y_newPop" style="margin-left: 10px;" data-title="人工分类管理" data-url="./project/materials/staff/catesMe.html"><i class="y_icon add">分类管理</i></span>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加人工清单" data-url="./project/materials/staff/add.html"><i class="y_icon add">新增</i></span>
 			</div>
 			<div class="y_top10">
 				<table class="y_tab y_bordtr">
 					<thead class="y_textCenter">
 						<tr>
 							<td>编号</td>
-							<td>机械名称</td>
-							<td>规格</td>
-							<td>单位</td>
-							<td>单价</td>
+							<td>姓名</td>
+							<td>部门</td>
+							<td>身份证</td>
+							<td>日薪</td>
 							<td>分类</td>
-							<td>最后操作人</td>
+							<td>最后编辑人</td>
 							<td>备注</td>
 							<td>操作</td>
 						</tr>
@@ -50,7 +50,7 @@
 			function getList() {
 				loading();
 				$.ajax({
-					url: reqUrl + '/api/projects/machine',
+					url: reqUrl + '/api/projects/staff',
 					type: 'post',
 					data: {
 						token: tokens,
@@ -78,10 +78,10 @@
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
-					str += '<tr><td>' + v.number + '</td><td>' + v.name + '</td><td>' + v.norm + '</td><td>' + v.unit +
+					str += '<tr><td>' + v.number + '</td><td>' + v.name + '</td><td>' + v.department + '</td><td>' + v.cert +
 						'</td><td>' + v.price + '</td><td>' + v.cname + '</td><td>' + v.optname + '</td><td>' + v.content + '</td>' +
 						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
-						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/machine/change.html?id=' +
+						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/staff/change.html?id=' +
 						v.id + '"><a>修改</a></li><li class="y_slectItem" data-title="删除" onClick="del(' + v.id +
 						')"><a>删除</a></li></ul></div></td></tr>'
 				});
@@ -124,7 +124,7 @@
 						type: 'post',
 						data: {
 							id: id,
-							mod:3
+							mod:2
 						},
 						dataType: 'json',
 						success: function(res) {

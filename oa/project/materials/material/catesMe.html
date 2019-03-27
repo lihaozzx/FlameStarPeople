@@ -24,6 +24,8 @@
 						<tr>
 							<td>编号</td>
 							<td>类名</td>
+							<td>添加时间</td>
+							<td>最后操作人</td>
 							<td>操作</td>
 						</tr>
 					</thead>
@@ -74,10 +76,10 @@
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
-					str += '<tr><td>' + v.id + '</td><td>' + v.name + '</td>' +
+					str += '<tr><td>' + v.id + '</td><td>' + v.name + '</td><td>'+v.adddt+'</td><td>'+v.optname+'</td>' +
 						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
-						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/material/change.html?id=' +
-						v.id + '"><a>修改</a></li><li class="y_slectItem" onClick="del(' + v.id +
+						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/material/changeCate.html?id=' +
+						v.name + '"><a>修改</a></li><li class="y_slectItem" onClick="del(' + v.id +
 						')"><a>删除</a></li></ul></div></td></tr>'
 				});
 				if (str == '') {
@@ -124,6 +126,7 @@
 						success: function(res) {
 							if (res.status == 0) {
 								parent.window.Alert('分类已删除');
+								parent.window.Reload('secondaryWindow');
 							} else {
 								parent.window.Alert(res.msg);
 							}

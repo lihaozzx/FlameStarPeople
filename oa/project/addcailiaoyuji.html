@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>分类：</td>
+						<td colspan="5">
+							<select name="mod" id="sel">
+								<option value="1">材料</option>
+								<option value="2">人工</option>
+								<option value="3">机械</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>材料：</td>
+						<td colspan="5">
+							<select name="cid" id="selc" disabled>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>数量：</td>
+						<td colspan="5">
+							<input type="number" name="num" class="y_input block" />
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="pid"/>
+					<input type="hidden" name="token" class="token" />
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		let id = getIdFromUrl();
+		initInfos(id);
+
+		$('#sel').on('change', function() {
+			initSel($(this).val());
+		})
+		/*提交*/
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		})
+
+	});
+	/* 提交 */
+	function do_sub() {
+		parent.window.loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/projects/addStock',
+			data: $('#check_form').serialize(),
+			dataType: "json",
+			error: function(request) {
+				parent.window.loading('none');
+				parent.window.Alert('提交失败');
+			},
+			success: function(data) {
+				parent.window.loading('none');
+				parent.window.Alert(data.msg, function() {
+					if (data.status == 0) {
+						parent.window.closePop('', function() {
+							parent.window.Reload('secondaryWindow');
+						})
+					}
+				});
+			}
+		});
+	}
+
+	function initSel(k) {
+		$('#selc').attr("disabled", true);
+		$('#selc').empty();
+		switch (k) {
+			case "1":
+				$.ajax({
+					type: "post",
+					url: reqUrl + '/api/projects/material',
+					data: {
+						type: k
+					},
+					dataType: "json",
+					success: function(res) {
+						if (res.status == 0) {
+							parent.window.loading('none');
+							let str = '';
+							res.data.forEach(k => {
+								str += '<option value ="' + k.id + '">' + k.name + '</option>'
+							})
+							$('#selc').append(str);
+							$('#selc').attr("disabled", false);
+						} else {
+							parent.window.loading('none');
+							parent.window.Alert(res.msg);
+						}
+					}
+				});
+				break;
+			case "2":
+				$.ajax({
+					type: "post",
+					url: reqUrl + '/api/projects/staff',
+					data: {
+						type: k
+					},
+					dataType: "json",
+					success: function(res) {
+						if (res.status == 0) {
+							parent.window.loading('none');
+							let str = '';
+							res.data.forEach(k => {
+								str += '<option value ="' + k.id + '">' + k.name + '</option>'
+							})
+							$('#selc').append(str);
+							$('#selc').attr("disabled", false);
+						} else {
+							parent.window.loading('none');
+							parent.window.Alert(res.msg);
+						}
+					}
+				});
+				break;
+			case "3":
+				$.ajax({
+					type: "post",
+					url: reqUrl + '/api/projects/machine',
+					data: {
+						type: k
+					},
+					dataType: "json",
+					success: function(res) {
+						if (res.status == 0) {
+							parent.window.loading('none');
+							let str = '';
+							res.data.forEach(k => {
+								str += '<option value ="' + k.id + '">' + k.name + '</option>'
+							})
+							$('#selc').append(str);
+							$('#selc').attr("disabled", false);
+						} else {
+							parent.window.loading('none');
+							parent.window.Alert(res.msg);
+						}
+					}
+				});
+				break;
+		}
+	}
+
+	function initInfos(id) {
+		parent.window.loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/projects/proInfo',
+			data: {
+				id: id
+			},
+			dataType: "json",
+			success: function(res) {
+				if (res.status == 0) {
+					console.log(res);
+					$('#jbqnwf').val(res.data.title);
+					$('input[name="pid"]').val(res.data.id)
+					parent.window.loading('none');
+				} else {
+					parent.window.Alert(res.msg);
+					parent.window.loading('none');
+				}
+
+			}
+		});
+		initSel("1");
+	}
+</script>
