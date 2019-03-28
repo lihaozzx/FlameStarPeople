@@ -12,46 +12,31 @@
 			<form id="check_form">
 				<table class="y_tab y_border y_top20">
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>机械分类：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属项目：</td>
 						<td colspan="5">
-							<select name="cid" id="type">
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>机械编号：</td>
-						<td colspan="5">
-							<input type="text" name="number" class="y_input block" />
+							<input type="text" class="y_input long y_rit10 proDistname" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="pid" class="proDistid" />
+							<span class="y_btn prim pro">选择</span>
 						</td>
 					</tr>
 					<tr>
 						<td class="y_textRight"><i class="y_colorRead">*</i>机械名称：</td>
 						<td colspan="5">
-							<input type="text" name="name" class="y_input block" />
+							<select name="sid" id="type" class="y_input block" style="width: 30%;">
+								<option value ="">--------------------------</option>
+							</select>
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>机械规格：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>材料数量：</td>
 						<td colspan="5">
-							<input type="text" name="norm" class="y_input block" />
+							<span id="aniuaeb"></span>
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>机械单价：</td>
-						<td colspan="5" style="position: relative;">
-							<input type="number" name="price" class="y_input block" /><span style="position: absolute;top: 15px;right: 50px;">元</span>
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>机械单位：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>申请数量：</td>
 						<td colspan="5">
-							<input type="text" name="unit" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>备注：</td>
-						<td colspan="5">
-							<textarea class="y_input block" name="content"></textarea>
+							<input type="text" name="num" class="y_input block" />
 						</td>
 					</tr>
 				</table>
@@ -67,52 +52,96 @@
 </html>
 <script type="text/javascript">
 	$(function() {
-		/*提交*/
 		parent.window.loading();
-		$.ajax({
-			type: "post",
-			url: reqUrl + '/api/public/cates',
-			data: {type:2},
-			dataType: "json",
-			success: function(res) {
-				if(res.status == 0){
-					let str = '';
-					res.data.forEach(k=>{
-						str+='<option value ="'+k.id+'" class="y_input block">'+k.name+'</option>'
-					});
-					$('#type').append(str);
-				}
-				parent.window.loading('none');
-			}
-		});
-		
+		initInfo();
+
+		/*提交*/
 		$('.submit').click(function() {
 			$('.token').val(tokens);
 			do_sub();
+		});
+		/* 切换select */
+		$('#type').on('change',function () {
+			getNum();
 		})
-
-		function do_sub() {
-			parent.window.loading();
-			$.ajax({
-				type: "post",
-				url: reqUrl + 'api/projects/cateApply',
-				data: $('#check_form').serialize(),
-				dataType: "json",
-				error: function(request) {
-					parent.window.loading('none');
-					parent.window.Alert('提交失败');
-				},
-				success: function(data) {
-					parent.window.loading('none');
-					parent.window.Alert(data.msg, function() {
-						if (data.status == 0) {
-							parent.window.closePop('', function() {
-								parent.window.Reload();
-							})
-						}
+	})
+	function do_sub() {
+		parent.window.loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/projects/cateApply',
+			data: $('#check_form').serialize(),
+			dataType: "json",
+			error: function(request) {
+				parent.window.loading('none');
+				parent.window.Alert('提交失败');
+			},
+			success: function(data) {
+				parent.window.loading('none');
+				parent.window.Alert(data.msg, function() {
+					if (data.status == 0) {
+						parent.window.closePop('', function() {
+							parent.window.Reload();
+						})
+					}
+				});
+			}
+		});
+	}
+	
+	function initInfo() {
+		/* 获取项目信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/projects/myPro",
+			data: {
+				token: tokens
+			},
+			dataType: 'json',
+			success: function(res) {
+				parent.window.loading('none');
+				if (res.status == 0) {
+					Pro = {}
+					Pro.status = 2;
+					Pro.data = res.data;
+					$('.pro').click(function() {
+						parent.window.ChousProject(Pro, 'one', $('.proDistid').val(), function(tex, val) {
+							$('.proDistname').val(tex);
+							$('.proDistid').val(val);
+							/* 项目下材料信息 */
+							$.ajax({
+								type: "post",
+								url: reqUrl + '/api/projects/proStock',
+								data: {
+									id: val
+								},
+								dataType: "json",
+								success: function(res) {
+									if (res.status == 0) {
+										$('#type').empty();
+										let str = '';
+										res.data.forEach(k => {
+											if(k.model == 'machine'){
+												str += '<option value ="' + k.id + '" class="y_input block" data-yuji="'+k.yuji+'" data-chuku="'+k.chuku+'">' + k.name + '</option>'
+											}
+										});
+										$('#type').append(str);
+										getNum();
+									}
+									parent.window.loading('none');
+								}
+							});
+						})
 					});
 				}
-			});
+			}
+		});
+		function getNum() {
+			let id = $('#type').val();
+			let yuji = $('option[value="'+id+'"]').attr('data-yuji');
+			let chuku = $('option[value="'+id+'"]').attr('data-chuku');
+			let o=parseInt(yuji)-parseInt(chuku)
+			$('#aniuaeb').html(o)
 		}
-	})
+	}
 </script>

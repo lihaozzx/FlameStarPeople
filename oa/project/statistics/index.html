@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../aaa/css/public.css"/>
+		<script src="../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+body,div,ul,li{margin: 0;padding: 0;list-style: none;}
+.colorRed{color: #f65621!important;}
+.colorGre{color: #5e87b0!important;}
+.GraphMap{width: 85%;border-bottom: 1px solid #e1e1e1; margin:30px auto;position: relative;}
+.GraphMapY{width: 100%;}
+.GraphMapYLine{border-top: 1px solid #e1e1e1;position: absolute;width: 100%;}
+.GraphMapYText{position: absolute;left: -70px;top: 50%;margin-top: -60px;writing-mode: tb-rl;letter-spacing: 5px;}
+.GraphMapRText{position: absolute;right: -60px;top: 50%;margin-top: -60px;writing-mode: tb-rl;letter-spacing: 5px;}
+.GraphMapYTextL{position: absolute;width: 50px;left: -55px;top: -10px;text-align: right;}
+.GraphMapYTextR{position: absolute;width: 50px;right: -55px;top: -10px;text-align: left;}
+.GraphMapX{height: 100%;}
+.GraphMapXItemBox{position: absolute;height: 100%;padding: 0 15px;}
+.GraphMapXItem{bottom: -36px;left: 0;position: absolute;width: 100%;font-size: 12px; text-align: center;}
+.GraphMapGrap{position: absolute;bottom: 0; transform: rotate(180deg);cursor: pointer;background-color: #eeeeee;z-index: 1;}
+.GraphMapSucc{position: absolute;bottom: 0; transform: rotate(180deg);cursor: pointer;background-color: #5e87b0;transition: height .5s;z-index: 2;}
+.GraphMapSucc.Blue{background-color: #68abd3;}
+.GraphMapMore{position: absolute;width: 100%;height: 20px;bottom:0; border-bottom-left-radius: 0px;background-color: #fff100;z-index: 3;}
+.GrapCursor{z-index: 99; border-radius: 4px; position: fixed;padding: 4px 6px;background-color: #fff;border:1px solid #f65621;z-index: 100;line-height: 20px;font-size: 12px;}
+.GrapCursor p{margin: 0;}
+</style>
+	</head>
+	<body>
+		<div class="y_body">
+			<div>
+				<label class="y_inpSect y_rit10 btn">
+					<span class="y_inpSect_tex" data-int="--请选择--">--请选择--</span>
+					<input type="text" class="y_inpSect_val year" value="">
+					<div class="y_inpSect_box">
+						<div class="y_inpSect_scroll">
+							<ul class="y_inpSect_itmBox year_str"></ul>
+						</div>
+					</div>
+					<span class="btn y_bgcPrim">年</span>
+				</label>
+				<label class="y_inpSect y_rit10 btn">
+					<span class="y_inpSect_tex" data-int="--请选择--">--请选择--</span>
+					<input type="text" class="y_inpSect_val month" value="">
+					<div class="y_inpSect_box">
+						<div class="y_inpSect_scroll">
+							<ul class="y_inpSect_itmBox mont_str"></ul>
+						</div>
+					</div>
+					<span class="btn y_bgcPrim">月</span>
+				</label>
+				<button class="y_btn prim y_rit10 serch">搜索</button>
+				<span class="y_btn y_reset y_rit10">重置</span>
+				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+			</div>
+			<div class="yejiCont">
+				<div class="GraphMap"style="height: 180px; width: 1000px;margin: 100px auto;">
+					<ul class="GraphMapY colorGre colorRed">
+						<li class="GraphMapYText ">数量</li>
+					</ul>
+					<ul class="GraphMapX"></ul>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		var dat = new Date();
+		var years = dat.getFullYear();
+		var year_str = '';
+		var mont_str = '';
+		var year,month;
+		
+		for(var i = 2019; i <= years; i++){
+			year_str += '<li class="y_inpSect_item" data-val="'+i+'">'+i+'</li>';
+		}
+		for(var i = 1; i < 13; i++){
+			mont_str += '<li class="y_inpSect_item" data-val="'+(i<10?'0'+i:i)+'">'+i+'</li>';
+		}
+		$('.year_str').append(year_str);
+		$('.mont_str').append(mont_str);
+		
+		getList();
+		
+		function getList(){
+			loading();
+			$.ajax({
+				url: reqUrl + '/api/projects/cateCount',
+				type: 'post',
+				data: {token: tokens},
+				dataType: 'json',
+				success: function(res){
+					console.log(res)
+					if(res.status == 0){
+						$('.yejiCont').show();
+						var cSwork = res.data.cSwork;
+						var diwork = res.data.diwork;
+						var mywork = res.data.mywork;
+						var ncSwork = res.data.ncSwork;
+						var max = -1;
+						var data = {};
+						data.results = [];
+						// {mywork:'我发布的任务数量',diwork:'我执行的任务数量',ncSwork:'任务未超时的任务数量',cSwork:'任务超时的任务数量',lwork:'按等级统计数量集合',}...备注{0=>普通,1=>'紧急',2=>'非常紧急'}
+// 						cSwork: (3) [1, 0, 0]
+//						diwork: (3) [8, 1, 2]
+//						mywork: (3) [7, 2, 21]
+//						ncSwork: (3) [0, 0, 1]
+						data.results.push({ expe: cSwork[0], succ: cSwork[0], name: '超时的普通任务' });
+						data.results.push({ expe: cSwork[1], succ: cSwork[1], name: '超时的紧急任务' })
+						data.results.push({ expe: cSwork[2], succ: cSwork[2], name: '超时的非常紧急任务' })
+						data.results.push({ expe: diwork[0], succ: diwork[0], name: '我执行的普通任务' })
+						data.results.push({ expe: diwork[1], succ: diwork[1], name: '我执行的紧急任务' })
+						data.results.push({ expe: diwork[2], succ: diwork[2], name: '我执行的非常紧急任务' })
+						data.results.push({ expe: mywork[0], succ: mywork[0], name: '我发布的普通任务' })
+						data.results.push({ expe: mywork[1], succ: mywork[1], name: '我发布的紧急任务' })
+						data.results.push({ expe: mywork[2], succ: mywork[2], name: '我发布的非常紧急任务' })
+						data.results.push({ expe: ncSwork[0], succ: ncSwork[0], name: '未超时的普通任务' })
+						data.results.push({ expe: ncSwork[1], succ: ncSwork[1], name: '未超时的紧急任务' })
+						data.results.push({ expe: ncSwork[2], succ: ncSwork[2], name: '未超时的非常紧急任务' })
+// 						for(var i = 0; i < lwork.length; i++){
+// 							if(max < lwork[i].count){
+// 								max = lwork[i].count
+// 							}
+// 							data.results.push({ expe: lwork[i].count, succ: lwork[i].count, name: lwork[i].level + '任务' })
+// 						}
+						data.maxexpe = 21;
+						data.maxsucc = 21;
+						
+						Graph(data, '.yejiCont', 3)
+					}else{
+						$('.yejiCont').hide();
+						noData('.y_body');
+					}
+				},
+				complete: function(){
+					loading('none');
+				}
+			});
+		};
+		
+		/*日期搜索*/
+		$('.serch').click(function(){
+			year = $('.year').val();
+			month = $('.month').val();
+			getList();
+		})
+	})
+	
+	
+//	var ress = {"maxexpe":70000,"maxsucc":44000,"results":[{"expe":null,"succ":6000,"name":"某某某"},{"expe":14000,"succ":44000,"name":"某某某"}]}
+//	console.log(ress)
+//	Graph(ress, '.yejiCont', 3)
+	function Graph(res,clas,num,id){
+		$(clas + ' .GraphMapX').children().remove();
+		if(!res.maxexpe && res.maxexpe !=0){return};
+		var arr = res.results
+		var max = res.maxexpe > res.maxsucc ? res.maxexpe : res.maxsucc;
+		
+// 		for(var i = 0; i < arr.length-1; i++){
+// 			for(var j = i+1; j < arr.length; j ++){
+// 				if( arr[i].succ < arr[j].succ ){
+// 					var a = $.extend({},arr[j]);
+// 					var b = $.extend({},arr[i]);
+// 					arr[i] = a
+// 					arr[j] = b
+// 				}
+// 			}
+// 		}
+		$(clas + ' .GraphMapX').children('.GraphMapXItemBox').remove()
+		$.each(arr, function(k,v){
+			$(clas + ' .GraphMapX').append(
+				'<li class="GraphMapXItemBox"><span class="GraphMapXItem">'+v.name+'</span><div class="GraphMapSucc '+(id?id==v.id?"Blue":"":"")+'">'+(v.succ>v.expe?'<div class="GraphMapMore"style="max-height:100%"></div>':'')+'</div><div class="GraphMapGrap"></div></li>'
+			);
+		})
+		var k = 1;
+		for(var i = 1; i > 0; i++){
+			if(i * num  >= max){
+				k = i;
+				break
+			}
+		}
+		var all_x = num*k
+		$(clas + ' .GraphMapY').children('.GraphMapYLine').remove()
+		for(var i = 1; i < num+1; i++){
+			$(clas + ' .GraphMapY').children().eq(0).before('<li class="GraphMapYLine"><span class="GraphMapYTextL">'+(i*k)+'</span></li>')//<span class="GraphMapYTextR colorGre">'+(i*k)+'</span>
+		}
+		var map_h = $(clas + ' .GraphMap').height();
+		var map_w = $(clas + ' .GraphMap').width();
+		var y_item = $(clas + ' .GraphMapYLine');
+		var x_item = $(clas + ' .GraphMapXItemBox');
+		y_item.each(function(k,v){
+			$(v).css({ 'top': (map_h/y_item.length).toFixed(2)*k });
+		})
+		x_item.each(function(k,v){
+			$(v).css({ 'left': (map_w/x_item.length).toFixed(2)*k, 'width': parseInt(map_w/x_item.length)-30});
+			var w = parseInt($(v).width());
+			$(v).children(clas + ' .GraphMapGrap').css({ 'width': w, 'max-width': '40px', 'height': ((arr[k].expe?arr[k].expe:0)/all_x).toFixed(4)*100 + '%', 'left': '50%',  'margin-left': w>40?'-20px':-w/2})
+			$(v).children(clas + ' .GraphMapSucc').css({ 'width': w, 'max-width': '40px', 'height': ((arr[k].succ?arr[k].succ:0)/all_x).toFixed(4)*100 + '%', 'left': '50%',  'margin-left': w>40?'-20px':-w/2})
+			$(v).children(clas + ' .GraphMapGrap').attr({ 'data-succ': arr[k].succ?arr[k].succ:0, 'data-expe': arr[k].expe?arr[k].expe:0, 'data-bfb': arr[k].expe?((arr[k].succ/arr[k].expe)*100).toFixed(2):100 + '%','data-name': arr[k].name })
+			$(v).children(clas + ' .GraphMapSucc').attr({ 'data-succ': arr[k].succ?arr[k].succ:0, 'data-expe': arr[k].expe?arr[k].expe:0, 'data-bfb': arr[k].expe?((arr[k].succ/arr[k].expe)*100).toFixed(2):100 + '%','data-name': arr[k].name })
+			$(v).children(clas + ' .GraphMapMore').attr({ 'data-succ': arr[k].succ?arr[k].succ:0, 'data-expe': arr[k].expe?arr[k].expe:0, 'data-bfb': arr[k].expe?((arr[k].succ/arr[k].expe)*100).toFixed(2):100 + '%','data-name': arr[k].name })
+		})
+		enter('.GraphMapSucc');
+		enter('.GraphMapGrap');
+		enter('.GraphMapMore');
+		$('body').append('<div class="GrapCursor" style="display:none"><p class="GrapCursorName"></p><p class="GrapCursorRece"></p></div>')
+		function enter(clas){
+			$(clas).mousemove(function(e1){
+				var that = $(this);
+				var w2 = e1.pageX+20;
+				var h2 = e1.pageY;
+				$('.GrapCursor').css({ 'display':'block', 'left': w2-$(window).scrollLeft(), 'top': h2-$(window).scrollTop()})
+				$('.GrapCursorName').text(that.attr('data-name'))
+				$('.GrapCursorRece').text('数量：' + that.attr('data-succ'))
+			})
+			$(clas).mouseout(function(e){
+				$('.GrapCursor').css({'display': 'none'})
+			})
+		};
+	};
+</script>

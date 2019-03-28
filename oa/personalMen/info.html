@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>用户名：</td>
+						<td colspan="5">
+							<input type="text" name="username" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>密码：</td>
+						<td colspan="5">
+							<input type="password" name="password" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>职位：</td>
+						<td colspan="2">
+							<select name="positionid" class="y_input block">
+								<option value="">未选择</option>
+							</select>
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>部门：</td>
+						<td colspan="2">
+							<select name="departmentid" class="y_input block">
+								<option value="">未选择</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>编号：</td>
+						<td>
+							<input type="text" name="number" class="y_input block" />
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>姓名：</td>
+						<td>
+							<input type="text" name="name" class="y_input block" />
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>性别：</td>
+						<td>
+							<select name="sex" class="y_input block">
+								<option>男</option>
+								<option>女</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>身份证号：</td>
+						<td colspan="2">
+							<input type="text" name="idCard" class="y_input block" />
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>生日：</td>
+						<td colspan="2">
+							<input type="text" name="birthday" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>邮箱：</td>
+						<td>
+							<input type="text" name="email" class="y_input block" />
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>电话：</td>
+						<td>
+							<input type="text" name="phone" class="y_input block" />
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>QQ：</td>
+						<td>
+							<input type="text" name="QQ" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">入职时间：</td>
+						<td>
+							<input type="text" name="workdate" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+						<td class="y_textRight">转正日期：</td>
+						<td>
+							<input type="text" name="positivedt" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+						<td class="y_textRight">离职时间：</td>
+						<td>
+							<input type="text" name="departure" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="id" />
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">修 改</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		var id = getIdFromUrl();
+		/*提交*/
+		initInfo(id);
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		})
+
+		function do_sub() {
+			parent.window.loading();
+			$.ajax({
+				type: "post",
+				url: reqUrl + '/api/per/upInfo',
+				data: $('#check_form').serialize(),
+				dataType: "json",
+				error: function(request) {
+					parent.window.loading('none');
+					parent.window.Alert('提交失败');
+				},
+				success: function(data) {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						if (data.status == 0) {
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							})
+						}
+					});
+				}
+			});
+		}
+	});
+
+	function initInfo(id) {
+		parent.window.loading();
+		let str = '';
+		/* 材料信息 */
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/per/info',
+			data: {
+				id: id
+			},
+			dataType: "json",
+			success: function(res) {
+				console.log(res);
+				let o = res.data
+				$('input[name="QQ"]').val(o.QQ);
+				$('input[name="birthday"]').val(o.birthday);
+				$('input[name="departmentname"]').val(o.departmentname);
+				$('input[name="dir"]').val(o.dir);
+				$('input[name="email"]').val(o.email);
+				$('input[name="idCard"]').val(o.idCard);
+				$('input[name="name"]').val(o.name);
+				$('input[name="number"]').val(o.number);
+				$('input[name="phone"]').val(o.phone);
+				$('input[name="pname"]').val(o.pname);
+				$('input[name="positionname"]').val(o.positionname);
+				$('input[name="positivedt"]').val(o.positivedt);
+				$('input[name="sex"]').val(o.sex);
+				$('input[name="username"]').val(o.username);
+				$('input[name="workdate"]').val(o.workdate);
+				$('input[name="id"]').val(o.id);
+				parent.window.loading('none');
+			}
+		});
+	}
+</script>

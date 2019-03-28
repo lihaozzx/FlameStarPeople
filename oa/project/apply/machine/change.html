@@ -9,96 +9,145 @@
 	</head>
 	<body>
 		<div class="y_popBody">
-			<form id="check_form">
-				<table class="y_tab y_border y_top20">
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料分类：</td>
-						<td colspan="5">
-							<select name="cid">
+			<table class="y_tab y_border y_top20">
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>申请名称：</td>
+					<td colspan="5">
+						<span id="name"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>申请人：</td>
+					<td colspan="5">
+						<span id="uname"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>申请时间：</td>
+					<td colspan="5">
+						<span id="adddt"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>状态：</td>
+					<td colspan="5">
+						<span id="status"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>编号：</td>
+					<td colspan="5">
+						<span id="number"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>分类：</td>
+					<td colspan="5">
+						<span id="model"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>数量：</td>
+					<td colspan="5">
+						<span id="num"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>规格：</td>
+					<td colspan="5">
+						<span id="norm"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>单位：</td>
+					<td colspan="5">
+						<span id="unit"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>总金额：</td>
+					<td colspan="5">
+						<span id="money"></span>
+					</td>
+				</tr>
+			</table>
+			<div class="logs y_none y_top20">
+				<p class="y_popSpeed">处理记录</p>
+				<table class="y_tab y_bordtr y_textCenter">
+					<thead class="y_bgcPrim">
+						<tr>
+							<td>操作人</td>
+							<td>操作时间</td>
+							<td>操作状态</td>
+							<td>说明</td>
+						</tr>
+					</thead>
+					<tbody class="y_exchag y_hover list">
 
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料编号：</td>
-						<td colspan="5">
-							<input type="text" name="number" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料名称：</td>
-						<td colspan="5">
-							<input type="text" name="name" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料规格：</td>
-						<td colspan="5">
-							<input type="text" name="norm" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料单价：</td>
-						<td colspan="5">
-							<input type="text" name="price" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料单位：</td>
-						<td colspan="5">
-							<input type="text" name="unit" class="y_input block" />
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>备注：</td>
-						<td colspan="5">
-							<textarea class="y_input block" name="content"></textarea>
-						</td>
-					</tr>
+					</tbody>
 				</table>
-				<div class="y_inPopFoot">
-					<input type="hidden" name="id" />
-					<input type="hidden" name="token" class="token" value="" />
-					<span class="y_btn lg y_rit20 prim submit">修 改</span>
-				</div>
-				<div class="y_top20"></div>
-			</form>
+			</div>
+			<div class="bill y_none y_top20">
+				<p class="y_popSpeed">审核处理</p>
+				<form id="check_form">
+					<table class="y_tab y_border">
+						<thead>
+							<tr>
+								<td class="y_textRight">状态：</td>
+								<td>待<i class="nowcheckname"></i>处理</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="y_textRight">处理流程：</td>
+								<td class="cllc"></td>
+							</tr>
+							<tr>
+								<td class="y_textRight"><span style="color:red;">*</span> 处理人：</td>
+								<td class="nowcheckname"></td>
+							</tr>
+							<tr>
+								<td class="y_textRight"><span style="color:red;">*</span> 处理动作：</td>
+								<td class="cldz"></td>
+							</tr>
+							<tr>
+								<td class="y_textRight">说明：</td>
+								<td><textarea class="y_input" name="checksm"></textarea></td>
+							</tr>
+							<tr>
+								<td class="y_textRight">相关文件 ：</td>
+								<td>
+									<ul class="y_file">
+									</ul>
+									<input class="y_none addFileVal fileToUpload" id="fileToUpload1" name="fileToUpload1" type="file" id=""
+									 value="" />
+									<span class="addFile">+添加文件</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="hidden" name="id" class="bill_id" value="" />
+									<input type="hidden" name="token" class="tokens" value="" />
+								</td>
+								<td><a class="y_btn info" onclick="do_subcheck()">提交处理</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+
+			<div class="y_inPopFoot">
+				<input type="hidden" name="id" />
+				<input type="hidden" name="token" class="token" value="" />
+			</div>
+			<div class="y_top20"></div>
 		</div>
 	</body>
 </html>
 <script type="text/javascript">
 	$(function() {
 		var id = getIdFromUrl();
-		/*提交*/
 		initInfo(id);
-		$('.submit').click(function() {
-			$('.token').val(tokens);
-			do_sub();
-		})
-
-		function do_sub() {
-			parent.window.loading();
-			$.ajax({
-				type: "post",
-				url: reqUrl + '/api/projects/upMachine',
-				data: $('#check_form').serialize(),
-				dataType: "json",
-				error: function(request) {
-					parent.window.loading('none');
-					parent.window.Alert('提交失败');
-				},
-				success: function(data) {
-					parent.window.loading('none');
-					parent.window.Alert(data.msg, function() {
-						if (data.status == 0) {
-							parent.window.closePop('', function() {
-								parent.window.Reload();
-							})
-						}
-					});
-				}
-			});
-		}
 	});
 
 	function initInfo(id) {
@@ -107,42 +156,102 @@
 		/* 材料信息 */
 		$.ajax({
 			type: "post",
-			url: reqUrl + '/api/projects/machineInfo',
+			url: reqUrl + '/api/projects/cateApplyInfo',
 			data: {
 				id: id
 			},
 			dataType: "json",
 			success: function(res) {
+				console.log(res);
 				if (res.status == 0) {
-					let o = res.data;
-					$('input[name="id"]').val(o.id);
-					$('input[name="number"]').val(o.number);
-					$('input[name="name"]').val(o.name);
-					$('input[name="norm"]').val(o.norm);
-					$('input[name="price"]').val(o.price);
-					$('input[name="unit"]').val(o.unit);
-					$('textarea[name="content"]').val(o.content);
-					str += '<option value="">--' + o.cname + '--</option>'
-					/* 分类信息 */
-					$.ajax({
-						type: "post",
-						url: reqUrl + '/api/projects/Catestype',
-						data: {
-							type: 2
-						},
-						dataType: "json",
-						success: function(res) {
-							if (res.status == 0) {
-								res.data.forEach(k => {
-									str += '<option value ="' + k.id + '">' + k.name + '</option>'
-								})
-							}
-							$('select[name="cid"]').append(str);
-							parent.window.loading('none');
-						}
-					});
+					parent.window.loading('none');
+					setInfo(res.data.result);
+					setLogs(res.data.log);
+					setBill(res.data.bill,res.data.course);
 				}
 			}
 		});
+	}
+	
+	function do_subcheck() {
+		parent.window.loading();
+		$.ajax({
+			url: reqUrl + '/api/projects/cateAudit',
+			type: 'get',
+			data: $('#check_form').serialize(),
+			dataType: 'json',
+			success: function(res){
+				parent.window.Alert(res.msg, function(){
+		    		if (res.status == 0) {
+		    			parent.window.closePop('', function(){
+		        			parent.window.Reload();
+		        		})
+		            }
+		    	});
+			},
+			complete: function(){
+				parent.window.loading('none');
+			}
+		});
+	}
+	
+	function setBill(bill,course) {
+		if(bill.isAudit == 1){
+			$('.bill').show();
+			var str1 = '';
+			$('.nowcheckname').text(bill.nowcheckname);
+			$('.bill_id').val(bill.id);
+			$('.cllc').text(course.name);
+			$('.tokens').val(tokens);
+			for(var i = 0; i< course.courseact.length; i++){
+				str1 += '<label><span class="y_radio y_rit20">'+course.courseact[i][0]+'</span><input type="radio" class="y_none" name="status" value="'+course.courseact[i][1]+'" /></label>'
+			}
+			$('.cldz').append(str1)
+		}else{
+			$('.bill').hide();
+		}
+	}
+	
+	function setLogs(d) {
+		if (d instanceof Array && d.length != 0) {
+			let str = '';
+			d.forEach(k=>{
+				str += '<tr><td>'+k.checkname+'</td><td>'+k.optdt+'</td><td>'+k.statusname+'</td><td>'+k.explains+'</td></tr>'
+			});
+			$('.logs').append(str);
+			$('.logs').show();
+		}
+	}
+
+	function setInfo(d) {
+		/* applydt: "2019-03-28 10:12:04"
+		cid: "17"
+		cname: "爆破用"
+		files: []
+		id: "6"
+		model: "machine"
+		money: "10000.000"
+		name: "搜搂蛋"
+		norm: "200g"
+		num: "20"
+		number: "1111133"
+		optdt: "2019-03-28 10:12:04"
+		optid: "1"
+		optname: "超级管理员"
+		pid: "33"
+		status: "1"
+		uid: "1"
+		uname: "超级管理员"
+		unit: "枚" */
+		$('span[id="name"]').html(d.name);
+		$('span[id="uname"]').html(d.uname);
+		$('span[id="adddt"]').html(d.applydt);
+		$('span[id="status"]').html(d.status);
+		$('span[id="number"]').html(d.number);
+		$('span[id="model"]').html(d.model);
+		$('span[id="num"]').html(d.num);
+		$('span[id="money"]').html(d.money);
+		$('span[id="norm"]').html(d.norm);
+		$('span[id="unit"]').html(d.unit);
 	}
 </script>
