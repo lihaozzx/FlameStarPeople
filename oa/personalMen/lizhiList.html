@@ -3,29 +3,30 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link rel="stylesheet" type="text/css" href="../../../aaa/css/public.css" />
-		<script src="../../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		<div class="y_body" style="min-width: 900px;">
+		<div class="y_body">
 			<div class="y_floatBox">
-				<!-- 名称 编号筛选 -->
-				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入分类名称" />
+				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入员工姓名" />
 				<button class="y_btn prim y_rit10 serch">搜索</button>
 				<span class="y_btn y_reset y_rit10">重置</span>
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
-				<span class="y_btn gren y_floatRight y_newPop" data-title="添加机械分类" data-url="./project/materials/machine/addCates.html"><i
-					 class="y_icon add">新增</i></span>
 			</div>
 			<div class="y_top10">
 				<table class="y_tab y_bordtr">
 					<thead class="y_textCenter">
 						<tr>
-							<td>编号</td>
-							<td>类名</td>
-							<td>添加时间</td>
-							<td>最后操作人</td>
+							<td>申请人</td>
+							<td>申请时间</td>
+							<td>部门</td>
+							<td>职位</td>
+							<td>入职时间</td>
+							<td>离职原因</td>
+							<td>备注</td>
+							<td>状态</td>
 							<td>操作</td>
 						</tr>
 					</thead>
@@ -40,21 +41,22 @@
 	<script type="text/javascript">
 		$(function() {
 			var title, pages;
+			var types = 1;
 			getList();
 
 			function getList() {
 				loading();
 				$.ajax({
-					url: reqUrl + '/api/projects/Catestype',
+					url: reqUrl + '/api/per/hrredund',
 					type: 'post',
 					data: {
 						token: tokens,
-						type: 2,
 						name: title,
 						p: pages
 					},
 					dataType: 'json',
 					success: function(res) {
+						console.log(res);
 						if (res.status == 0) {
 							setList(res.data);
 							setPage('.page', res.pager);
@@ -71,14 +73,14 @@
 			}
 
 			function setList(data) {
+				console.log(data);
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
-					str += '<tr><td>' + v.id + '</td><td>' + v.name + '</td><td>'+v.adddt+'</td><td>'+v.optname+'</td>' +
-						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
-						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/machine/changeCate.html?id=' +
-						v.name + '"><a>修改</a></li><li class="y_slectItem" onClick="del(' + v.id +
-						')"><a>删除</a></li></ul></div></td></tr>'
+					str += '<tr><td>' + v.uname + '</td><td>' + v.applydt + '</td><td>' + v.udeptname + '</td><td>' + v.position +
+						'</td><td>' + v.entrydt + '</td>' +
+						'<td>' + v.content + '</td><td>' + v.content + '</td><td>'+v.stName+'</td>' +
+						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="员工详情" data-url="./personalMen/changeLizhi.html?id=' + v.id + '"><a>审核</a></li></ul></div></td></tr>'
 				});
 				if (str == '') {
 					$('.y_tab').hide();
@@ -89,6 +91,7 @@
 					$('.list').append(str);
 				}
 			}
+
 			/*页码跳转*/
 			$(document).on('click', '.y_page_item', function() {
 				var that = $(this);
@@ -108,32 +111,6 @@
 				getList();
 			})
 
-		});
-
-		function del(id) {
-			parent.window.Confirm('确认删除吗？', function(e) {
-				if (e) {
-					loading();
-					$.ajax({
-						url: reqUrl + '/api/projects/delCatesType',
-						type: 'post',
-						data: {
-							id: id
-						},
-						dataType: 'json',
-						success: function(res) {
-							if (res.status == 0) {
-								parent.window.Alert('分类已删除');
-							} else {
-								parent.window.Alert(res.msg);
-							}
-						},
-						complete: function() {
-							loading('none');
-						}
-					});
-				}
-			})
-		}
+		})
 	</script>
 </html>

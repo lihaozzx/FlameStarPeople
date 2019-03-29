@@ -3,9 +3,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link rel="stylesheet" type="text/css" href="../../../aaa/css/public.css" />
-		<script src="../../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<div class="y_popBody">
@@ -156,7 +156,7 @@
 		/* 材料信息 */
 		$.ajax({
 			type: "post",
-			url: reqUrl + '/api/projects/cateApplyInfo',
+			url: reqUrl + '/api/per/hrpositiveInfo',
 			data: {
 				id: id
 			},
@@ -176,7 +176,7 @@
 	function do_subcheck() {
 		parent.window.loading();
 		$.ajax({
-			url: reqUrl + '/api/projects/cateAudit',
+			url: reqUrl + '/api/per/hrpositiveAudit',
 			type: 'get',
 			data: $('#check_form').serialize(),
 			dataType: 'json',

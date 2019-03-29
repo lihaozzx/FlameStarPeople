@@ -11,25 +11,28 @@
 		<div class="y_body">
 			<div class="y_floatBox">
 				<!-- 名称 编号筛选 -->
-				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入材料名称" />
-				<button class="y_btn prim y_rit10 serch">搜索</button>
-				<span class="y_btn y_reset y_rit10">重置</span>
+				<span class="y_btn prim pro">选择人员分类</span>
+				<div class="y_btn infoqfvs y_rit10" style="display: none;"><i class="y_icon fresh">当前选择：<span id="anuab"></span></i></div>
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
-				<span class="y_btn gren y_floatRight y_newPop" style="margin-left: 10px;" data-title="人工分类管理" data-url="./project/materials/staff/catesMe.html"><i class="y_icon add">分类管理</i></span>
-				<span class="y_btn gren y_floatRight y_newPop" data-title="添加人工清单" data-url="./project/materials/staff/add.html"><i class="y_icon add">新增</i></span>
+				<!-- <span class="y_btn gren y_floatRight y_newPop" style="margin-left: 10px;" data-title="机械分类管理" data-url="./project/materials/machine/catesMe.html"><i class="y_icon add">分类管理</i></span> -->
+				<span style="color: green;"></span>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加人员申请" data-url="./project/apply/staff/add.html"><i
+					 class="y_icon add">新增</i></span>
 			</div>
 			<div class="y_top10">
 				<table class="y_tab y_bordtr">
 					<thead class="y_textCenter">
 						<tr>
 							<td>编号</td>
-							<td>姓名</td>
+							<td>分类</td>
+							<td>申请名称</td>
+							<td>数量</td>
 							<td>部门</td>
 							<td>身份证</td>
-							<td>日薪</td>
-							<td>分类</td>
-							<td>最后编辑人</td>
-							<td>备注</td>
+							<td>总金额</td>
+							<td>状态</td>
+							<td>申请人</td>
+							<td>申请时间</td>
 							<td>操作</td>
 						</tr>
 					</thead>
@@ -49,12 +52,14 @@
 
 			function getList() {
 				loading();
+				init();
 				$.ajax({
-					url: reqUrl + '/api/projects/staff',
+					url: reqUrl + '/api/projects/cateList',
 					type: 'post',
 					data: {
+						model: 'staff',
 						token: tokens,
-						title: title,
+						cid: title,
 						p: pages
 					},
 					dataType: 'json',
@@ -78,12 +83,7 @@
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
-					str += '<tr><td>' + v.number + '</td><td>' + v.name + '</td><td>' + v.department + '</td><td>' + v.cert +
-						'</td><td>' + v.price + '</td><td>' + v.cname + '</td><td>' + v.optname + '</td><td>' + v.content + '</td>' +
-						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
-						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/materials/staff/change.html?id=' +
-						v.id + '"><a>修改</a></li><li class="y_slectItem" data-title="删除" onClick="del(' + v.id +
-						')"><a>删除</a></li></ul></div></td></tr>'
+					str += addStr(v);
 				});
 				if (str == '') {
 					$('.y_tab').hide();
@@ -94,6 +94,51 @@
 					$('.list').append(str);
 				}
 			}
+
+			function init() {
+				/* 获取项目信息*/
+				$.ajax({
+					type: "post",
+					url: reqUrl + "/api/projects/Catestype",
+					data: {
+						type: 2,
+						token: tokens
+					},
+					dataType: 'json',
+					success: function(res) {
+						console.log(res);
+						let o = [];
+						res.data.forEach(e => {
+							o.push({
+								title: e.name,
+								id: e.id
+							})
+						})
+						parent.window.loading('none');
+						if (res.status == 0) {
+							Pro = {}
+							Pro.status = 2;
+							Pro.data = o;
+							$('.pro').click(function() {
+								parent.window.ChousProject(Pro, 'one', $('.proDistid').val(), function(tex, val) {
+									title = val;
+									getList();
+									$('#anuab').html(tex);
+									$('.infoqfvs').show();
+								})
+							});
+						}
+					}
+				});
+			}
+			
+			/* 取消搜索 */
+			$('.infoqfvs').on('click',function () {
+				title = '';
+				getList();
+				$('.infoqfvs').hide();
+				$('#anuab').html('');
+			})
 
 			/*页码跳转*/
 			$(document).on('click', '.y_page_item', function() {
@@ -106,15 +151,8 @@
 					getList()
 				}
 			})
-
-			/*标题搜索*/
-			$('.serch').click(function() {
-				title = $('.serch_title').val().trim();
-				pages = 1;
-				getList();
-			})
-
 		});
+
 		function del(id) {
 			parent.window.Confirm('确认删除吗？', function(e) {
 				if (e) {
@@ -124,7 +162,7 @@
 						type: 'post',
 						data: {
 							id: id,
-							mod:2
+							mod: 3
 						},
 						dataType: 'json',
 						success: function(res) {
@@ -141,6 +179,10 @@
 					});
 				}
 			})
+		}
+
+		function addStr(v) {
+			return `<tr><td>${v.number}</td><td>${v.model}</td><td>${v.name}</td><td>${v.num}</td><td>${v.norm}</td><td>${v.unit}</td><td>${v.money}</td><td>${v.status=='1'?'<span style="color: burlywood;">待审核</span>':v.status=='2'?'<span style="color: red;">未通过</span>':v.status=='3'?'<span style="color: green;">通过</span>':'<span style="color: red;">异常</span>'}</td><td>${v.uname}</td><td>${v.applydt}</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="审核" data-url="./project/apply/change/change.html?id=${v.id}"><a>审核</a></li><li class="y_slectItem" data-title="删除" onClick="del(${v.id})"><a>删除</a></li></ul></div></td></tr>`
 		}
 	</script>
 </html>

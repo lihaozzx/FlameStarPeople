@@ -27,13 +27,13 @@
 						<td class="y_textRight"><i class="y_colorRead">*</i>职位：</td>
 						<td colspan="2">
 							<select name="positionid" class="y_input block">
-								<option value="">未选择</option>
+								<option value="">不变</option>
 							</select>
 						</td>
 						<td class="y_textRight"><i class="y_colorRead">*</i>部门：</td>
 						<td colspan="2">
 							<select name="departmentid" class="y_input block">
-								<option value="">未选择</option>
+								<option value="">不变</option>
 							</select>
 						</td>
 					</tr>
@@ -116,7 +116,7 @@
 		function do_sub() {
 			parent.window.loading();
 			$.ajax({
-				type: "post",
+				type: "get",
 				url: reqUrl + '/api/per/upInfo',
 				data: $('#check_form').serialize(),
 				dataType: "json",
@@ -141,7 +141,7 @@
 	function initInfo(id) {
 		parent.window.loading();
 		let str = '';
-		/* 材料信息 */
+		/* 员工信息 */
 		$.ajax({
 			type: "post",
 			url: reqUrl + '/api/per/info',
@@ -169,6 +169,41 @@
 				$('input[name="workdate"]').val(o.workdate);
 				$('input[name="id"]').val(o.id);
 				parent.window.loading('none');
+			}
+		});
+		
+		/* 部门 */
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/public/department',
+			data: {
+				token: tokens
+			},
+			dataType: "json",
+			success: function(res) {
+				let o = res.data;
+				let str = '';
+				o.forEach(a=>{
+					str+='<option value="'+a.id+'">'+a.department+'</option>'
+				})
+				$('select[name="departmentid"]').append(str);
+			}
+		});
+		/* 职工 */
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/public/position',
+			data: {
+				token: tokens
+			},
+			dataType: "json",
+			success: function(res) {
+				let o = res.data;
+				let str = '';
+				o.forEach(a=>{
+					str+='<option value="'+a.id+'">'+a.name+'</option>'
+				})
+				$('select[name="positionid"]').append(str);
 			}
 		});
 	}

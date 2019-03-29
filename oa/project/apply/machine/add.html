@@ -28,7 +28,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>材料数量：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>机械剩余可申请数量：</td>
 						<td colspan="5">
 							<span id="aniuaeb"></span>
 						</td>
@@ -136,12 +136,12 @@
 				}
 			}
 		});
-		function getNum() {
-			let id = $('#type').val();
-			let yuji = $('option[value="'+id+'"]').attr('data-yuji');
-			let chuku = $('option[value="'+id+'"]').attr('data-chuku');
-			let o=parseInt(yuji)-parseInt(chuku)
-			$('#aniuaeb').html(o)
-		}
+	}
+	function getNum() {
+		let id = $('#type').val();
+		let yuji = $('option[value="'+id+'"]').attr('data-yuji');
+		let chuku = $('option[value="'+id+'"]').attr('data-chuku');
+		let o=parseInt(yuji)-parseInt(chuku)
+		$('#aniuaeb').html(o)
 	}
 </script>

@@ -10,18 +10,18 @@
 	<body>
 		<div class="y_body">
 			<div class="y_floatBox">
-				<!-- 名称 编号筛选 -->
 				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入员工姓名" />
 				<button class="y_btn prim y_rit10 serch">搜索</button>
 				<span class="y_btn y_reset y_rit10">重置</span>
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
-				<span class="y_btn gren y_floatRight y_newPop" data-title="添加项目" data-url="./personalMen/add.html"><i class="y_icon add">新增</i></span>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="离职申请" data-url="./personalMen/addLizhi.html"><i class="y_icon add">离职</i></span>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="转正申请" data-url="./personalMen/addZhuanzhen.html"><i class="y_icon add">转正</i></span>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加员工" data-url="./personalMen/add.html"><i class="y_icon add">新增</i></span>
 			</div>
 			<div class="y_top10">
 				<table class="y_tab y_bordtr">
 					<thead class="y_textCenter">
 						<tr>
-							<!-- {id,name:'姓名',departmentname:'部门',positionname:'职位',phone:'电话',number:'编号',sex:'性别',birthday:'生日',dir:'状态',idCard:'身份证',email:'邮箱',QQ:'qq'} -->
 							<td>编号</td>
 							<td>姓名</td>
 							<td>部门</td>
@@ -57,7 +57,7 @@
 					type: 'post',
 					data: {
 						token: tokens,
-						title: title,
+						name: title,
 						p: pages
 					},
 					dataType: 'json',
@@ -78,7 +78,6 @@
 			}
 
 			function setList(data) {
-				console.log(data);
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
@@ -88,9 +87,9 @@
 						'</td><td>' + v.QQ + '</td>' +
 						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="员工详情" data-url="./personalMen/info.html?id=' +
 						v.id +
-						'"><a>详情</a></li><li class="y_slectItem y_newPop" data-class="secondaryWindow" data-title="项目预计材料信息" data-url="./project/materialManagement.html?id=' +
+						'"><a>详情</a></li><li class="y_slectItem y_newPop" data-class="secondaryWindow" data-title="离职信息" data-url="./project/materialManagement.html?id=' +
 						v.id +
-						'"><a>材料预计</a></li><li class="y_slectItem y_newPop" data-title="删除理由" data-url="./project/del.html?id=' + v.id +
+						'"><a>员工离职</a></li><li class="y_slectItem y_newPop" data-title="删除理由" data-url="./project/del.html?id=' + v.id +
 						'"><a>删除</a></li></ul></div></td></tr>'
 				});
 				if (str == '') {

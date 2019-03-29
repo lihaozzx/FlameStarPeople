@@ -9,14 +9,13 @@
 	</head>
 	<body>
 		<div class="y_body">
-			<div class="y_floatBox">
 				<!-- 名称 编号筛选 -->
-				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入材料名称" />
-				<button class="y_btn prim y_rit10 serch">搜索</button>
-				<span class="y_btn y_reset y_rit10">重置</span>
+				<span class="y_btn prim pro">选择机械分类</span>
+				<div class="y_btn infoqfvs y_rit10" style="display: none;"><i class="y_icon fresh">当前选择：<span id="anuab"></span></i></div>
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
-				<!-- <span class="y_btn gren y_floatRight y_newPop" style="margin-left: 10px;" data-title="机械分类管理" data-url="./project/materials/machine/catesMe.html"><i class="y_icon add">分类管理</i></span> --> <span style="color: green;"></span>
-				<span class="y_btn gren y_floatRight y_newPop" data-title="添加机械申请" data-url="./project/apply/machine/add.html"><i class="y_icon add">新增</i></span>
+				<span style="color: green;"></span>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加机械申请" data-url="./project/apply/machine/add.html"><i
+					 class="y_icon add">新增</i></span>
 			</div>
 			<div class="y_top10">
 				<table class="y_tab y_bordtr">
@@ -51,13 +50,14 @@
 
 			function getList() {
 				loading();
+				init();
 				$.ajax({
 					url: reqUrl + '/api/projects/cateList',
 					type: 'post',
 					data: {
-						model:'machine',
+						model: 'machine',
 						token: tokens,
-						title: title,
+						cid: title,
 						p: pages
 					},
 					dataType: 'json',
@@ -78,39 +78,10 @@
 			}
 
 			function setList(data) {
-				console.log(data);
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
-					
-					
-					
-					
-					
-					
-					/* <!-- 	{id,name:'申请名称',uname:'申请人',adddt:'申请时间',status:'状态',number:'编号',model:'分类',num:'数量',money:'总金额',norm:'规格或部门',unit:'单位或身份证'}
-					applydt: "2019-03-28 10:12:04"
-					id: "6"
-					model: "machine"
-					money: "10000.000"
-					name: "搜搂蛋"
-					norm: "200g"
-					num: "20"
-					number: ""
-					status: "1"
-					uname: "超级管理员"
-					unit: "枚"1待审核2未通过3通过-->
-												<td>编号</td>
-												<td>分类</td>
-												<td>申请名称</td>
-												<td>数量</td>
-												<td>规格</td>
-												<td>单位</td>
-												<td>总金额</td>
-												<td>状态</td>
-												<td>申请人</td>
-												<td>申请时间</td> */
-					str += `<tr><td>${v.number}</td><td>${v.model}</td><td>${v.name}</td><td>${v.num}</td><td>${v.norm}</td><td>${v.unit}</td><td>${v.money}</td><td>${v.status=='1'?'<span style="color: burlywood;">待审核</span>':v.status=='2'?'<span style="color: red;">未通过</span>':v.status=='3'?'<span style="color: green;">通过</span>':'<span style="color: red;">异常</span>'}</td><td>${v.uname}</td><td>${v.applydt}</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="审核" data-url="./project/apply/machine/change.html?id=${v.id}"><a>审核</a></li><li class="y_slectItem" data-title="删除" onClick="del(${v.id})"><a>删除</a></li></ul></div></td></tr>`
+					str += addStr(v);
 				});
 				if (str == '') {
 					$('.y_tab').hide();
@@ -121,6 +92,51 @@
 					$('.list').append(str);
 				}
 			}
+
+			function init() {
+				/* 获取项目信息*/
+				$.ajax({
+					type: "post",
+					url: reqUrl + "/api/projects/Catestype",
+					data: {
+						type: 2,
+						token: tokens
+					},
+					dataType: 'json',
+					success: function(res) {
+						console.log(res);
+						let o = [];
+						res.data.forEach(e => {
+							o.push({
+								title: e.name,
+								id: e.id
+							})
+						})
+						parent.window.loading('none');
+						if (res.status == 0) {
+							Pro = {}
+							Pro.status = 2;
+							Pro.data = o;
+							$('.pro').click(function() {
+								parent.window.ChousProject(Pro, 'one', $('.proDistid').val(), function(tex, val) {
+									title = val;
+									getList();
+									$('#anuab').html(tex);
+									$('.infoqfvs').show();
+								})
+							});
+						}
+					}
+				});
+			}
+			
+			/* 取消搜索 */
+			$('.infoqfvs').on('click',function () {
+				title = '';
+				getList();
+				$('.infoqfvs').hide();
+				$('#anuab').html('');
+			})
 
 			/*页码跳转*/
 			$(document).on('click', '.y_page_item', function() {
@@ -133,41 +149,10 @@
 					getList()
 				}
 			})
-
-			/*标题搜索*/
-			$('.serch').click(function() {
-				title = $('.serch_title').val().trim();
-				pages = 1;
-				getList();
-			})
-
 		});
-		function del(id) {
-			parent.window.Confirm('确认删除吗？', function(e) {
-				if (e) {
-					loading();
-					$.ajax({
-						url: reqUrl + '/api/projects/delCate',
-						type: 'post',
-						data: {
-							id: id,
-							mod:3
-						},
-						dataType: 'json',
-						success: function(res) {
-							if (res.status == 0) {
-								parent.window.Alert('分类已删除');
-								parent.window.Reload();
-							} else {
-								parent.window.Alert(res.msg);
-							}
-						},
-						complete: function() {
-							loading('none');
-						}
-					});
-				}
-			})
+
+		function addStr(v) {
+			return `<tr><td>${v.number}</td><td>${v.model}</td><td>${v.name}</td><td>${v.num}</td><td>${v.norm}</td><td>${v.unit}</td><td>${v.money}</td><td>${v.status=='1'?'<span style="color: burlywood;">待审核</span>':v.status=='2'?'<span style="color: red;">未通过</span>':v.status=='3'?'<span style="color: green;">通过</span>':'<span style="color: red;">异常</span>'}</td><td>${v.uname}</td><td>${v.applydt}</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="审核" data-url="./project/apply/machine/change.html?id=${v.id}"><a>审核</a></li></ul></div></td></tr>`
 		}
 	</script>
 </html>

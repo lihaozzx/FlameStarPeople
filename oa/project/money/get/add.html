@@ -14,19 +14,17 @@
 					<tr>
 						<td class="y_textRight"><i class="y_colorRead">*</i>所属项目：</td>
 						<td colspan="5">
-							<input type="text" class="y_input long y_rit10 proDistname" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="text" class="y_input long y_rit10 proDistname" readonly="readonly"/>
 							<input type="hidden" name="proid" class="proDistid" />
-							<span class="y_btn prim pro">选择</span>
 						</td>
 					</tr>
 					<tr>
 						<td class="y_textRight"><i class="y_colorRead">*</i>分类：</td>
 						<td colspan="5">
 							<select name="cate" id="type" class="y_input block" style="width: 30%;">
-								<option value="">--未选择--</option>
 								<option value="1">材料</option>
-								<option value="2">人工</option>
-								<option value="3">机械</option>
+								<option value="2">机械</option>
+								<option value="3">人工</option>
 							</select>
 						</td>
 					</tr>
@@ -52,7 +50,7 @@
 					</tr>
 				</table>
 				<div class="y_inPopFoot">
-					<input type="hidden" name="type" class="token" value="1" />
+					<input type="hidden" name="type" value="1" />
 					<input type="hidden" name="token" class="token" value="" />
 					<span class="y_btn lg y_rit20 prim submit">提 交</span>
 				</div>
@@ -62,10 +60,10 @@
 	</body>
 </html>
 <script type="text/javascript">
-	var info = []
+	let id = ''; 
 	$(function() {
+		id = getIdFromUrl();
 		initInfos();
-
 
 		/*提交*/
 		$('.submit').click(function() {
@@ -74,27 +72,25 @@
 		});
 
 		$('#type').on('change', function() {
-			let type = $(this).val();
-			switch (type) {
+			switch ($(this).val()) {
 				case '1':
-					setType('material');
+					initfenlei('material');
 					break;
 				case '2':
-					setType('staff');
+					initfenlei('machine');
 					break;
 				case '3':
-					setType('machine');
+					initfenlei('staff');
 					break;
 			}
 		})
-
 	});
 	/* 提交 */
 	function do_sub() {
 		parent.window.loading();
 		$.ajax({
 			type: "GET",
-			url: reqUrl + '/api/projects/savePro',
+			url: reqUrl + '/api/projects/savePayment',
 			data: $('#check_form').serialize(),
 			dataType: "json",
 			error: function(request) {
@@ -106,102 +102,61 @@
 				parent.window.Alert(data.msg, function() {
 					if (data.status == 0) {
 						parent.window.closePop('', function() {
-							parent.window.Reload();
+							parent.window.Reload('shoukuan');
 						})
 					}
 				});
 			}
 		});
 	}
-	function setType(e) {
-		let str = '';
-		let f = true;
-		$('#type2').empty();
-		info.forEach(k => {
-			if (f) {
-				switch (k.model) {
-					case "machine":
-						$('#type').val(3);
-						break;
-					case "staff":
-						$('#type').val(2);
-						break;
-					case "material":
-						$('#type').val(1);
-						break;
-				}
-				f = false;
-			}
-			if(k.model == e){
-				str += '<option value ="' + k.id + '" class="y_input block" data-yuji="' + k.yuji +
-					'" data-chuku="' + k.chuku + '">' + k.name + '</option>'
-			}
-		});
-		$('#type2').append(str);
-	}
+
 	function initInfos() {
 		/* 获取项目信息*/
 		$.ajax({
 			type: "post",
-			url: reqUrl + "/api/projects/myPro",
+			url: reqUrl + "/api/projects/proInfo",
 			data: {
-				token: tokens
+				token: tokens,
+				id:id
 			},
 			dataType: 'json',
 			success: function(res) {
-				parent.window.loading('none');
+				console.log(res);
 				if (res.status == 0) {
-					Pro = {}
-					Pro.status = 2;
-					Pro.data = res.data;
-					$('.pro').click(function() {
-						parent.window.ChousProject(Pro, 'one', $('.proDistid').val(), function(tex, val) {
-							$('.proDistname').val(tex);
-							$('.proDistid').val(val);
-							/* 项目下材料信息 */
-							$.ajax({
-								type: "post",
-								url: reqUrl + '/api/projects/proStock',
-								data: {
-									id: val
-								},
-								dataType: "json",
-								success: function(res) {
-									if (res.status == 0) {
-										info = res.data
-										
-										let str = '';
-										let f = true;
-										$('#type2').empty();
-										res.data.forEach(k => {
-											if (f) {
-												switch (k.model) {
-													case "machine":
-														$('#type').val(3);
-														break;
-													case "staff":
-														$('#type').val(2);
-														break;
-													case "material":
-														$('#type').val(1);
-														break;
-												}
-												f = false;
-											}
-											
-											str += '<option value ="' + k.id + '" class="y_input block" data-yuji="' + k.yuji +
-												'" data-chuku="' + k.chuku + '">' + k.name + '</option>'
-										});
-										$('#type2').append(str);
-									} else {
-										parent.window.Alert(res.msg)
-									}
-									parent.window.loading('none');
-								}
-							});
-						})
-					});
+					$('.proDistname').val(res.data.title);
+					$('.proDistid').val(res.data.id)
 				}
+			}
+		});
+		initfenlei('material')
+	}
+
+	function initfenlei(k) {
+		parent.window.loading();
+		/* 项目下材料分类信息 */
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/projects/cateFl',
+			data: {
+				model: k,
+				proid:id
+			},
+			dataType: "json",
+			success: function(res) {
+				console.log(res);
+				if (res.status == 0) {
+					info = res.data
+					let str = '';
+					let f = true;
+					$('#type2').empty();
+					res.data.forEach(k => {
+						str += '<option value ="' + k.cid + '" class="y_input block">' + k.cname + '</option>'
+					});
+					$('#type2').append(str);
+				} else {
+					parent.window.Alert(res.msg)
+				}
+				parent.window.loading('none');
 			}
 		});
 	}

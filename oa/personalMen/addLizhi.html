@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>离职原因：</td>
+						<td colspan="5">
+							<select name="cause" class="y_input block" >
+								
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight">离职日期：</td>
+						<td colspan="5">
+							<input type="text" name="leavedt" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>备注：</td>
+						<td colspan="5">
+							<textarea class="y_input long y_rit10" name="content"></textarea>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		$.ajax({
+			type: "GET",
+			url: reqUrl + '/api/public/leave',
+			data: {token:tokens},
+			dataType: "json",
+			error: function(request) {
+				parent.window.loading('none');
+				parent.window.Alert('提交失败');
+			},
+			success: function(res) {
+				if(res.status == 0){
+					let str = ''
+					res.data.forEach(s=>{
+						str+='<option>'+s+'</option>'
+					})
+					$('select[name="cause"]').append(str)
+				}
+				parent.window.loading('none');
+			}
+		});
+		/*提交*/
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		})
+
+	});
+	/* 提交 */
+	function do_sub() {
+		parent.window.loading();
+		$.ajax({
+			type: "GET",
+			url: reqUrl + '/api/per/saveHrredund',
+			data: $('#check_form').serialize(),
+			dataType: "json",
+			error: function(request) {
+				parent.window.loading('none');
+				parent.window.Alert('提交失败');
+			},
+			success: function(data) {
+				parent.window.loading('none');
+				parent.window.Alert(data.msg, function() {
+					if (data.status == 0) {
+						parent.window.closePop('', function() {
+							parent.window.Reload();
+						})
+					}
+				});
+			}
+		});
+	}
+</script>
