@@ -1,0 +1,10 @@
+﻿route要分模块引入{
+			path: '/',
+			name: 'index',
+			component: resolve => require(['path'], resolve),
+			meta: {
+				title: '选手到位情况'
+			}
+		}
+
+vuex真快乐啊
