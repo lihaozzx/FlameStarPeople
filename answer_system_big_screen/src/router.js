@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import index from './views/index.vue'
+import info from './views/answerInfo.vue'
+import paimin from './views/paimin.vue'
+import answer from './views/answer.vue'
 
 Vue.use(Router)
 
@@ -13,6 +16,27 @@ export default new Router({
 				title: '选手到位情况'
 			}
 		},
+		{
+			path: '/info',
+			name: 'info',
+			component: info,
+			meta: {
+				title: '本题答对前三名'
+			}
+		},
+		{
+			path: '/Ranking',
+			name: 'Ranking',
+			component: paimin,
+			meta: {
+				title: '选手排名情况'
+			}
+		},
+		{
+			path: '/answer',
+			name: 'answer',
+			component: answer
+		}
 		//     {
 		//       path: '/about',
 		//       name: 'about',

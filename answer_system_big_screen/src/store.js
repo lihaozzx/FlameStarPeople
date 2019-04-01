@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		title: ''
+		title: '',
+		answerNum:0
 	},
 	mutations: {
 		changeTitle(state,k){
 			state.title = k;
+		},
+		nextAns(state){
+			state.answerNum++;
 		}
 	},
 	actions: {
@@ -18,6 +22,9 @@ export default new Vuex.Store({
 	getters:{
 		nowTitle(state){
 			return state.title
+		},
+		ans(state){
+			return state.answerNum
 		}
 	}
 })
