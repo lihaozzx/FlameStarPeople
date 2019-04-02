@@ -8,33 +8,53 @@ import cpm from './views/cpm.vue'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: index,
-			children:[
-				{
-					path: '/',
-          component: stu
+	routes: [{
+			path: '/index.html',
+			component: index,
+			children: [{
+					path: 'student',
+					name: 'student',
+					component: stu,
+					meta: {
+						title: '学生列表'
+					}
 				},
 				{
 					path: 'school',
-				  component: sch
+					name: 'school',
+					component: sch,
+					meta: {
+						title: '学校列表'
+					}
 				},
 				{
 					path: 'session',
-				  component: cpm
+					name: 'session',
+					component: cpm,
+					meta: {
+						title: '赛程列表'
+					}
 				}
 			]
-    }
-//     {
-//       path: '/about',
-//       name: 'about',
-//       // route level code-splitting
-//       // this generates a separate chunk (about.[hash].js) for this route
-//       // which is lazy-loaded when the route is visited.
-//       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-//     }
-  ]
+		}, {
+			path: '/login',
+			name: 'login',
+			component: resolve => require(['./views/login.vue'], resolve),
+			meta: {
+				title: '登录'
+			}
+		},
+		{
+			path: "*",
+			redirect: "/login"
+		}
+		//     {
+		//       path: '/about',
+		//       name: 'about',
+		//       // route level code-splitting
+		//       // this generates a separate chunk (about.[hash].js) for this route
+		//       // which is lazy-loaded when the route is visited.
+		//       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+		//     }
+	]
 })

@@ -27,13 +27,13 @@
 						<td class="y_textRight"><i class="y_colorRead">*</i>职位：</td>
 						<td colspan="2">
 							<select name="positionid" class="y_input block">
-								<option value="">不变</option>
+								<option value="">---</option>
 							</select>
 						</td>
 						<td class="y_textRight"><i class="y_colorRead">*</i>部门：</td>
 						<td colspan="2">
 							<select name="departmentid" class="y_input block">
-								<option value="">不变</option>
+								<option value="">---</option>
 							</select>
 						</td>
 					</tr>
@@ -105,9 +105,8 @@
 </html>
 <script type="text/javascript">
 	$(function() {
-		var id = getIdFromUrl();
 		/*提交*/
-		initInfo(id);
+		initInfo();
 		$('.submit').click(function() {
 			$('.token').val(tokens);
 			do_sub();
@@ -117,7 +116,7 @@
 			parent.window.loading();
 			$.ajax({
 				type: "get",
-				url: reqUrl + '/api/per/upInfo',
+				url: reqUrl + '/api/per/addInfo',
 				data: $('#check_form').serialize(),
 				dataType: "json",
 				error: function(request) {
@@ -141,36 +140,6 @@
 	function initInfo(id) {
 		parent.window.loading();
 		let str = '';
-		/* 员工信息 */
-		$.ajax({
-			type: "post",
-			url: reqUrl + '/api/per/info',
-			data: {
-				id: id
-			},
-			dataType: "json",
-			success: function(res) {
-				console.log(res);
-				let o = res.data
-				$('input[name="QQ"]').val(o.QQ);
-				$('input[name="birthday"]').val(o.birthday);
-				$('input[name="departmentname"]').val(o.departmentname);
-				$('input[name="dir"]').val(o.dir);
-				$('input[name="email"]').val(o.email);
-				$('input[name="idCard"]').val(o.idCard);
-				$('input[name="name"]').val(o.name);
-				$('input[name="number"]').val(o.number);
-				$('input[name="phone"]').val(o.phone);
-				$('input[name="pname"]').val(o.pname);
-				$('input[name="positionname"]').val(o.positionname);
-				$('input[name="positivedt"]').val(o.positivedt);
-				$('input[name="sex"]').val(o.sex);
-				$('input[name="username"]').val(o.username);
-				$('input[name="workdate"]').val(o.workdate);
-				$('input[name="id"]').val(o.id);
-				parent.window.loading('none');
-			}
-		});
 		
 		/* 部门 */
 		$.ajax({
@@ -187,6 +156,7 @@
 					str+='<option value="'+a.id+'">'+a.department+'</option>'
 				})
 				$('select[name="departmentid"]').append(str);
+				parent.window.loading('none');
 			}
 		});
 		/* 职工 */

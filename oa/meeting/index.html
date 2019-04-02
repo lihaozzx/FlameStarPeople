@@ -75,7 +75,7 @@
 				var str = '';
 				$.each(data, function(k, v) {
 					str += '<tr><td>' + v.name + '</td><td>' + v.statdt + '</td><td>' + v.mRoom + '</td><td>' + v.del + '</td>' +
-						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="会议总结" data-url="./project/info.html?id='+v.id+'"><a>总结</a>></ul></div></td></tr>'
+						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="会议总结" data-url="./meeting/info.html?id='+v.id+'"><a>总结</a></ul></div></td></tr>'
 				});
 				if (str == '') {
 					$('.y_tab').hide();
