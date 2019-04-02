@@ -9,37 +9,37 @@
 	</head>
 	<body>
 		<div class="y_body">
-				<!-- 名称 编号筛选 -->
-				<span class="y_btn prim pro">选择机械分类</span>
-				<div class="y_btn infoqfvs y_rit10" style="display: none;"><i class="y_icon fresh">当前选择：<span id="anuab"></span></i></div>
-				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
-				<span style="color: green;"></span>
-				<span class="y_btn gren y_floatRight y_newPop" data-title="添加机械申请" data-url="./project/apply/machine/add.html"><i
-					 class="y_icon add">新增</i></span>
-			</div>
-			<div class="y_top10">
-				<table class="y_tab y_bordtr">
-					<thead class="y_textCenter">
-						<tr>
-							<td>编号</td>
-							<td>分类</td>
-							<td>申请名称</td>
-							<td>数量</td>
-							<td>规格</td>
-							<td>单位</td>
-							<td>总金额</td>
-							<td>状态</td>
-							<td>申请人</td>
-							<td>申请时间</td>
-							<td>操作</td>
-						</tr>
-					</thead>
-					<tbody class="y_textCenter y_exchag y_hover list">
+			<!-- 名称 编号筛选 -->
+			<span class="y_btn prim pro">选择机械分类</span>
+			<div class="y_btn infoqfvs y_rit10" style="display: none;"><i class="y_icon fresh">当前选择：<span id="anuab"></span></i></div>
+			<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+			<span style="color: green;"></span>
+			<span class="y_btn gren y_floatRight y_newPop" data-title="添加机械申请" data-url="./project/apply/machine/add.html"><i
+				 class="y_icon add">新增</i></span>
+		</div>
+		<div class="y_top10">
+			<table class="y_tab y_bordtr">
+				<thead class="y_textCenter">
+					<tr>
+						<td>编号</td>
+						<td>分类</td>
+						<td>申请名称</td>
+						<td>数量</td>
+						<td>规格</td>
+						<td>单位</td>
+						<td>总金额</td>
+						<td>状态</td>
+						<td>申请人</td>
+						<td>申请时间</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody class="y_textCenter y_exchag y_hover list">
 
-					</tbody>
-				</table>
-			</div>
-			<div class="y_pageBody page"></div>
+				</tbody>
+			</table>
+		</div>
+		<div class="y_pageBody page"></div>
 		</div>
 	</body>
 	<script type="text/javascript">
@@ -129,9 +129,9 @@
 					}
 				});
 			}
-			
+
 			/* 取消搜索 */
-			$('.infoqfvs').on('click',function () {
+			$('.infoqfvs').on('click', function() {
 				title = '';
 				getList();
 				$('.infoqfvs').hide();

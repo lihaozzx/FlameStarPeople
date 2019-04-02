@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>标识：</td>
+						<td colspan="5">
+							<span id="name"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>名称：</td>
+						<td colspan="5">
+							<span id="zsName"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>内容：</td>
+						<td colspan="5">
+							<textarea class="y_input block" name="content"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>类型：</td>
+						<td colspan="5">
+							<span id="type"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>修改人：</td>
+						<td colspan="5">
+							<span id="optName"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>修改时间：</td>
+						<td colspan="5">
+							<span id="optdt"></span>
+						</td>
+					</tr>
+				</table>
+
+				<div class="y_inPopFoot">
+					<input type="hidden" name="id" />
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		var id = getIdFromUrl();
+		initInfo(id);
+
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub(id);
+		})
+	});
+
+	function initInfo(id) {
+		parent.window.loading();
+		let str = '';
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/basis/basisInfo',
+			data: {
+				id: id
+			},
+			dataType: "json",
+			success: function(res) {
+				if (res.status == 0) {
+					parent.window.loading('none');
+					setInfo(res.data);
+				}
+			}
+		});
+	}
+
+	function do_sub(id) {
+		let s = $('textarea[name="content"]').val();
+		let o = s.split(',');
+		parent.window.loading();
+		$.ajax({
+			url: reqUrl + '/api/basis/upBasis',
+			type: 'get',
+			data: {
+				content:o,
+				id:id
+			},
+			dataType: 'json',
+			success: function(res) {
+				parent.window.Alert(res.msg, function() {
+					if (res.status == 0) {
+						parent.window.closePop('', function() {
+							parent.window.Reload();
+						})
+					}
+				});
+			},
+			complete: function() {
+				parent.window.loading('none');
+			}
+		});
+	}
+
+	function setInfo(d) {
+		console.log(d);
+		$('span[id="name"]').html(d.name);
+		$('span[id="zsName"]').html(d.zsName);
+		let str = '';
+		for(let i = 0;i < d.content.length;i++){
+			if(i == d.content.length-1){
+				str += d.content[i];
+			}else{
+				str += d.content[i]+',';
+			}
+		}
+		$('textarea[name="content"]').html(str);
+		$('span[id="type"]').html(d.type);
+		$('span[id="optName"]').html(d.optName);
+		$('span[id="optdt"]').html(d.optdt);
+		$('input[name="id"]').val(d.id)
+	}
+</script>

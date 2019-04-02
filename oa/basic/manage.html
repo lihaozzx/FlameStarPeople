@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_top10">
+				<table class="y_tab y_bordtr">
+					<thead class="y_textCenter">
+						<tr>
+							<td>标识</td>
+							<td>名称</td>
+							<td>信息</td>
+							<td>type</td>
+							<td>修改人</td>
+							<td>修改时间</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list">
+
+					</tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			var title, pages;
+			var types = 1;
+			getList();
+
+			function getList() {
+				loading();
+				$.ajax({
+					url: reqUrl + '/api/basis/index',
+					type: 'post',
+					data: {
+						token: tokens,
+						p: pages
+					},
+					dataType: 'json',
+					success: function(res) {
+						if (res.status == 0) {
+							setList(res.data);
+							setPage('.page', res.pager);
+						} else {
+							$('.y_tab').hide();
+							noData('.y_body');
+							setPage('.page', false);
+						}
+					},
+					complete: function() {
+						loading('none');
+					}
+				});
+			}
+
+			function setList(data) {
+				$('.list').children().remove();
+				var str = '';
+				$.each(data, function(k, v) {
+					str += addStr(v);
+				});
+				if (str == '') {
+					$('.y_tab').hide();
+					noData('.y_body');
+				} else {
+					$('.y_tab').show();
+					$('.y_noData').remove();
+					$('.list').append(str);
+				}
+			}
+
+			/* 取消搜索 */
+			$('.infoqfvs').on('click', function() {
+				title = '';
+				getList();
+				$('.infoqfvs').hide();
+				$('#anuab').html('');
+			})
+
+			/*页码跳转*/
+			$(document).on('click', '.y_page_item', function() {
+				var that = $(this);
+				var cut_page = $('.y_page_item.active').attr('data-page');
+				if (that.attr('data-page') == cut_page) {
+					return
+				} else {
+					pages = that.attr('data-page') - 0;
+					getList()
+				}
+			})
+		});
+
+		function addStr(v) {
+			return `<tr><td>${v.name}</td><td>${v.zsName}</td><td>${v.content}</td><td>${v.type}</td><td>${v.optName}</td><td>${v.optdt}</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="修改信息" data-url="./basic/change.html?id=${v.id}"><a>修改信息</a></li></ul></div></td></tr>`
+		}
+	</script>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		
+	</body>
+	<script type="text/javascript">
+		$.ajax({
+			url: reqUrl + '/api/basis/auth',
+			type: 'post',
+			data: {
+				token: tokens
+			},
+			dataType: 'json',
+			success: function(res) {
+				console.log(res);
+				if (res.status == 0) {
+					
+				} else {
+					
+				}
+			},
+			complete: function() {
+				loading('none');
+			}
+		});
+	</script>
+</html>

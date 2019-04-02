@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<!-- 名称 编号筛选 -->
+			<span class="y_btn prim pro">选择机械分类</span>
+			<div class="y_btn infoqfvs y_rit10" style="display: none;"><i class="y_icon fresh">当前选择：<span id="anuab"></span></i></div>
+			<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+			<span style="color: green;"></span>
+			<span class="y_btn gren y_floatRight y_newPop" data-title="添加机械申请" data-url="./basic/addPer.html"><i class="y_icon add">新增</i></span>
+			<div class="y_top10">
+				<table class="y_tab y_bordtr">
+					<thead class="y_textCenter">
+						<tr>
+							<td>角色名称</td>
+							<td>操作人</td>
+							<td>操作时间</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list">
+
+					</tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			var title, pages;
+			var types = 1;
+			getList();
+
+			function getList() {
+				loading();
+				$.ajax({
+					url: reqUrl + '/api/basis/roles',
+					type: 'post',
+					data: {
+						token: tokens,
+						p: pages
+					},
+					dataType: 'json',
+					success: function(res) {
+						if (res.status == 0) {
+							setList(res.data);
+							setPage('.page', res.pager);
+						} else {
+							$('.y_tab').hide();
+							noData('.y_body');
+							setPage('.page', false);
+						}
+					},
+					complete: function() {
+						loading('none');
+					}
+				});
+			}
+
+			function setList(data) {
+				$('.list').children().remove();
+				var str = '';
+				$.each(data, function(k, v) {
+					str += addStr(v);
+				});
+				if (str == '') {
+					$('.y_tab').hide();
+					noData('.y_body');
+				} else {
+					$('.y_tab').show();
+					$('.y_noData').remove();
+					$('.list').append(str);
+				}
+			}
+
+			/* 取消搜索 */
+			$('.infoqfvs').on('click', function() {
+				title = '';
+				getList();
+				$('.infoqfvs').hide();
+				$('#anuab').html('');
+			})
+
+			/*页码跳转*/
+			$(document).on('click', '.y_page_item', function() {
+				var that = $(this);
+				var cut_page = $('.y_page_item.active').attr('data-page');
+				if (that.attr('data-page') == cut_page) {
+					return
+				} else {
+					pages = that.attr('data-page') - 0;
+					getList()
+				}
+			})
+		});
+
+		function addStr(v) {
+			return `<tr><td>${v.name}</td><td>${v.optname}</td><td>${v.optdt}</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="修改信息" data-url="./basic/change.html?id=${v.id}"><a>修改</a></li></ul></div></td></tr>`
+		}
+	</script>
+</html>
