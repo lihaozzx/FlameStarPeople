@@ -10,6 +10,7 @@
 	<body>
 		<div class="y_body">
 			<span class="y_btn gren y_floatRight y_newPop" data-title="添加权限人员" data-url="./basic/addPer.html"><i class="y_icon add">新增</i></span>
+			<div style="height: 50px;"></div>
 			<div class="y_top10">
 				<table class="y_tab y_bordtr">
 					<thead class="y_textCenter">
@@ -98,8 +99,35 @@
 			})
 		});
 
+		function del(id) {
+			parent.window.Confirm('确认删除吗？', function(e) {
+				if (e) {
+					loading();
+					$.ajax({
+						url: reqUrl + '/api/basis/delRole',
+						type: 'post',
+						data: {
+							id: id,
+						},
+						dataType: 'json',
+						success: function(res) {
+							if (res.status == 0) {
+								parent.window.Alert('角色删除');
+								parent.window.Reload();
+							} else {
+								parent.window.Alert(res.msg);
+							}
+						},
+						complete: function() {
+							loading('none');
+						}
+					});
+				}
+			})
+		}
+
 		function addStr(v) {
-			return `<tr><td>${v.name}</td><td>${v.optname}</td><td>${v.optdt}</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="修改信息" data-url="./basic/change.html?id=${v.id}"><a>修改</a></li></ul></div></td></tr>`
+			return `<tr><td>${v.name}</td><td>${v.optname}</td><td>${v.optdt}</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="修改信息" data-url="./basic/change.html?id=${v.id}"><a>修改</a></li><li class="y_slectItem" onclick="del(${v.id})"><a>删除</a></li></ul></div></td></tr>`
 		}
 	</script>
 </html>

@@ -17,30 +17,29 @@
 			</el-form>
 		</div>
 
-		<el-table v-loading="loadingTable" :data="tableData" style="width: 100%" :height="height*0.6" :border='false'>
-				<el-table-column prop="number" label="序号"> </el-table-column>
-				<el-table-column prop="name" label="姓名"></el-table-column>
-				<el-table-column prop="age" label="年龄"></el-table-column>
-				<el-table-column prop="size" label="衣服尺码"></el-table-column>
-				<el-table-column prop="school" label="学校"></el-table-column>
-				<el-table-column prop="grade" label="年级"></el-table-column>
-				<el-table-column prop="class" label="班级"></el-table-column>
-				<el-table-column prop="address" label="地址">
-					<!-- <template slot-scope="scope">
+		<el-table v-loading="loadingTable" :data="tableData" style="width: 100%" :height="height*0.5" :border='false'>
+			<el-table-column prop="number" label="序号"> </el-table-column>
+			<el-table-column prop="name" label="姓名"></el-table-column>
+			<el-table-column prop="age" label="年龄"></el-table-column>
+			<el-table-column prop="size" label="衣服尺码"></el-table-column>
+			<el-table-column prop="school" label="学校"></el-table-column>
+			<el-table-column prop="grade" label="年级"></el-table-column>
+			<el-table-column prop="class" label="班级"></el-table-column>
+			<el-table-column prop="address" label="地址">
+				<!-- <template slot-scope="scope">
 						<span>{{scope.row.status == 0 ? '冻结' : scope.row.status == 1 ? '未确认' : scope.row.status == 2 ? '已确认学员信息' : '异常'}}</span>
 					</template> -->
-				</el-table-column>
-				<el-table-column prop="phone" label="电话"></el-table-column>
-				<el-table-column fixed="right" label="操作">
-					<template slot-scope="scope">
-						<el-button @click="showInfoFun(scope.row)" type="text" size="small">编辑</el-button>
-					</template>
-				</el-table-column>
+			</el-table-column>
+			<el-table-column prop="phone" label="电话"></el-table-column>
+			<el-table-column fixed="right" label="操作">
+				<template slot-scope="scope">
+					<el-button @click="showInfoFun(scope.row)" type="text" size="small">编辑</el-button>
+				</template>
+			</el-table-column>
 		</el-table>
 
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage"
-			 @current-change="selStu"></el-pagination>
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selStu"></el-pagination>
 		</div>
 
 		<!-- 弹窗 -->
@@ -82,11 +81,15 @@
 
 <script>
 	export default {
+		computed:{
+			height(){
+				return innerHeight>800?(innerHeight>1080?innerHeight:1080):800
+			}
+		},
 		data() {
 			return {
 				loadingTable: true,
 				tableData: [],
-				height: innerHeight,
 				pageInfo: {
 					totalCount: 0,
 					size: 1,
@@ -113,13 +116,25 @@
 			};
 		},
 		created() {
-			this.selStu();
+			let info = this.$store.getters.stuInfo.stu;
+			let page = this.$store.getters.stuInfo.page;
+			console.log(info);
+			if (info.length != 0) {
+				this.tableData = info;
+				this.pageInfo = page;
+				this.loadingTable = false;
+			}else{
+				this.selStu();
+			}
 		},
 		methods: {
 			// 组件的方法
 			selStu(p) {
 				this.loadingTable = true;
-				this.pageInfo.nowPage = p;
+				if(p){
+					this.pageInfo.nowPage = p;
+				}
+
 				this.$http.get('/admin/student', {
 					params: {
 						token: this.$store.getters.token,
@@ -133,6 +148,14 @@
 							size: res.data.pager.page_size,
 							nowPage: res.data.pager.current_page
 						};
+						this.$store.commit('stu', {
+							stu: res.data.data,
+							page: {
+								totalCount: parseInt(res.data.pager.total_count),
+								size: res.data.pager.page_size,
+								nowPage: res.data.pager.current_page
+							}
+						})
 					}
 					this.loadingTable = false
 				})
@@ -141,8 +164,8 @@
 				this.inAdd = true
 				let out = this.oco(this.form, this.oldForm);
 				this.$http.post('/admin/upStudent', this.$qs.stringify({ ...out,
-						token: this.$store.getters.token
-					})).then(res => {
+					token: this.$store.getters.token
+				})).then(res => {
 					if (res.data.status == 0) {
 						this.showInfo = false;
 						this.$notify.success({
@@ -160,7 +183,7 @@
 						});
 					}
 					this.inAdd = false;
-				}).catch(()=>{
+				}).catch(() => {
 					this.$notify.success({
 						title: '错误',
 						iconClass: 'el-icon-warning',
@@ -171,9 +194,11 @@
 				})
 			},
 			showInfoFun(e) {
-				this.showInfo=true
+				console.log(e);
+				this.showInfo = true
 				this.form = e;
-				this.oldForm = {...this.form}
+				this.oldForm = { ...this.form
+				}
 			},
 			getStuInfo() {},
 			removeSearch() {},
@@ -209,29 +234,21 @@
 		height: 1.82rem;
 	}
 
-	.infoFooter {
-		display: flex;
-		flex-wrap: inherit;
-		position: relative;
-	}
-
-	.el-pagination {
-		position: absolute;
-		right: 0;
-	}
-	.el-table__body-wrapper::-webkit-scrollbar{
+	.el-table__body-wrapper::-webkit-scrollbar {
 		width: 0.625rem;
 	}
+
 	/*滚动条里面滑块*/
 	.el-table__body-wrapper::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-        background: #409EFF;
-    }
+		border-radius: 10px;
+		-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		background: #409EFF;
+	}
+
 	/*滚动条里面轨道*/
 	.el-table__body-wrapper::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-        border-radius: 0.3125rem;
-        background: #EDEDED;
-    }
+		-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		border-radius: 0.3125rem;
+		background: #EDEDED;
+	}
 </style>

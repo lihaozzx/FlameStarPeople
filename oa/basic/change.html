@@ -12,47 +12,40 @@
 			<form id="check_form">
 				<table class="y_tab y_border y_top20">
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>标识：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>角色名称：</td>
 						<td colspan="5">
-							<span id="name"></span>
+							<input type="text" name="name" class="y_input block" />
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>名称：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>状态：</td>
 						<td colspan="5">
-							<span id="zsName"></span>
+							<span id="del"></span>
 						</td>
 					</tr>
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>内容：</td>
-						<td colspan="5">
-							<textarea class="y_input block" name="content"></textarea>
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>类型：</td>
-						<td colspan="5">
-							<span id="type"></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>修改人：</td>
-						<td colspan="5">
-							<span id="optName"></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="y_textRight"><i class="y_colorRead"></i>修改时间：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>更新时间：</td>
 						<td colspan="5">
 							<span id="optdt"></span>
 						</td>
 					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>更新者：</td>
+						<td colspan="5">
+							<span id="optname"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>权限：</td>
+						<td colspan="5">
+							<div class="roles">
+							</div>
+						</td>
+					</tr>
 				</table>
-
 				<div class="y_inPopFoot">
-					<input type="hidden" name="id" />
 					<input type="hidden" name="token" class="token" value="" />
-					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+					<span class="y_btn lg y_rit20 prim submit">修 改</span>
 				</div>
 				<div class="y_top20"></div>
 			</form>
@@ -61,77 +54,106 @@
 </html>
 <script type="text/javascript">
 	$(function() {
-		var id = getIdFromUrl();
+		let id = getIdFromUrl()
 		initInfo(id);
-
+		
+		/*提交*/
 		$('.submit').click(function() {
-			$('.token').val(tokens);
-			do_sub(id);
-		})
-	});
+			var pattern = /check=.*?&/,
+				str = $('#check_form').serialize();
+			let o = ''
+			getR(pattern, str);
 
+			function getR(p, s) {
+				let a = p.exec(s);
+				if (a) {
+					o += a[0].substring(6, a[0].length - 1) + ','
+					getR(p, s.substring(a.index + a[0].length, s.length))
+				}
+			}
+			let out = o.split(',');
+			out.pop();
+			$('.token').val(tokens);
+			do_sub(out);
+		})
+
+		function do_sub(arr) {
+			parent.window.loading();
+			$.ajax({
+				type: "post",
+				url: reqUrl + '/api/basis/upRole',
+				data: {
+					name: $('input[name="name"]').val(),
+					promission: arr
+				},
+				dataType: "json",
+				error: function(request) {
+					parent.window.loading('none');
+					parent.window.Alert('提交失败');
+				},
+				success: function(data) {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						if (data.status == 0) {
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							});
+						}
+					});
+				}
+			});
+		}
+	})
 	function initInfo(id) {
 		parent.window.loading();
-		let str = '';
 		$.ajax({
 			type: "post",
-			url: reqUrl + '/api/basis/basisInfo',
+			url: reqUrl + '/api/basis/roleInfo',
 			data: {
-				id: id
+				token: tokens,
+				id:id
 			},
 			dataType: "json",
 			success: function(res) {
 				if (res.status == 0) {
-					parent.window.loading('none');
-					setInfo(res.data);
+					$.ajax({
+						type: "post",
+						url: reqUrl + '/api/basis/auth',
+						data: {
+							token: tokens
+						},
+						dataType: "json",
+						success: function(ress) {
+							if (ress.status == 0) {
+								let str = ''
+								ress.data.forEach(e => {
+									str +=
+										'<div style="width: 100%; border: 1px solid #DDDDDD; border-radius: 5px;box-sizing: border-box;padding: 5px;margin-bottom: 10px;"><label class="y_rit20"><span class="y_checkAll" data-checkall="'+e.id+'">' +
+										e.title + '</span><input type="checkbox" class="y_none"></label><br>'
+									e.children.forEach(es => {
+										str += '<label class="y_inline y_rit20"><span class="y_check y_checkson" data-id="' + es.id + '" data-checkall="'+e.id+'">' + es.title +
+											'</span><input type="checkbox" class="y_none" name="check" value="' + es.id + '"></label>'
+									})
+									str += '</div>'
+								})
+								$('.roles').empty();
+								$('.roles').append(str);
+								$('.y_check').each((k,v)=>{
+									let id = $(v).attr('data-id');
+									console.log(id);
+									if(res.data.promission.some(a=>{return a==id})){
+										$(v).trigger("click");
+									}
+								})
+							}
+							parent.window.loading('none');
+						}
+					});
+					$('span[id="del"]').html(res.data.del==0?'使用':'删除');
+					$('span[id="optdt"]').html(res.data.optdt);
+					$('span[id="optname"]').html(res.data.optname);
 				}
 			}
 		});
-	}
-
-	function do_sub(id) {
-		let s = $('textarea[name="content"]').val();
-		let o = s.split(',');
-		parent.window.loading();
-		$.ajax({
-			url: reqUrl + '/api/basis/upBasis',
-			type: 'get',
-			data: {
-				content:o,
-				id:id
-			},
-			dataType: 'json',
-			success: function(res) {
-				parent.window.Alert(res.msg, function() {
-					if (res.status == 0) {
-						parent.window.closePop('', function() {
-							parent.window.Reload();
-						})
-					}
-				});
-			},
-			complete: function() {
-				parent.window.loading('none');
-			}
-		});
-	}
-
-	function setInfo(d) {
-		console.log(d);
-		$('span[id="name"]').html(d.name);
-		$('span[id="zsName"]').html(d.zsName);
-		let str = '';
-		for(let i = 0;i < d.content.length;i++){
-			if(i == d.content.length-1){
-				str += d.content[i];
-			}else{
-				str += d.content[i]+',';
-			}
-		}
-		$('textarea[name="content"]').html(str);
-		$('span[id="type"]').html(d.type);
-		$('span[id="optName"]').html(d.optName);
-		$('span[id="optdt"]').html(d.optdt);
-		$('input[name="id"]').val(d.id)
 	}
 </script>

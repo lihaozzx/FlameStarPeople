@@ -326,6 +326,28 @@ $(function() {
 	/*多选框*/
 	$(document).on('click', '.y_check', function() {
 		$(this).toggleClass('active');
+		if($(this).hasClass('y_checkson')){
+			let id = $(this).attr('data-checkall');
+			let isAll = true;
+			$('.y_checkson').each((k,v)=>{
+				if(isAll && $(v).attr('data-checkall')==id && !$(v).hasClass('active')){
+					isAll = false;
+				}
+			})
+			if(isAll){
+				$('.y_checkAll').each((k,v)=>{
+					if(id == $(v).attr('data-checkall')){
+						$(v).addClass('active')
+					}
+				})
+			}else{
+				$('.y_checkAll').each((k,v)=>{
+					if(id == $(v).attr('data-checkall')){
+						$(v).removeClass('active')
+					}
+				})
+			}
+		}
 	})
 	$(document).on('click','.y_checkAll', function () {
 		$(this).toggleClass('active');

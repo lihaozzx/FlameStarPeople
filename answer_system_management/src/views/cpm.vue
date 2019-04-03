@@ -1,24 +1,52 @@
 <template>
-	<div>
+	<div class="root">
 		<div class="infoBody">
-			<div class="one_info">
-				<div>
-					<span>阿萨德</span>
-					<span>授权码</span>
+			<div v-for="(s,k) in sessionInfo" :key="k" class="one_info">
+				<div class="div_text">
+					<span class="ts18">{{s.ffg}}</span>
+					<span class="ts12 inbot">授权码: <span class="cf0">{{s.warrant}}</span></span>
 				</div>
-				<div>
-					<span>
-						<span>选题视频：</span>
-						<span>第二套题库。avi</span>
+				<div class="div_text">
+					<span class="ts14">
+						<span class="o26">选题视频：</span>
+						<span class="a26">第二套题库。avi</span>
 					</span>
-					<span>修改</span>
+					<span class="ts12 inbot b18">修改</span>
 				</div>
-			</div>
-			<div class="one_info">
-				
-			</div>
-			<div class="one_info">
-				
+				<div>
+					
+				</div>
+				<div class="div_text">
+					<span class="ts14">
+						<span class="o26">当前考卷：</span>
+						<span class="a26">第二套题库。avi</span>
+					</span>
+					<span class="ts12 inbot b18">修改</span>
+				</div>
+				<div class="div_text">
+					<span class="ts14">
+						<span class="o26">答题人员：</span>
+						<span class="a26">？人</span>
+					</span>
+				</div>
+				<div class="div_text">
+					<span class="ts14">
+						<span class="o26">比赛日期：</span>
+						<span class="a26">{{s.date}}</span>
+					</span>
+					<span class="ts12 inbot b18">修改</span>
+				</div>
+				<div class="div_text">
+					<span class="ts14">
+						<span class="o26">当前状态：</span>
+						<span class="a26">{{s.status}}</span>
+					</span>
+					<span class="ts12 inbot b18">修改</span>
+				</div>
+				<div class="div_addPer">
+					<span class="ts12 b18">添加人员</span>
+					<i class="el-icon-arrow-down"></i>
+				</div>
 			</div>
 		</div>
 		<div class="infoFooter">
@@ -31,19 +59,30 @@
 	export default {
 		data() {
 			return {
-				sessionInfo:[
-					{
-						name:'阿萨德',
-						code:'Aqfdf',
-						vdioinfo:{
-							name:'wva.mp4',
-							url:''
-						},
-						tiku:'',
-						
-					}
-				]
+				sessionInfo: [{
+					ffg: '场次',
+					video: '视频地址',
+					date: '日期',
+					status: '状态',
+					warrant: '授权码',
+					eid: '对应考题'
+				}],
+				pageInfo: {
+					totalCount: 0,
+					size: 1,
+					nowPage: 1
+				}
 			};
+		},
+		created() {
+			this.$http.get('/admin/games', {
+				params: {
+					token: this.$store.getters.token,
+					p: this.pageInfo.nowPage
+				}
+			}).then(res => {
+				console.log(res);
+			})
 		},
 		methods: {
 			// 组件的方法
@@ -52,27 +91,41 @@
 </script>
 
 <style>
-	.infoBody{
+	.infoBody {
 		width: 100%;
-		height: 35rem;
+		height: 100%;
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
+		box-sizing: border-box;
+		padding-bottom: 50px;
 	}
-	.one_info{
+
+	.one_info {
 		width: 30%;
 		height: 80%;
 		background-color: #FFFFFF;
 		border-radius: 0 0 1.875rem 1.875rem;
-		box-shadow: 0 0 0.75rem 0.2rem rgba(0,0,0,0.2);
+		box-shadow: 0 0 0.75rem 0.2rem rgba(0, 0, 0, 0.2);
+		box-sizing: border-box;
+		padding: 1.4rem 1.875rem;
 	}
-	.infoFooter{
+	
+	.div_text{
 		display: flex;
-		flex-wrap: inherit;
+		justify-content: space-between;
 		position: relative;
 	}
-	.el-pagination{
+	.div_text .inbot{
 		position: absolute;
 		right: 0;
+		bottom: 0;
+	}
+	.div_addPer{
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

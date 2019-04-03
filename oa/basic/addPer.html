@@ -36,6 +36,7 @@
 </html>
 <script type="text/javascript">
 	$(function() {
+		parent.window.loading();
 		$.ajax({
 			type: "post",
 			url: reqUrl + '/api/basis/auth',
@@ -63,27 +64,8 @@
 				parent.window.loading('none');
 			}
 		});
+		
 		/*提交*/
-		parent.window.loading();
-		$.ajax({
-			type: "post",
-			url: reqUrl + '/api/public/cates',
-			data: {
-				type: 2
-			},
-			dataType: "json",
-			success: function(res) {
-				if (res.status == 0) {
-					let str = '';
-					res.data.forEach(k => {
-						str += '<option value ="' + k.id + '" class="y_input block">' + k.name + '</option>'
-					});
-					$('#type').append(str);
-				}
-				parent.window.loading('none');
-			}
-		});
-
 		$('.submit').click(function() {
 			var pattern = /check=.*?&/,
 				str = $('#check_form').serialize();
@@ -106,7 +88,7 @@
 		function do_sub(arr) {
 			parent.window.loading();
 			$.ajax({
-				type: "post",
+				type: "get",
 				url: reqUrl + '/api/basis/addRole',
 				data: {
 					name: $('input[name="name"]').val(),

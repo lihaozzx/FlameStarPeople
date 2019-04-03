@@ -4,6 +4,8 @@ import index from './views/index.vue'
 import stu from './views/stu.vue'
 import sch from './views/sch.vue'
 import cpm from './views/cpm.vue'
+import bank from './views/bank.vue'
+import paper from './views/paper.vue'
 
 Vue.use(Router)
 
@@ -33,6 +35,22 @@ export default new Router({
 					component: cpm,
 					meta: {
 						title: '赛程列表'
+					}
+				},
+				{
+					path: 'questionBank',
+					name: 'bank',
+					component: bank,
+					meta: {
+						title: '题库'
+					}
+				},
+				{
+					path: 'examinationPaper',
+					name: 'paper',
+					component: paper,
+					meta: {
+						title: '试卷'
 					}
 				}
 			]
