@@ -315,8 +315,8 @@ input.y_btn.block{height: 40px;line-height: 40px;padding: 0;}
 .y_page_item.active a{background-color: #b7b7b7;background: linear-gradient(to bottom, #b7b7b7, #878787);color: #fff;}
 .y_page_item.no a{background-color: #f1f1f1;background: linear-gradient(to bottom, #f1f1f1, #dadada);color: #5d5d5d;cursor: no-drop;}
 /*选择框*/
-.y_check, .y_radio{display: inline-block;vertical-align: middle;height: 20px;line-height: 20px;padding-left: 20px;background-image: url(../images/icon/check.png);background-repeat: no-repeat;background-position: left center;user-select: none;cursor: pointer;}
-.y_check.active, .y_radio.active{background-image: url(../images/icon/check_on.png);}
+.y_check,.y_checkAll, .y_radio{display: inline-block;vertical-align: middle;height: 20px;line-height: 20px;padding-left: 20px;background-image: url(../images/icon/check.png);background-repeat: no-repeat;background-position: left center;user-select: none;cursor: pointer;}
+.y_check.active,.y_checkAll.active, .y_radio.active{background-image: url(../images/icon/check_on.png);}
 
 /*背景渐变*/
 .y_bgc{background-color: #31496e;background: -webkit-linear-gradient(to top, #767c8a, #aeb6b9, #2d456b);background: -o-linear-gradient(to top, #767c8a, #aeb6b9, #2d456b);background: -moz-linear-gradient(to top, #767c8a, #aeb6b9, #2d456b);background: linear-gradient(to top, #767c8a, #aeb6b9, #2d456b);}

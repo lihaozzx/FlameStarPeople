@@ -8,27 +8,126 @@
 		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>角色名称：</td>
+						<td colspan="5">
+							<input type="text" name="name" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>权限：</td>
+						<td colspan="5">
+							<div class="roles">
+							</div>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
 	</body>
-	<script type="text/javascript">
+</html>
+<script type="text/javascript">
+	$(function() {
 		$.ajax({
+			type: "post",
 			url: reqUrl + '/api/basis/auth',
-			type: 'post',
 			data: {
-				token: tokens
+				type: 2
 			},
-			dataType: 'json',
+			dataType: "json",
 			success: function(res) {
 				console.log(res);
 				if (res.status == 0) {
-					
-				} else {
-					
+					let str = ''
+					res.data.forEach(e => {
+						str +=
+							'<div style="width: 100%; border: 1px solid #DDDDDD; border-radius: 5px;box-sizing: border-box;padding: 5px;margin-bottom: 10px;"><label class="y_rit20"><span class="y_checkAll" data-checkall="'+e.id+'">' +
+							e.title + '</span><input type="checkbox" class="y_none"></label><br>'
+						e.children.forEach(es => {
+							str += '<label class="y_inline y_rit20"><span class="y_check y_checkson" data-checkall="'+e.id+'">' + es.title +
+								'</span><input type="checkbox" class="y_none" name="check" value="' + es.id + '"></label>'
+						})
+						str += '</div>'
+					})
+					$('.roles').empty();
+					$('.roles').append(str);
 				}
-			},
-			complete: function() {
-				loading('none');
+				parent.window.loading('none');
 			}
 		});
-	</script>
-</html>
+		/*提交*/
+		parent.window.loading();
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/public/cates',
+			data: {
+				type: 2
+			},
+			dataType: "json",
+			success: function(res) {
+				if (res.status == 0) {
+					let str = '';
+					res.data.forEach(k => {
+						str += '<option value ="' + k.id + '" class="y_input block">' + k.name + '</option>'
+					});
+					$('#type').append(str);
+				}
+				parent.window.loading('none');
+			}
+		});
+
+		$('.submit').click(function() {
+			var pattern = /check=.*?&/,
+				str = $('#check_form').serialize();
+			let o = ''
+			getR(pattern, str);
+
+			function getR(p, s) {
+				let a = p.exec(s);
+				if (a) {
+					o += a[0].substring(6, a[0].length - 1) + ','
+					getR(p, s.substring(a.index + a[0].length, s.length))
+				}
+			}
+			let out = o.split(',');
+			out.pop();
+			$('.token').val(tokens);
+			do_sub(out);
+		})
+
+		function do_sub(arr) {
+			parent.window.loading();
+			$.ajax({
+				type: "post",
+				url: reqUrl + '/api/basis/addRole',
+				data: {
+					name: $('input[name="name"]').val(),
+					promission: arr
+				},
+				dataType: "json",
+				error: function(request) {
+					parent.window.loading('none');
+					parent.window.Alert('提交失败');
+				},
+				success: function(data) {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						if (data.status == 0) {
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							});
+						}
+					});
+				}
+			});
+		}
+	})
+</script>

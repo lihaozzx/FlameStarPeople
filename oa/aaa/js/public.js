@@ -325,7 +325,29 @@ $(function() {
 
 	/*多选框*/
 	$(document).on('click', '.y_check', function() {
-		$(this).toggleClass('active')
+		$(this).toggleClass('active');
+	})
+	$(document).on('click','.y_checkAll', function () {
+		$(this).toggleClass('active');
+		let t = $(this).hasClass('active');
+		let a = $(this).attr('data-checkall');
+		if(a){
+			$('.y_checkson').each((k,v)=>{
+				if($(v).attr('data-checkall')==a){
+					if(t){
+						if($(v).hasClass('active')){
+						}else{
+							$(v).trigger("click");
+						}
+					}else{
+						if($(v).hasClass('active')){
+							$(v).trigger("click");
+						}else{
+						}
+					}
+				}
+			})
+		}
 	})
 
 	/*新开页面*/
