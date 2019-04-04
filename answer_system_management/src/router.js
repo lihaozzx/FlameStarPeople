@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import index from './views/index.vue'
 import stu from './views/stu.vue'
-import sch from './views/sch.vue'
 import cpm from './views/cpm.vue'
 import bank from './views/bank.vue'
 import paper from './views/paper.vue'
@@ -19,14 +18,6 @@ export default new Router({
 					component: stu,
 					meta: {
 						title: '学生列表'
-					}
-				},
-				{
-					path: 'school',
-					name: 'school',
-					component: sch,
-					meta: {
-						title: '学校列表'
 					}
 				},
 				{
@@ -60,6 +51,14 @@ export default new Router({
 			component: resolve => require(['./views/login.vue'], resolve),
 			meta: {
 				title: '登录'
+			}
+		},
+		{
+			path: '/addpaper',
+			name: 'addPaper',
+			component: resolve => require(['./views/addPaper.vue'], resolve),
+			meta: {
+				title: '添加试卷'
 			}
 		},
 		{

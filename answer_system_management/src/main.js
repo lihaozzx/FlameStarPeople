@@ -12,6 +12,14 @@ Vue.prototype.$qs = qs;
 
 Vue.config.productionTip = false
 
+Vue.prototype.$outInfo=function (obj) {
+	let str = '';
+	for (let k in obj) {
+		str += '&'+k+'='+obj[k]
+	}
+	console.log(str);
+}
+
 function getcookie(cname) {
 	var name = cname + "=";
 	var ca = document.cookie.split(';');

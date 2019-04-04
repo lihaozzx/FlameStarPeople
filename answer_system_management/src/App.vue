@@ -31,17 +31,36 @@
 		align-items: center;
 		overflow: auto;
 	}
-
+	
+	.ovy{
+		height: 450px;
+		overflow-y: auto;
+	}
+	.ovy::-webkit-scrollbar {
+		display: none;
+	}
+	.juzhong{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.ts30{
+		font-size: 30px;
+	}
+	
 	.ts18 {
-		font-size: 1.125rem;
+		font-size: 18px;
+	}
+	.ts16 {
+		font-size: 16px;
 	}
 
 	.ts14 {
-		font-size: 0.875rem;
+		font-size: 14px;
 	}
 
 	.ts12 {
-		font-size: 0.75rem;
+		font-size: 12px;
 	}
 
 	.cf0 {

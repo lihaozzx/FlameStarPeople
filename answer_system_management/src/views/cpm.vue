@@ -13,8 +13,8 @@
 					</span>
 					<span class="ts12 inbot b18">修改</span>
 				</div>
-				<div>
-					
+				<div class="img_video">
+
 				</div>
 				<div class="div_text">
 					<span class="ts14">
@@ -78,7 +78,6 @@
 			this.$http.get('/admin/games', {
 				params: {
 					token: this.$store.getters.token,
-					p: this.pageInfo.nowPage
 				}
 			}).then(res => {
 				console.log(res);
@@ -105,23 +104,42 @@
 		width: 30%;
 		height: 80%;
 		background-color: #FFFFFF;
-		border-radius: 0 0 1.875rem 1.875rem;
+		border-radius: 20px;
 		box-shadow: 0 0 0.75rem 0.2rem rgba(0, 0, 0, 0.2);
 		box-sizing: border-box;
 		padding: 1.4rem 1.875rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
-	
-	.div_text{
+
+	.div_text {
 		display: flex;
 		justify-content: space-between;
 		position: relative;
 	}
-	.div_text .inbot{
+
+	.img_video {
+		width: 100%;
+		height: 150px;
+		border-radius: 20px;
+		background-color: #0000FE;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.img_video:hover {
+		transform: scale(1.05, 1.05);
+	}
+
+	.div_text .inbot {
 		position: absolute;
 		right: 0;
 		bottom: 0;
 	}
-	.div_addPer{
+
+	.div_addPer {
 		width: 100%;
 		display: flex;
 		flex-direction: column;

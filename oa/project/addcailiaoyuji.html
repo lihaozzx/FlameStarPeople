@@ -12,12 +12,20 @@
 			<form id="check_form">
 				<table class="y_tab y_border y_top20">
 					<tr>
-						<td class="y_textRight"><i class="y_colorRead">*</i>分类：</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>主类：</td>
 						<td colspan="5">
 							<select name="mod" id="sel" class="y_input block">
+								<option value ="">未选择</option>
 								<option value="1">材料</option>
 								<option value="2">机械</option>
 								<option value="3">人工</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>分类：</td>
+						<td colspan="5">
+							<select id="selm" disabled class="y_input block">
 							</select>
 						</td>
 					</tr>
@@ -36,7 +44,7 @@
 					</tr>
 				</table>
 				<div class="y_inPopFoot">
-					<input type="hidden" name="pid"/>
+					<input type="hidden" name="pid" />
 					<input type="hidden" name="token" class="token" />
 					<span class="y_btn lg y_rit20 prim submit">发 布</span>
 				</div>
@@ -51,7 +59,10 @@
 		initInfos(id);
 
 		$('#sel').on('change', function() {
-			initSel($(this).val());
+			initSelm($(this).val());
+		})
+		$('#selm').on('change', function() {
+			initSelc($('#sel').val());
 		})
 		/*提交*/
 		$('.submit').click(function() {
@@ -85,7 +96,7 @@
 		});
 	}
 
-	function initSel(k) {
+	function initSelc(k) {
 		$('#selc').attr("disabled", true);
 		$('#selc').empty();
 		switch (k) {
@@ -94,7 +105,7 @@
 					type: "post",
 					url: reqUrl + '/api/projects/material',
 					data: {
-						type: k
+						cid: $('#selm').val()
 					},
 					dataType: "json",
 					success: function(res) {
@@ -116,9 +127,9 @@
 			case "2":
 				$.ajax({
 					type: "post",
-					url: reqUrl + '/api/projects/staff',
+					url: reqUrl + '/api/projects/machine',
 					data: {
-						type: k
+						cid: $('#selm').val()
 					},
 					dataType: "json",
 					success: function(res) {
@@ -140,9 +151,9 @@
 			case "3":
 				$.ajax({
 					type: "post",
-					url: reqUrl + '/api/projects/machine',
+					url: reqUrl + '/api/projects/staff',
 					data: {
-						type: k
+						cid: $('#selm').val()
 					},
 					dataType: "json",
 					success: function(res) {
@@ -154,6 +165,85 @@
 							})
 							$('#selc').append(str);
 							$('#selc').attr("disabled", false);
+						} else {
+							parent.window.loading('none');
+							parent.window.Alert(res.msg);
+						}
+					}
+				});
+				break;
+		}
+	}
+
+	function initSelm(k) {
+		$('#selm').attr("disabled", true);
+		$('#selm').empty();
+		switch (k) {
+			case "1":
+				$.ajax({
+					type: "post",
+					url: reqUrl + '/api/projects/Catestype',
+					data: {
+						type: k
+					},
+					dataType: "json",
+					success: function(res) {
+						if (res.status == 0) {
+							parent.window.loading('none');
+							let str = '';
+							res.data.forEach(k => {
+								str += '<option value ="' + k.id + '">' + k.name + '</option>'
+							})
+							$('#selm').append(str);
+							$('#selm').attr("disabled", false);
+						} else {
+							parent.window.loading('none');
+							parent.window.Alert(res.msg);
+						}
+					}
+				});
+				break;
+			case "2":
+				$.ajax({
+					type: "post",
+					url: reqUrl + '/api/projects/Catestype',
+					data: {
+						type: k
+					},
+					dataType: "json",
+					success: function(res) {
+						if (res.status == 0) {
+							parent.window.loading('none');
+							let str = '';
+							res.data.forEach(k => {
+								str += '<option value ="' + k.id + '">' + k.name + '</option>'
+							})
+							$('#selm').append(str);
+							$('#selm').attr("disabled", false);
+						} else {
+							parent.window.loading('none');
+							parent.window.Alert(res.msg);
+						}
+					}
+				});
+				break;
+			case "3":
+				$.ajax({
+					type: "post",
+					url: reqUrl + '/api/projects/Catestype',
+					data: {
+						type: k
+					},
+					dataType: "json",
+					success: function(res) {
+						if (res.status == 0) {
+							parent.window.loading('none');
+							let str = '';
+							res.data.forEach(k => {
+								str += '<option value ="' + k.id + '">' + k.name + '</option>'
+							})
+							$('#selm').append(str);
+							$('#selm').attr("disabled", false);
 						} else {
 							parent.window.loading('none');
 							parent.window.Alert(res.msg);
@@ -186,6 +276,5 @@
 
 			}
 		});
-		initSel("1");
 	}
 </script>

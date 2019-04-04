@@ -14,7 +14,7 @@
 					<tr>
 						<td class="y_textRight"><i class="y_colorRead">*</i>工种分类：</td>
 						<td colspan="5">
-							<select name="cid" id="type">
+							<select name="cid" id="type" class="y_input block">
 							</select>
 						</td>
 					</tr>
@@ -33,7 +33,8 @@
 					<tr>
 						<td class="y_textRight"><i class="y_colorRead">*</i>部门：</td>
 						<td colspan="5">
-							<input type="text" name="department" class="y_input block" />
+							<select name="department" id="type2" class="y_input block">
+							</select>
 						</td>
 					</tr>
 					<tr>
@@ -66,29 +67,49 @@
 </html>
 <script type="text/javascript">
 	$(function() {
-		/*提交*/
-		parent.window.loading();
-		$.ajax({
-			type: "post",
-			url: reqUrl + '/api/public/cates',
-			data: {type:3},
-			dataType: "json",
-			success: function(res) {
-				if(res.status == 0){
-					let str = '';
-					res.data.forEach(k=>{
-						str+='<option value ="'+k.id+'" class="y_input block">'+k.name+'</option>'
-					});
-					$('#type').append(str);
-				}
-				parent.window.loading('none');
-			}
-		});
+		initInfo();
 		
+		/*提交*/
 		$('.submit').click(function() {
 			$('.token').val(tokens);
 			do_sub();
 		})
+		
+		function initInfo() {
+			parent.window.loading();
+			$.ajax({
+				type: "post",
+				url: reqUrl + '/api/public/cates',
+				data: {type:3},
+				dataType: "json",
+				success: function(res) {
+					if(res.status == 0){
+						let str = '';
+						res.data.forEach(k=>{
+							str+='<option value ="'+k.id+'" class="y_input block">'+k.name+'</option>'
+						});
+						$('#type').append(str);
+					}
+					parent.window.loading('none');
+				}
+			});
+			$.ajax({
+				type: "post",
+				url: reqUrl + '/api/public/department',
+				data: {type:3},
+				dataType: "json",
+				success: function(res) {
+					if(res.status == 0){
+						let str = '';
+						res.data.forEach(k=>{
+							str+='<option value ="'+k.id+'" class="y_input block">'+k.department+'</option>'
+						});
+						$('#type2').append(str);
+					}
+					parent.window.loading('none');
+				}
+			});
+		}
 
 		function do_sub() {
 			parent.window.loading();

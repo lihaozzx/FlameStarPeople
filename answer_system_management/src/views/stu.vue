@@ -39,7 +39,8 @@
 		</el-table>
 
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selStu"></el-pagination>
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage"
+			 @current-change="selStu"></el-pagination>
 		</div>
 
 		<!-- 弹窗 -->
@@ -81,9 +82,9 @@
 
 <script>
 	export default {
-		computed:{
-			height(){
-				return innerHeight>800?(innerHeight>1080?innerHeight:1080):800
+		computed: {
+			height() {
+				return innerHeight > 800 ? (innerHeight > 1080 ? innerHeight : 1080) : 800
 			}
 		},
 		data() {
@@ -118,12 +119,11 @@
 		created() {
 			let info = this.$store.getters.stuInfo.stu;
 			let page = this.$store.getters.stuInfo.page;
-			console.log(info);
 			if (info.length != 0) {
 				this.tableData = info;
 				this.pageInfo = page;
 				this.loadingTable = false;
-			}else{
+			} else {
 				this.selStu();
 			}
 		},
@@ -131,14 +131,16 @@
 			// 组件的方法
 			selStu(p) {
 				this.loadingTable = true;
-				if(p){
+				if (p) {
 					this.pageInfo.nowPage = p;
 				}
 
 				this.$http.get('/admin/student', {
 					params: {
 						token: this.$store.getters.token,
-						p: this.pageInfo.nowPage
+						p: this.pageInfo.nowPage,
+						name:this.search.name,
+						sname:this.search.sname
 					}
 				}).then(res => {
 					if (res.status == 200 && res.data.status == 0) {
@@ -200,8 +202,15 @@
 				this.oldForm = { ...this.form
 				}
 			},
-			getStuInfo() {},
-			removeSearch() {},
+			getStuInfo() {
+				this.selStu(1)
+			},
+			removeSearch() {
+				this.search = {
+					name: '',
+					sname: ''
+				}
+			},
 			oco(n, o) {
 				let out = {}
 				for (let k in n) {
