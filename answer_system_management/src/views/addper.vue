@@ -18,8 +18,7 @@
 			</el-form>
 		</div>
 
-		<el-table v-loading="loadingTable" :data="tableData" style="width: 100%" :height="height*0.5" :border='false' ref="multipleTable"
-		 tooltip-effect="dark" @selection-change="handleSelectionChange">
+		<el-table v-loading="loadingTable" :data="tableData" style="width: 100%" :height="height*0.55" :border='false' ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange">
 			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column prop="number" label="序号"> </el-table-column>
 			<el-table-column prop="name" label="姓名"></el-table-column>
@@ -31,10 +30,14 @@
 			<el-table-column prop="address" label="地址"></el-table-column>
 			<el-table-column prop="phone" label="电话"></el-table-column>
 		</el-table>
+		<div class="div_back" @click="goback">
+			<i class="el-icon-back"></i>
+			<span>返回场次列表</span>
+		</div>
 
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage"
-			 @current-change="selStu"></el-pagination>
+			
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selStu"></el-pagination>
 		</div>
 
 		<!-- 弹窗 -->
@@ -151,7 +154,6 @@
 			},
 			submitSch() {
 				this.inAdd = true
-				 /*  */
 				this.$http.post('/admin/addGamesPlayer',this.$qs.stringify({
 					players:this.out,
 					id:this.id
@@ -183,7 +185,6 @@
 				})
 			},
 			showInfoFun(e) {
-				console.log(e);
 				this.showInfo = true
 				this.form = e;
 				this.oldForm = { ...this.form
@@ -197,6 +198,9 @@
 					name: '',
 					sname: ''
 				}
+			},
+			goback(){
+				this.$router.go(-1)
 			}
 		}
 	}
@@ -204,8 +208,12 @@
 
 <style>
 	.stu_tab {
+		height: 100%;
 		box-sizing: border-box;
 		padding-top: 0.625rem;
+		background-color: #FFFFFF;
+		border-radius: 20px;
+		position: relative;
 	}
 
 	.div_search {
@@ -213,6 +221,15 @@
 		justify-content: center;
 		box-sizing: border-box;
 		height: 1.82rem;
+	}
+	
+	.div_back {
+		width: 100%;
+		height: 30px;
+		position: relative;
+		top: 10px;
+		left: 30px;
+		color: #1890FF;
 	}
 
 	.el-table__body-wrapper::-webkit-scrollbar {

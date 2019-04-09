@@ -8,10 +8,13 @@
 				</div>
 				<div class="div_text">
 					<span class="ts14">
-						<span class="o26">选题视频：</span>
-						<span class="a26">{{s.video}}</span>
+						<span class="o26">选题视频地址：</span>
+						<span v-if="dizhi[k]" class="a26">{{s.video}}</span>
+						<div v-else>
+							<el-input v-model="s.video" autocomplete="off" placeholder="视频地址"></el-input>
+						</div>
 					</span>
-					<span class="ts12 inbot b18">修改</span>
+					<span class="ts12 inbot b18" @click="setDizhi(k,s.id)">{{dizhi[k]?'修改':'完成'}}</span>
 				</div>
 				<div class="img_video">
 					<video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions[k]"></video-player>
@@ -19,9 +22,14 @@
 				<div class="div_text">
 					<span class="ts14">
 						<span class="o26">当前考卷：</span>
-						<span class="a26">{{s.ename}}</span>
+						<span v-if="paper[k]" class="a26">{{s.ename}}</span>
+						<div v-else>
+							<el-select v-model="s.eid" filterable placeholder="请选择">
+								<el-option v-for="item in paperInfo" :key="item.id" :label="item.name" :value="item.id"></el-option>
+							</el-select>
+						</div>
 					</span>
-					<span class="ts12 inbot b18">修改</span>
+					<span class="ts12 inbot b18" @click="setPaper(k,s.id)">{{paper[k]?'修改':'完成'}}</span>
 				</div>
 				<div class="div_text">
 					<span class="ts14">
@@ -33,9 +41,13 @@
 				<div class="div_text">
 					<span class="ts14">
 						<span class="o26">比赛日期：</span>
-						<span class="a26">{{s.date}}</span>
+						<span v-if="date[k]" class="a26">{{s.date}}</span>
+						<div v-else>
+							<el-date-picker v-model="s.date" type="date" placeholder="选择日期">
+							</el-date-picker>
+						</div>
 					</span>
-					<span class="ts12 inbot b18">修改</span>
+					<span class="ts12 inbot b18" @click="setDate(k,s.id)">{{date[k]?'修改':'完成'}}</span>
 				</div>
 				<!-- <div class="div_text">
 					<span class="ts14">
@@ -51,13 +63,11 @@
 			</div>
 		</div>
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage"
-			 @current-change="selCpm"></el-pagination>
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selCpm"></el-pagination>
 		</div>
-		
+
 		<el-dialog title="人员信息" :visible.sync="per" width="70%">
-			<el-table :data="tableData" style="width: 100%"  :height="500" :border='false'>
-				{name:'姓名',class:'班级',number:'序号',score:'',timeCost:'答题总时长',status:'0.未登陆，1.待确认，2.已确认'}
+			<el-table :data="tableData" style="width: 100%" :height="500" :border='false'>
 				<el-table-column prop="number" label="序号"> </el-table-column>
 				<el-table-column prop="name" label="姓名"></el-table-column>
 				<el-table-column prop="age" label="年龄"></el-table-column>
@@ -91,17 +101,33 @@
 					nowPage: 1
 				},
 				playerOptions: [],
-				per:false,
-				tableData:[]
+				per: false,
+				tableData: [],
+				dizhi: [],
+				paper: [],
+				date:[],
+				olddizhi: '',
+				oldPaper: '',
+				oldDate:'',
+				paperInfo: [],
+				
 			};
 		},
 		created() {
-			this.selCpm()
+			this.selCpm();
+			/* 试卷 */
+			this.$http.get('/admin/selectexam').then(res => {
+				if (res.data.status == 0) {
+					this.paperInfo = res.data.data
+				}
+			})
 		},
 		methods: {
 			// 组件的方法
 			selCpm(p) {
-				this.pageInfo.nowPage = p;
+				if(p){
+					this.pageInfo.nowPage = p;
+				}
 				let load = this.$loading({
 					fullscreen: true
 				});
@@ -132,7 +158,10 @@
 									remainingTimeDisplay: false,
 									fullscreenToggle: true //全屏按钮
 								}
-							})
+							});
+							this.dizhi.push(true);
+							this.paper.push(true);
+							this.date.push(true);
 						});
 						this.sessionInfo = res.data.data
 						this.pageInfo = {
@@ -168,7 +197,7 @@
 					}
 				})
 			},
-			changePer(k){
+			changePer(k) {
 				let load = this.$loading({
 					fullscreen: true
 				});
@@ -178,8 +207,8 @@
 					}
 				}).then(res => {
 					if (res.data.status == 0) {
-						this.per=true;
-						this.tableData=res.data.data;
+						this.per = true;
+						this.tableData = res.data.data;
 						load.close();
 					} else {
 						this.$notify.success({
@@ -199,6 +228,134 @@
 					});
 					load.close()
 				});
+			},
+			setDizhi(k, id) {
+				if (this.dizhi[k]) {
+					this.dizhi.splice(k, 1, false);
+					this.olddizhi = this.sessionInfo[k].video
+				} else {
+					if (this.sessionInfo[k].video != this.olddizhi) {
+						let load = this.$loading({
+							fullscreen: true
+						});
+						this.$http.post('/admin/upGames', this.$qs.stringify({
+							id: id,
+							video: this.sessionInfo[k].video
+						})).then(res => {
+							if (res.data.status == 0) {
+								this.$notify.success({
+									title: '成功',
+									message: res.data.msg,
+									showClose: false
+								});
+								load.close();
+							} else {
+								this.$notify.success({
+									title: '错误',
+									iconClass: 'el-icon-warning',
+									message: res.data.msg,
+									showClose: false
+								});
+							}
+							load.close();
+						}).catch(() => {
+							this.$notify.success({
+								title: '错误',
+								iconClass: 'el-icon-warning',
+								message: '服务器未响应',
+								showClose: false
+							});
+							load.close()
+						});
+					}
+					this.dizhi.splice(k, 1, true);
+				}
+			},
+			setPaper(k, id) {
+				if (this.paper[k]) {
+					this.paper.splice(k, 1, false);
+					this.oldPaper = this.sessionInfo[k].eid
+				} else {
+					if (this.sessionInfo[k].video != this.oldPaper) {
+						let load = this.$loading({
+							fullscreen: true
+						});
+						this.$http.post('/admin/upGames', this.$qs.stringify({
+							id: id,
+							eid: this.sessionInfo[k].eid
+						})).then(res => {
+							if (res.data.status == 0) {
+								this.$notify.success({
+									title: '成功',
+									message: res.data.msg,
+									showClose: false
+								});
+								this.selCpm();
+								load.close();
+							} else {
+								this.$notify.success({
+									title: '错误',
+									iconClass: 'el-icon-warning',
+									message: res.data.msg,
+									showClose: false
+								});
+							}
+							load.close();
+						}).catch(() => {
+							this.$notify.success({
+								title: '错误',
+								iconClass: 'el-icon-warning',
+								message: '服务器未响应',
+								showClose: false
+							});
+							load.close()
+						});
+					}
+					this.paper.splice(k, 1, true);
+				}
+			},
+			setDate(k, id) {
+				if (this.date[k]) {
+					this.date.splice(k, 1, false);
+					this.oldDate = this.sessionInfo[k].date
+				} else {
+					if (this.sessionInfo[k].video != this.oldPaper) {
+						let load = this.$loading({
+							fullscreen: true
+						});
+						this.$http.post('/admin/upGames', this.$qs.stringify({
+							id: id,
+							date: this.sessionInfo[k].date
+						})).then(res => {
+							if (res.data.status == 0) {
+								this.$notify.success({
+									title: '成功',
+									message: res.data.msg,
+									showClose: false
+								});
+								this.selCpm();
+								load.close();
+							} else {
+								this.$notify.success({
+									title: '错误',
+									iconClass: 'el-icon-warning',
+									message: res.data.msg,
+									showClose: false
+								});
+							}
+							load.close();
+						}).catch(() => {
+							this.$notify.success({
+								title: '错误',
+								iconClass: 'el-icon-warning',
+								message: '服务器未响应',
+								showClose: false
+							});
+							load.close()
+						});
+					}
+					this.date.splice(k, 1, true);
+				}
 			}
 		}
 	}
@@ -225,7 +382,7 @@
 		margin: 5% 0 0 3%;
 		background-color: #FFFFFF;
 		border-radius: 20px;
-		box-shadow: 0 0 0.75rem 0.2rem rgba(0, 0, 0, 0.2);
+		box-shadow: 0 0 0.75rem 0.2rem #ececec;
 		box-sizing: border-box;
 		padding: 1.4rem 1.875rem;
 		display: flex;

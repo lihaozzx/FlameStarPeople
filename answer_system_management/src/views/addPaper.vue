@@ -30,8 +30,9 @@
 						<li v-for="(topic,k) in showTopic" :key="topic.id">
 							<div class="onetop">
 								<div class="topinfo">
-									{{topic}}
 									<span>{{topic.name}}</span>
+									<span>选项:{{topic.xuanx}}</span>
+									<!-- <span style="color: #006400;">答案:{{topic.answer}}</span> -->
 									<span>分数:{{topic.score}}</span>
 								</div>
 								<div class="btn">
@@ -69,7 +70,7 @@
 		</el-dialog>
 		<el-dialog title="提示" :visible.sync="subshow" width="30%">
 			<span class="ts18">提交试卷？</span>
-			<el-input v-model="pagerName" placeholder="请输入试卷名称"  style="margin-top: 20px;"></el-input>
+			<el-input v-model="pagerName" placeholder="请输入试卷名称" style="margin-top: 20px;"></el-input>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="subshow = false">取 消</el-button>
 				<el-button type="primary" @click="submit()">确 定</el-button>
@@ -295,7 +296,10 @@
 					border-radius: 20px;
 					margin-bottom: 26px;
 					display: flex;
-
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space:nowrap;
+					
 					.topinfo {
 						width: 86%;
 						height: 100%;
@@ -364,7 +368,7 @@
 
 				.onetop {
 					width: 100%;
-					height: 120px;
+					height: 150px;
 					border-radius: 20px;
 					box-shadow: 2px 2px 10px 4px rgba(0, 0, 0, 0.2);
 					margin-bottom: 26px;
@@ -374,6 +378,29 @@
 					.topinfo {
 						width: 86%;
 						height: 100%;
+						box-sizing: border-box;
+						padding: 25px 25px;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						position: relative;
+
+						span:nth-of-type(1) {
+							font-size: 16px;
+							font-weight: 900;
+						}
+						span:nth-of-type(2) {
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space:nowrap;
+						}
+
+						span:nth-of-type(3) {
+							font-size: 12px;
+							position: absolute;
+							top: 0;
+							right: 5px;
+						}
 					}
 
 					.btn {

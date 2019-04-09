@@ -43,7 +43,7 @@ Vue.prototype.$outInfo=function (obj) {
 	for (let k in obj) {
 		str += '&'+k+'='+obj[k]
 	}
-	console.log(str);
+	return str;
 }
 
 function getcookie(cname) {

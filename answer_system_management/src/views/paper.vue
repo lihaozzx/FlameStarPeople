@@ -27,7 +27,7 @@
 			<span>暂无试卷信息，请添加</span>
 		</div>
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="50" :page-size="3"></el-pagination>
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selPaper"></el-pagination>
 		</div>
 	</div>
 </template>
@@ -45,38 +45,49 @@
 			};
 		},
 		created() {
-			let load = this.$loading({
-				fullscreen: true
-			});
-			this.$http.get('/admin/exam', {
-				params: {
-					token: this.$store.getters.token,
-					p: this.pageInfo.nowPage
-				}
-			}).then(res => {
-				if (res.data.status == 0) {
-					this.bankInfo = res.data.data
-				} else {
-					this.$notify.success({
-						title: '错误',
-						iconClass: 'el-icon-warning',
-						message: res.data.msg,
-						showClose: false
-					});
-				}
-				load.close();
-			}).catch(() => {
-				this.$notify.success({
-					title: '错误',
-					iconClass: 'el-icon-warning',
-					message: '服务器未响应',
-					showClose: false
-				});
-				load.close()
-			});
+			this.selPaper()
 		},
 		methods: {
 			// 组件的方法
+			selPaper(p){
+				if(p){
+					this.pageInfo.nowPage = p;
+				}
+				let load = this.$loading({
+					fullscreen: true
+				});
+				this.$http.get('/admin/exam', {
+					params: {
+						token: this.$store.getters.token,
+						p: this.pageInfo.nowPage
+					}
+				}).then(res => {
+					if (res.data.status == 0) {
+						this.bankInfo = res.data.data;
+						this.pageInfo = {
+							totalCount: parseInt(res.data.pager.total_count),
+							size: res.data.pager.page_size,
+							nowPage: res.data.pager.current_page
+						}
+					} else {
+						this.$notify.success({
+							title: '错误',
+							iconClass: 'el-icon-warning',
+							message: res.data.msg,
+							showClose: false
+						});
+					}
+					load.close();
+				}).catch(() => {
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '服务器未响应',
+						showClose: false
+					});
+					load.close()
+				});
+			}
 		}
 	}
 </script>
@@ -106,7 +117,7 @@
 		margin: 46px 0 0 50px;
 		background-color: #FFFFFF;
 		border-radius: 20px;
-		box-shadow: 5px 5px 0.75rem 0.2rem rgba(0, 0, 0, 0.1);
+		box-shadow: 5px 5px 0.75rem 0.2rem #ececec;
 		box-sizing: border-box;
 		padding: 1.4rem 1.875rem;
 		display: flex;

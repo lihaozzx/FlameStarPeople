@@ -15,8 +15,7 @@
 		<router-view></router-view>
 
 		<!-- 弹窗 -->
-		<el-dialog :width="activeIndex=='student'?'50%':activeIndex=='bank'?'30%':activeIndex=='session'?'30%':'代做'" :title="activeIndex=='student'?'添加学生':activeIndex=='bank'?'添加题目':activeIndex=='session'?'添加场次':'代做'"
-		 :visible.sync="showInfo">
+		<el-dialog :width="activeIndex=='student'?'50%':activeIndex=='bank'?'30%':activeIndex=='session'?'30%':'代做'" :title="activeIndex=='student'?'添加学生':activeIndex=='bank'?'添加题目':activeIndex=='session'?'添加场次':'代做'" :visible.sync="showInfo">
 			<!-- 添加学生 -->
 			<div class="div_dialog" v-if="activeIndex=='student'">
 				<div class="juzhong" v-if="addStu.status">
@@ -239,7 +238,7 @@
 				if (res.data.status == 0) {
 					this.paperInfo = res.data.data
 				}
-			})
+			});
 		},
 		methods: {
 			// 组件的方法
@@ -380,6 +379,7 @@
 						}
 						this.showInfo = false;
 						this.inAdd = false;
+						window.location.reload()
 					} else {
 						this.$notify.success({
 							title: '错误',

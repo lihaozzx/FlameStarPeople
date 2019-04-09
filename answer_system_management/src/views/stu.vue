@@ -191,7 +191,6 @@
 				})
 			},
 			showInfoFun(e) {
-				console.log(e);
 				this.showInfo = true
 				this.form = e;
 				this.oldForm = { ...this.form
