@@ -5,8 +5,34 @@ import store from './store'
 import './plugins/element.js'
 import axios from 'axios'
 import qs from 'qs'
+import VueVideoPlayer from 'vue-video-player'
+import 'video.js/dist/video-js.css'
+
+Vue.use(VueVideoPlayer)
 
 axios.defaults.baseURL = 'http://192.168.1.100:9001';
+axios.interceptors.request.use(function (config) {
+    // 在发送请求之前做些什么
+	let a = config.url.split('/');
+	if(a[a.length-1]!='login'){
+		config.params = {
+			...config.params,
+			token:store.getters.token
+		}
+	}
+    return config;
+  }, function (error) {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+  });
+axios.interceptors.response.use(function (response) {
+    // 对响应数据做点什么
+    return response;
+  }, function (error) {
+    // 对响应错误做点什么
+    return Promise.reject(error);
+  });
+  
 Vue.prototype.$http = axios;
 Vue.prototype.$qs = qs;
 

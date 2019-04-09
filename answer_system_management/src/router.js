@@ -62,6 +62,14 @@ export default new Router({
 			}
 		},
 		{
+			path: '/addper',
+			name: 'addper',
+			component: resolve => require(['./views/addper.vue'], resolve),
+			meta: {
+				title: '添加人员'
+			}
+		},
+		{
 			path: "*",
 			redirect: "/login"
 		}

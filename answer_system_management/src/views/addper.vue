@@ -1,23 +1,26 @@
 <template>
 	<div class="stu_tab">
+		<div>
+			<el-button type="primary" @click="seeInfo">选中选手信息</el-button>
+		</div>
 		<div class="div_search">
 			<el-form inline size="mini">
 				<el-form-item>
 					<el-input v-model="search.name" autocomplete="off" placeholder="学生姓名"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-form-item v-if="sid == 'all'" type="primary">
-						<el-input v-model="search.sname" autocomplete="off" placeholder="学校名称"></el-input>
-					</el-form-item>
-					<el-button type="primary" @click="getStuInfo">搜索</el-button>
+					<el-input v-model="search.sname" autocomplete="off" placeholder="学校名称"></el-input>
 				</el-form-item>
 				<el-form-item>
+					<el-button type="primary" @click="getStuInfo">搜索</el-button>
 					<el-button type="primary" @click="removeSearch">清空</el-button>
 				</el-form-item>
 			</el-form>
 		</div>
 
-		<el-table v-loading="loadingTable" :data="tableData" style="width: 100%" :height="height*0.5" :border='false'>
+		<el-table v-loading="loadingTable" :data="tableData" style="width: 100%" :height="height*0.5" :border='false' ref="multipleTable"
+		 tooltip-effect="dark" @selection-change="handleSelectionChange">
+			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column prop="number" label="序号"> </el-table-column>
 			<el-table-column prop="name" label="姓名"></el-table-column>
 			<el-table-column prop="age" label="年龄"></el-table-column>
@@ -27,49 +30,30 @@
 			<el-table-column prop="class" label="班级"></el-table-column>
 			<el-table-column prop="address" label="地址"></el-table-column>
 			<el-table-column prop="phone" label="电话"></el-table-column>
-			<el-table-column fixed="right" label="操作">
-				<template slot-scope="scope">
-					<el-button @click="showInfoFun(scope.row)" type="text" size="small">编辑</el-button>
-				</template>
-			</el-table-column>
 		</el-table>
 
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selStu"></el-pagination>
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage"
+			 @current-change="selStu"></el-pagination>
 		</div>
 
 		<!-- 弹窗 -->
 		<el-dialog title="学校信息" :visible.sync="showInfo">
-			<el-form :model="form" :label-width="formLabelWidth">
-				<el-form-item label="序号">
-					<el-input v-model="form.number" autocomplete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="姓名">
-					<el-input v-model="form.name" autocomplete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input v-model="form.age" autocomplete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="年级">
-					<el-input v-model="form.grade" autocomplete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="班级">
-					<el-input v-model="form.class" autocomplete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input v-model="form.address" autocomplete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="衣服尺码">
-					<el-input v-model="form.size" autocomplete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="电话">
-					<el-input v-model="form.phone" autocomplete="off"></el-input>
-				</el-form-item>
-
-			</el-form>
+			<el-table v-loading="loadingTable" :data="choseStu" style="width: 100%" :height="height*0.5" :border='false'>
+				<el-table-column prop="number" label="座位号">
+					<template slot-scope="scope">
+						<el-input v-model="scope.row.numbers" placeholder="座位号"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column prop="number" label="序号"> </el-table-column>
+				<el-table-column prop="name" label="姓名"></el-table-column>
+				<el-table-column prop="school" label="学校"></el-table-column>
+				<el-table-column prop="grade" label="年级"></el-table-column>
+				<el-table-column prop="class" label="班级"></el-table-column>
+			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="showInfo = false">取 消</el-button>
-				<el-button type="primary" @click="submitSch" :disabled="inAdd">修 改</el-button>
+				<el-button type="primary" @click="submitSch" :disabled="inAdd">确 定</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -80,6 +64,16 @@
 		computed: {
 			height() {
 				return innerHeight > 800 ? (innerHeight > 1080 ? innerHeight : 1080) : 800
+			},
+			out() {
+				let o = []
+				this.choseStu.forEach(s => {
+					o.push({
+						id: s.id,
+						number: s.numbers
+					})
+				});
+				return o
 			}
 		},
 		data() {
@@ -108,19 +102,14 @@
 					size: '',
 					phone: '',
 				},
-				inAdd: false
+				inAdd: false,
+				id: '',
+				choseStu: []
 			};
 		},
 		created() {
-			let info = this.$store.getters.stuInfo.stu;
-			let page = this.$store.getters.stuInfo.page;
-			if (info.length != 0) {
-				this.tableData = info;
-				this.pageInfo = page;
-				this.loadingTable = false;
-			} else {
-				this.selStu();
-			}
+			this.id = this.$route.params.id
+			this.selStu();
 		},
 		methods: {
 			// 组件的方法
@@ -132,10 +121,9 @@
 
 				this.$http.get('/admin/student', {
 					params: {
-						token: this.$store.getters.token,
 						p: this.pageInfo.nowPage,
-						name:this.search.name,
-						sname:this.search.sname
+						name: this.search.name,
+						sname: this.search.sname
 					}
 				}).then(res => {
 					if (res.status == 200 && res.data.status == 0) {
@@ -145,32 +133,36 @@
 							size: res.data.pager.page_size,
 							nowPage: res.data.pager.current_page
 						};
-						this.$store.commit('stu', {
-							stu: res.data.data,
-							page: {
-								totalCount: parseInt(res.data.pager.total_count),
-								size: res.data.pager.page_size,
-								nowPage: res.data.pager.current_page
-							}
-						})
 					}
 					this.loadingTable = false
 				})
 			},
+			handleSelectionChange(val) {
+				this.choseStu = [];
+				val.forEach(v => {
+					this.choseStu.push({
+						...v,
+						numbers: ''
+					})
+				})
+			},
+			seeInfo() {
+				this.showInfo = true;
+			},
 			submitSch() {
 				this.inAdd = true
-				let out = this.oco(this.form, this.oldForm);
-				this.$http.post('/admin/upStudent', this.$qs.stringify({ ...out,
-					token: this.$store.getters.token
+				 /*  */
+				this.$http.post('/admin/addGamesPlayer',this.$qs.stringify({
+					players:this.out,
+					id:this.id
 				})).then(res => {
 					if (res.data.status == 0) {
-						this.showInfo = false;
 						this.$notify.success({
 							title: 'Info',
-							message: '修改成功',
+							message: '添加成功',
 							showClose: false
 						});
-						this.getStuInfo();
+						this.$router.go(-1);
 					} else {
 						this.$notify.success({
 							title: '错误',
@@ -205,21 +197,6 @@
 					name: '',
 					sname: ''
 				}
-			},
-			oco(n, o) {
-				let out = {}
-				for (let k in n) {
-					for (let j in o) {
-						if (k == j) {
-							if (n[k] == o[j] && k != 'id') {
-								out[k] = '';
-							} else {
-								out[k] = n[k];
-							}
-						}
-					}
-				}
-				return out;
 			}
 		}
 	}

@@ -7,7 +7,7 @@
 			<el-menu-item index="paper">查看考卷</el-menu-item>
 
 			<el-button v-if="activeIndex=='student'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="showInfo = true">新增学生</el-button>
-			<el-button v-else-if="activeIndex=='session'" type="primary" style='position: absolute;right: 1%;top: 20%;'>新增场次</el-button>
+			<el-button v-else-if="activeIndex=='session'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="showInfo = true">新增场次</el-button>
 			<el-button v-else-if="activeIndex=='bank'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="showInfo = true">新增题目</el-button>
 			<el-button v-else-if="activeIndex=='paper'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="toaddPaper">新增试卷</el-button>
 			<el-button v-else type="primary" style='display: none;'></el-button>
@@ -15,7 +15,7 @@
 		<router-view></router-view>
 
 		<!-- 弹窗 -->
-		<el-dialog :width="activeIndex=='student'?'50%':activeIndex=='bank'?'30%':'代做'" :title="activeIndex=='student'?'添加学生':activeIndex=='bank'?'添加题目':'代做'"
+		<el-dialog :width="activeIndex=='student'?'50%':activeIndex=='bank'?'30%':activeIndex=='session'?'30%':'代做'" :title="activeIndex=='student'?'添加学生':activeIndex=='bank'?'添加题目':activeIndex=='session'?'添加场次':'代做'"
 		 :visible.sync="showInfo">
 			<!-- 添加学生 -->
 			<div class="div_dialog" v-if="activeIndex=='student'">
@@ -84,13 +84,15 @@
 								<el-input v-model="addTopic.form.name"></el-input>
 							</el-form-item>
 							<el-form-item label="选项">
-								<div v-for="(x,k) in addTopic.form.xuanx" :key="k">
-									{{k+1}}.<el-input v-model="addTopic.form.xuanx[k]"></el-input>
+								<div v-for="(x,k) in addTopic.form.xuanx" :key="k" style="display: flex;margin-bottom: 10px;">
+									<span style="margin-right: 5px;">{{k+1}}.</span>
+									<el-input v-model="addTopic.form.xuanx[k]"></el-input>
+									<el-button v-if="k!=0" style="margin-left: 5px;" icon="el-icon-minus" circle @click="minusxuanx(k)"></el-button>
+									<div v-else style="width: 52px; height: 27px;"></div>
 								</div>
 								<div style="margin-top: 5px;display: flex;align-items: center;justify-content: center;">
 									<el-button icon="el-icon-plus" circle @click="addxuanx"></el-button>
 								</div>
-
 							</el-form-item>
 							<el-form-item label="分数">
 								<el-input v-model="addTopic.form.score"></el-input>
@@ -130,6 +132,33 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- 添加场次 -->
+			<div class="div_dialog" v-else-if="activeIndex=='session'">
+				<div class="ovy">
+					<el-form v-loading="bankLoading" :label-width="formLabelWidth">
+						<el-form-item label="场次名称">
+							<el-input v-model="addSession.form.ffg"></el-input>
+						</el-form-item>
+						<el-form-item label="选题视频地址">
+							<el-input v-model="addSession.form.video"></el-input>
+						</el-form-item>
+						<el-form-item label="开赛时间">
+							<el-date-picker v-model="addSession.form.date" type="date" placeholder="选择日期">
+							</el-date-picker>
+						</el-form-item>
+						<el-form-item label="试卷">
+							<el-select v-model="addSession.form.eid" filterable placeholder="请选择">
+								<el-option v-for="item in paperInfo" :key="item.id" :label="item.name" :value="item.id"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-form>
+				</div>
+				<div slot="footer">
+					<el-button @click="showInfo = false">取 消</el-button>
+					<el-button type="primary" @click="submitSession" :loading="inAdd">添 加</el-button>
+				</div>
+			</div>
 		</el-dialog>
 	</div>
 </template>
@@ -147,12 +176,12 @@
 		data() {
 			return {
 				formLabelWidth: '100px',
-				btnInfo: [{}],
 				showInfo: false,
 				a: true,
 				b: true,
 				form: {},
 				inAdd: false,
+				paperInfo: [],
 				addStu: {
 					status: true,
 					tableData: [],
@@ -171,6 +200,14 @@
 						answer: '',
 						id: ''
 					}
+				},
+				addSession: {
+					form: {
+						ffg: '',
+						video: '',
+						date: '',
+						eid: ''
+					}
 				}
 			};
 		},
@@ -178,7 +215,6 @@
 			/* 题目类型 */
 			this.$http.get('/admin/basisInfo', {
 				params: {
-					token: this.$store.getters.token,
 					id: 1
 				}
 			}).then(res => {
@@ -190,7 +226,6 @@
 			/* 题目主题 */
 			this.$http.get('/admin/basisInfo', {
 				params: {
-					token: this.$store.getters.token,
 					id: 2
 				}
 			}).then(res => {
@@ -199,6 +234,12 @@
 				}
 				this.b = false
 			});
+			/* 试卷 */
+			this.$http.get('/admin/selectexam').then(res => {
+				if (res.data.status == 0) {
+					this.paperInfo = res.data.data
+				}
+			})
 		},
 		methods: {
 			// 组件的方法
@@ -236,7 +277,7 @@
 			submitStu() {
 				this.inAdd = true
 				this.$http.post('/admin/daoruStu', this.$qs.stringify({
-					dizhi: this.addStu.dizhi,
+					dizhi: this.addStu.dizhi
 				})).then(res => {
 					if (res.data.status == 0) {
 						this.$notify.success({
@@ -273,8 +314,7 @@
 			submitTopic() {
 				this.inAdd = true
 				this.$http.post('/admin/saveTopic', this.$qs.stringify({
-					...this.addTopic.form,
-					token: this.$store.getters.token
+					...this.addTopic.form
 				})).then(res => {
 					if (res.data.status == 0) {
 						this.$notify.success({
@@ -283,7 +323,7 @@
 							showClose: false
 						});
 
-						this.addTopic= {
+						this.addTopic = {
 							cate: {},
 							type: {},
 							status: 0, //添加0 导入1 导入确认2
@@ -318,8 +358,52 @@
 					this.inAdd = false;
 				});
 			},
+			submitSession() {
+				this.inAdd = true
+				this.$http.post('/admin/addGames', this.$qs.stringify({
+					...this.addSession.form,
+				})).then(res => {
+					if (res.data.status == 0) {
+						this.$notify.success({
+							title: '成功',
+							message: res.data.msg,
+							showClose: false
+						});
+
+						this.addSession = {
+							form: {
+								ffg: '',
+								video: '',
+								date: '',
+								eid: ''
+							}
+						}
+						this.showInfo = false;
+						this.inAdd = false;
+					} else {
+						this.$notify.success({
+							title: '错误',
+							iconClass: 'el-icon-warning',
+							message: res.data.msg,
+							showClose: false
+						});
+						this.inAdd = false;
+					}
+				}).catch(() => {
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '服务器未响应',
+						showClose: false
+					});
+					this.inAdd = false;
+				});
+			},
 			addxuanx() {
 				this.addTopic.form.xuanx.push('')
+			},
+			minusxuanx(k) {
+				this.addTopic.form.xuanx.splice(k, 1)
 			},
 			toaddPaper() {
 				this.$router.push({

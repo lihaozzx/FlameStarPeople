@@ -1,0 +1,2 @@
+﻿key 好像不能直接绑（v,k） in arr 的k 应该绑v中的独一属性
+父元素有圆角 子元素覆盖 用overflow auto处理 裁剪属性

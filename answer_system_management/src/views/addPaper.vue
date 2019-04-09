@@ -1,14 +1,23 @@
 <template>
 	<div class="show">
 		<div class="div_head">
-			<el-button type="primary" @click="asdasdad">完成</el-button>
-			<span class="ts30">新建试卷</span>
+			<el-button type="primary" @click="sub">完成</el-button>
+			<span class="ts30">新建试卷({{paperTopic.length}}题)</span>
 		</div>
 		<div class="div_clome">
 			<div class="one">
-				<transition>
-
-				</transition>
+				<div class="topics">
+					<transition-group name="letopic" tag="ul">
+						<li v-for="(topic,k) in paperTopic" :key="topic.id" @click="choseTopic(k)">
+							<div class="onetop" :class="nowChose==k?'active':'none'">
+								<div class="topinfo">
+									<span>{{k+1}}.</span>
+									<span>{{topic.name}}</span>
+								</div>
+							</div>
+						</li>
+					</transition-group>
+				</div>
 			</div>
 			<div class="two">
 				<div class="ch">
@@ -17,29 +26,31 @@
 					</el-menu>
 				</div>
 				<div class="topics">
-					<transition name="letopic">
-						<div class="onetop" v-for="(topic,k) in showTopic" :key="k">
-							<div class="topinfo">
-								{{topic}}
-								<span>{{topic.name}}</span>
-								<span>分数:{{topic.score}}</span>
-							</div>
-							<div class="btn">
-								<div class="replace juzhong">
-									<div>
-										<i class="el-icon-sort"></i>
-										<span>替换</span>
+					<transition-group name="letopic" tag="ul">
+						<li v-for="(topic,k) in showTopic" :key="topic.id">
+							<div class="onetop">
+								<div class="topinfo">
+									{{topic}}
+									<span>{{topic.name}}</span>
+									<span>分数:{{topic.score}}</span>
+								</div>
+								<div class="btn">
+									<div class="replace juzhong" @click="changeToPaper(k)">
+										<div>
+											<i class="el-icon-sort"></i>
+											<span>替换</span>
+										</div>
+									</div>
+									<div class="add juzhong" @click="addToPaper(k)">
+										<div>
+											<i class="el-icon-plus"></i>
+											<span>添加</span>
+										</div>
 									</div>
 								</div>
-								<div class="add juzhong" @click="addToPaper(k)">
-									<div>
-										<i class="el-icon-plus"></i>
-										<span>添加</span>
-									</div>
-								</div>
 							</div>
-						</div>
-					</transition>
+						</li>
+					</transition-group>
 				</div>
 			</div>
 		</div>
@@ -56,6 +67,14 @@
 				<el-button type="primary" @click="goback()">确 定</el-button>
 			</span>
 		</el-dialog>
+		<el-dialog title="提示" :visible.sync="subshow" width="30%">
+			<span class="ts18">提交试卷？</span>
+			<el-input v-model="pagerName" placeholder="请输入试卷名称"  style="margin-top: 20px;"></el-input>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="subshow = false">取 消</el-button>
+				<el-button type="primary" @click="submit()">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 
@@ -64,6 +83,13 @@
 		computed: {
 			showTopic() {
 				return this.tiku[parseInt(this.showTiku)]
+			},
+			ids() {
+				let ids = []
+				this.paperTopic.forEach(p => {
+					ids.push(p.id)
+				})
+				return ids
 			}
 		},
 		data() {
@@ -71,7 +97,12 @@
 				showTiku: '0',
 				backsure: false,
 				titype: ['题目类型'],
-				tiku: []
+				tiku: [],
+				paperTopic: [],
+				nowChose: -1,
+				shangxian: 2,
+				pagerName: '',
+				subshow: false
 			};
 		},
 		created() {
@@ -114,8 +145,51 @@
 			});
 		},
 		methods: {
-			asdasdad() {
-				console.log(this.tiku);
+			sub() {
+				this.subshow = true
+			},
+			submit() {
+				if (this.paperTopic.length == this.shangxian) {
+					let load = this.$loading({
+						fullscreen: true
+					});
+					this.$http.post('/admin/exmaTopic', this.$qs.stringify({
+						token: this.$store.getters.token,
+						ids: this.ids,
+						name: this.pagerName
+					})).then(res => {
+						if (res.data.status == 0) {
+							setTimeout(() => {
+								this.goback();
+							}, 500)
+							this.$message({
+								type: 'success',
+								message: '提交成功!'
+							});
+						} else {
+							this.$notify.success({
+								title: '错误',
+								iconClass: 'el-icon-warning',
+								message: res.data.msg,
+								showClose: false
+							});
+						}
+						load.close();
+					}).catch(() => {
+						this.$notify.success({
+							title: '错误',
+							iconClass: 'el-icon-warning',
+							message: '服务器未响应',
+							showClose: false
+						});
+						load.close();
+					});
+				} else {
+					this.$message({
+						type: 'info',
+						message: '还不够' + this.shangxian + '题哟!'
+					});
+				}
 			},
 			topics(t) {
 				return this.$http.post('/admin/topics', this.$qs.stringify({
@@ -136,7 +210,36 @@
 				this.showTiku = e
 			},
 			addToPaper(k) {
-				this.showTopic.splice(k,1);
+				if (this.paperTopic.length >= this.shangxian) {
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '试卷上限' + this.shangxian + '题',
+						showClose: false
+					});
+				} else {
+					this.paperTopic.push(this.showTopic.splice(k, 1)[0]);
+				}
+			},
+			changeToPaper(k) {
+				if (this.paperTopic[this.nowChose].type == this.showTopic[k].type) {
+					this.paperTopic.splice(this.nowChose, 1, this.showTopic.splice(k, 1, this.paperTopic[this.nowChose])[0]);
+				} else {
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '类型不同不能替换',
+						showClose: false
+					});
+				}
+
+			},
+			choseTopic(k) {
+				if (this.nowChose == k) {
+					this.nowChose = -1;
+				} else {
+					this.nowChose = k;
+				}
 			}
 		}
 	}
@@ -145,15 +248,13 @@
 <style lang="scss" scoped>
 	.letopic-enter-active,
 	.letopic-leave-active {
-		transition: opacity .5s;
+		transition: all .5s;
 	}
 
 	.letopic-enter,
-	.letopic-leave-to
-
-	/* .fade-leave-active below version 2.1.8 */
-		{
+	.letopic-leave-to {
 		opacity: 0;
+		transform: translateY(30px);
 	}
 
 	.show {
@@ -175,6 +276,69 @@
 		.one {
 			height: 100%;
 			width: 50%;
+
+			.topics {
+				width: 100%;
+				height: calc(100% - 50px);
+				box-sizing: border-box;
+				padding: 24px 24px 24px 0;
+				padding-right: 11px;
+				overflow: auto;
+
+				ul {
+					padding: 5px;
+				}
+
+				.onetop {
+					width: 100%;
+					height: 60px;
+					border-radius: 20px;
+					margin-bottom: 26px;
+					display: flex;
+
+					.topinfo {
+						width: 86%;
+						height: 100%;
+						padding: 5px 10px;
+					}
+
+					.btn {
+						width: 14%;
+						height: 100%;
+						border-radius: 0 20px 20px 0;
+						border: solid 1px #1890FF;
+
+						.replace {
+							width: 100%;
+							height: 50%;
+							color: #1890FF;
+						}
+
+						.add {
+							width: 100%;
+							height: 50%;
+							border-radius: 0 0 20px 0;
+							background-color: #1890FF;
+							color: white;
+						}
+					}
+				}
+
+				.active {
+					box-shadow: 2px 2px 10px 4px rgba(0, 0, 0, 0.2);
+					background-color: rgba(243, 249, 255, 1);
+					border: 1px solid #1890FF;
+				}
+
+				.none {
+					box-shadow: 2px 2px 10px 4px rgba(0, 0, 0, 0.2);
+					border: 1px solid rgba(0, 0, 0, 0.2);
+				}
+			}
+
+			.topics::-webkit-scrollbar {
+				display: none;
+			}
 		}
 
 		.two {

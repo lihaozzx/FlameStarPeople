@@ -18,6 +18,10 @@
 		width: 100vw;
 		height: 100vh;
 	}
+	
+	li{
+		list-style-type:none;
+	}
 
 	#app {
 		background-image: url(assets/login_bg.png);

@@ -1,14 +1,14 @@
 <template>
 	<div class="root">
-		<div class="infoBody">
+		<div class="infoBody" v-if="bankInfo.length!=0">
 			<div v-for="(s,k) in bankInfo" :key="k" class="one_bank_info">
 				<div class="div_text">
-					<span class="ts18">试卷</span>
+					<span class="ts18">{{s.name}}</span>
 				</div>
 				<div class="div_text">
 					<span class="ts16">
 						<span class="o26">当前题数：</span>
-						<span class="a26">200</span>
+						<span class="a26">{{s.nums}}</span>
 					</span>
 				</div>
 				<div class="div_text">
@@ -23,6 +23,9 @@
 				</div>
 			</div>
 		</div>
+		<div v-else class="infoBody_none">
+			<span>暂无试卷信息，请添加</span>
+		</div>
 		<div class="infoFooter">
 			<el-pagination layout="prev, pager, next" :total="50" :page-size="3"></el-pagination>
 		</div>
@@ -33,12 +36,7 @@
 	export default {
 		data() {
 			return {
-				bankInfo: [{
-				},{
-				},{
-				},{
-				},{
-				}],
+				bankInfo: [{},{},{},{},{},{}],
 				pageInfo: {
 					totalCount: 0,
 					size: 1,
@@ -47,14 +45,35 @@
 			};
 		},
 		created() {
+			let load = this.$loading({
+				fullscreen: true
+			});
 			this.$http.get('/admin/exam', {
 				params: {
 					token: this.$store.getters.token,
 					p: this.pageInfo.nowPage
 				}
 			}).then(res => {
-				console.log(res);
-			})
+				if (res.data.status == 0) {
+					this.bankInfo = res.data.data
+				} else {
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: res.data.msg,
+						showClose: false
+					});
+				}
+				load.close();
+			}).catch(() => {
+				this.$notify.success({
+					title: '错误',
+					iconClass: 'el-icon-warning',
+					message: '服务器未响应',
+					showClose: false
+				});
+				load.close()
+			});
 		},
 		methods: {
 			// 组件的方法
@@ -67,16 +86,24 @@
 		width: 100%;
 		height: 100%;
 		display: flex;
-		justify-content: space-around;
-		align-items: center;
 		box-sizing: border-box;
 		padding-bottom: 50px;
 		flex-wrap: wrap;
 	}
 
+	.infoBody_none {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 50px;
+	}
+
 	.one_bank_info {
 		width: 350px;
 		height: 190px;
+		margin: 46px 0 0 50px;
 		background-color: #FFFFFF;
 		border-radius: 20px;
 		box-shadow: 5px 5px 0.75rem 0.2rem rgba(0, 0, 0, 0.1);
@@ -86,18 +113,20 @@
 		flex-direction: column;
 		justify-content: space-between;
 	}
-	
-	.div_text{
+
+	.div_text {
 		display: flex;
 		justify-content: space-between;
 		position: relative;
 	}
-	.div_text .inbot{
+
+	.div_text .inbot {
 		position: absolute;
 		right: 0;
 		bottom: 0;
 	}
-	.div_addPer{
+
+	.div_addPer {
 		width: 100%;
 		display: flex;
 		flex-direction: column;

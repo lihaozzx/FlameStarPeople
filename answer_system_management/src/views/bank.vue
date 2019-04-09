@@ -5,9 +5,9 @@
 				
 			</div>
 		</div>
-		<div class="infoFooter">
+		<!-- <div class="infoFooter">
 			<el-pagination layout="prev, pager, next" :total="50" :page-size="3"></el-pagination>
-		</div>
+		</div> -->
 	</div>
 </template>
 
