@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import index from './views/index.vue'
 import stu from './views/stu.vue'
-import cpm from './views/cpm.vue'
 import bank from './views/bank.vue'
 import paper from './views/paper.vue'
 
@@ -23,7 +22,7 @@ export default new Router({
 				{
 					path: 'session',
 					name: 'session',
-					component: cpm,
+					component: resolve => require(['./views/cpm.vue'], resolve),
 					meta: {
 						title: '赛程列表'
 					}
