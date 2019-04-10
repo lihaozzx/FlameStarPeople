@@ -10,10 +10,13 @@
 	<body>
 		<div class="y_body">
 			<div class="y_floatBox">
-				<!-- 名称 编号筛选 -->
-				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入项目名称" />
+				<ul class="y_grpBtn prim y_rit10">
+					<li class="y_grpItem wwc active"><a>关于我的</a></li>
+					<li class="y_grpItem ywc"><a>我发布的</a></li>
+				</ul>
+				<!-- <input type="text" class="y_input y_rit10 serch_title" placeholder="输入会议名称" />
 				<button class="y_btn prim y_rit10 serch">搜索</button>
-				<span class="y_btn y_reset y_rit10">重置</span>
+				<span class="y_btn y_reset y_rit10">重置</span> -->
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
 				<span class="y_btn gren y_floatRight y_newPop" data-title="添加会议" data-url="./meeting/add.html"><i class="y_icon add">新增</i></span>
 			</div>
@@ -39,13 +42,19 @@
 	<script type="text/javascript">
 		$(function() {
 			var title, pages;
-			var types = 1;
+			var type = 1;
 			getList();
 
 			function getList() {
+				let url = '';
+				if(type==1){
+					url = '/api/conference/xgConference'
+				}else{
+					url = '/api/conference/myConference'
+				}
 				loading();
 				$.ajax({
-					url: reqUrl + '/api/conference/xgConference',
+					url: reqUrl + url,
 					type: 'post',
 					data: {
 						token: tokens,
@@ -74,8 +83,13 @@
 				$('.list').children().remove();
 				var str = '';
 				$.each(data, function(k, v) {
-					str += '<tr><td>' + v.name + '</td><td>' + v.statdt + '</td><td>' + v.mRoom + '</td><td>' + v.del + '</td>' +
-						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="会议总结" data-url="./meeting/info.html?id='+v.id+'"><a>总结</a></ul></div></td></tr>'
+					if(type == 1){
+						str += '<tr><td>' + v.name + '</td><td>' + v.statdt + '</td><td>' + v.mRoom + '</td><td>' + v.del + '</td>' +
+							'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="会议详情" data-url="./meeting/detile.html?id='+v.tid+'"><a>详情</a></li></ul></div></td></tr>'
+					}else{
+						str += '<tr><td>' + v.name + '</td><td>' + v.statdt + '</td><td>' + v.mRoom + '</td><td>' + v.del + '</td>' +
+							'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="会议详情" data-url="./meeting/detile.html?id='+v.id+'"><a>详情</a></li><li class="y_slectItem y_newPop" data-title="会议总结" data-url="./meeting/info.html?id='+v.id+'"><a>总结</a></li><li class="y_slectItem y_newPop" data-title="删除会议" data-url="./meeting/del.html?id='+v.id+'"><a>删除</a></li></ul></div></td></tr>'
+					}
 				});
 				if (str == '') {
 					$('.y_tab').hide();
@@ -105,7 +119,16 @@
 				pages = 1;
 				getList();
 			})
-
+			/* 标签切换 */
+			$('.wwc').click(function () {
+				type = 1
+				getList();
+			})
+			$('.ywc').click(function () {
+				type = 2
+				getList();
+			})
+			
 		})
 	</script>
 </html>

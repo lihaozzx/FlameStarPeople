@@ -1,5 +1,5 @@
 /* 项目根路径 */
-var rootUrl = '/oa';
+var rootUrl = '/html';
 /*页面地址前缀*/
 var pagUrl = '../';
 /*图片地址前缀*/

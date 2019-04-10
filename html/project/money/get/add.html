@@ -154,7 +154,9 @@
 					});
 					$('#type2').append(str);
 				} else {
-					parent.window.Alert(res.msg)
+					parent.window.Alert(res.msg,()=>{
+						parent.window.closePop()
+					})
 				}
 				parent.window.loading('none');
 			}

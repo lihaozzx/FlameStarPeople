@@ -168,6 +168,12 @@
 					setInfo(res.data.result);
 					setLogs(res.data.log);
 					setBill(res.data.bill,res.data.course);
+				}else{
+					parent.window.Alert(res.msg, function(){
+							parent.window.closePop('', function(){
+								parent.window.loading('none');
+							})
+					});
 				}
 			}
 		});
@@ -191,6 +197,7 @@
 			},
 			complete: function(){
 				parent.window.loading('none');
+				
 			}
 		});
 	}

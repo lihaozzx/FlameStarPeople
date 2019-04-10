@@ -11,9 +11,28 @@
 		<div class="y_body">
 			<div class="y_floatBox">
 				<!-- 名称 编号筛选 -->
-				<input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入材料名称" />
+				<!-- <input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入材料名称" />
 				<button class="y_btn prim y_rit10 serch">搜索</button>
-				<span class="y_btn y_reset y_rit10">重置</span>
+				<span class="y_btn y_reset y_rit10">重置</span> -->
+				<ul class="y_grpBtn prim y_rit10">
+					<li class="y_grpItem skz"><a>收款中</a></li>
+					<li class="y_grpItem yyq"><a>已逾期</a></li>
+					<li class="y_grpItem ywc"><a>已完成</a></li>
+				</ul>
+				
+				<ul class="y_grpBtn prim y_rit10">
+					<!-- 1.金额倒序,2.金额正序,3.时间倒序,4.时间正序 -->
+					<li class="y_grpItem jedx"><a>金额倒序</a></li>
+					<li class="y_grpItem jezx"><a>金额正序</a></li>
+					<li class="y_grpItem sjdx"><a>时间倒序</a></li>
+					<li class="y_grpItem sjzx"><a>时间正序</a></li>
+				</ul>
+				<ul class="y_grpBtn prim y_rit10">
+					<li class="y_grpItem cl"><a>材料</a></li>
+					<li class="y_grpItem rg"><a>人工</a></li>
+					<li class="y_grpItem jx"><a>机械</a></li>
+				</ul>
+				
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
 				<span class="y_btn gren y_floatRight y_newPop" id="add2" data-title="添加收款计划"><i class="y_icon add">新增收款</i></span>
 			</div>
@@ -47,7 +66,7 @@
 		$(function() {
 			var id = getIdFromUrl();
 			$('#add2').attr('data-url','./project/money/get/add.html?id='+id);
-			var title, pages;
+			var cate, pages,st,ord;
 			var types = 1;
 			getList();
 
@@ -60,8 +79,10 @@
 						proid:id,
 						type:'1',
 						token: tokens,
-						title: title,
-						p: pages
+						p: pages,
+						cate,
+						st,
+						ord
 					},
 					dataType: 'json',
 					success: function(res) {
@@ -89,8 +110,7 @@
 						'</td><td>' + v.endTime + '</td><td>' + v.income + '</td><td>' + v.status + '</td><td>' + v.adddt + '</td><td>'+v.optname+'</td><td>'+v.actual+'</td>' +
 						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
 						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/money/get/change.html?id=' +
-						v.id + '"><a>修改</a></li><li class="y_slectItem" data-title="删除" onClick="del(' + v.id +
-						')"><a>删除</a></li></ul></div></td></tr>'
+						v.id + '"><a>修改</a></li></ul></div></td></tr>'
 				});
 				if (str == '') {
 					$('.y_tab').hide();
@@ -119,35 +139,51 @@
 				title = $('.serch_title').val().trim();
 				pages = 1;
 				getList();
-			})
-
+			});
+			
+			/* 各种分类 */
+			$('.skz').click(function() {
+				st = 1
+				getList();
+			});
+			$('.yyq').click(function() {
+				st = 2
+				getList();
+			});
+			$('.ywc').click(function() {
+				st = 3
+				getList();
+			});
+			
+			$('.jedx').click(function() {
+				ord = 1
+				getList();
+			});
+			$('.jezx').click(function() {
+				ord = 2
+				getList();
+			});
+			$('.sjdx').click(function() {
+				ord = 3
+				getList();
+			});
+			$('.sjzx').click(function() {
+				ord = 4
+				getList();
+			});
+			
+			$('.cl').click(function() {
+				cate =1
+				getList();
+			});
+			$('.rg').click(function() {
+				cate =2
+				getList();
+			});
+			$('.jx').click(function() {
+				cate =3
+				getList();
+			});
 		});
-		function del(id) {
-			parent.window.Confirm('确认删除吗？', function(e) {
-				if (e) {
-					loading();
-					$.ajax({
-						url: reqUrl + '/api/projects/delCate',
-						type: 'post',
-						data: {
-							id: id,
-							mod:2
-						},
-						dataType: 'json',
-						success: function(res) {
-							if (res.status == 0) {
-								parent.window.Alert('分类已删除');
-								parent.window.Reload();
-							} else {
-								parent.window.Alert(res.msg);
-							}
-						},
-						complete: function() {
-							loading('none');
-						}
-					});
-				}
-			})
-		}
 	</script>
 </html>

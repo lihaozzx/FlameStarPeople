@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../../aaa/css/public.css" />
+		<script src="../../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_floatBox">
+				<!-- 名称 编号筛选 -->
+				<!-- <input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入材料名称" />
+				<button class="y_btn prim y_rit10 serch">搜索</button>
+				<span class="y_btn y_reset y_rit10">重置</span> -->
+				<ul class="y_grpBtn prim y_rit10">
+					<li class="y_grpItem skz"><a>收款中</a></li>
+					<li class="y_grpItem yyq"><a>已逾期</a></li>
+					<li class="y_grpItem ywc"><a>已完成</a></li>
+				</ul>
+				
+				<ul class="y_grpBtn prim y_rit10">
+					<!-- 1.金额倒序,2.金额正序,3.时间倒序,4.时间正序 -->
+					<li class="y_grpItem jedx"><a>金额倒序</a></li>
+					<li class="y_grpItem jezx"><a>金额正序</a></li>
+					<li class="y_grpItem sjdx"><a>时间倒序</a></li>
+					<li class="y_grpItem sjzx"><a>时间正序</a></li>
+				</ul>
+				<ul class="y_grpBtn prim y_rit10">
+					<li class="y_grpItem cl"><a>材料</a></li>
+					<li class="y_grpItem rg"><a>人工</a></li>
+					<li class="y_grpItem jx"><a>机械</a></li>
+				</ul>
+				
+				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+				<span class="y_btn gren y_floatRight y_newPop" id="add2" data-title="添加收款计划"><i class="y_icon add">新增收款</i></span>
+			</div>
+			<div class="y_top10">
+				<table class="y_tab y_bordtr">
+					<thead class="y_textCenter">
+						<tr>
+							<td>收付款编号</td>
+							<td>大类</td>
+							<td>小类</td>
+							<td>预计收款时间</td>
+							<td>实际收款时间</td>
+							<!-- <td>收入</td> -->
+							<td>支付</td>
+							<td>状态</td>
+							<td>添加时间</td>
+							<td>修改</td>
+							<td>实际金额</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list">
+						
+					</tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			var id = getIdFromUrl();
+			$('#add2').attr('data-url','./project/money/get/add.html?id='+id);
+			var cate, pages,st,ord;
+			var types = 1;
+			getList();
+
+			function getList() {
+				loading();
+				$.ajax({
+					url: reqUrl + '/api/projects/payment',
+					type: 'post',
+					data: {
+						proid:id,
+						type:'2',
+						token: tokens,
+						p: pages,
+						cate,
+						st,
+						ord
+					},
+					dataType: 'json',
+					success: function(res) {
+						if (res.status == 0) {
+							setList(res.data);
+							setPage('.page', res.pager);
+						} else {
+							$('.y_tab').hide();
+							noData('.y_body');
+							setPage('.page', false);
+						}
+					},
+					complete: function() {
+						loading('none');
+					}
+				});
+			}
+
+			function setList(data) {
+				$('.list').children().remove();
+				var str = '';
+				$.each(data, function(k, v) {
+					/* <!-- <td>' + v.pay + '</td> --> */
+					str += '<tr><td>' + v.type + '</td><td>' + v.cateName + '</td><td>' + v.tname + '</td><td>' + v.starTime +
+						'</td><td>' + v.endTime + '</td><td>' + v.pay + '</td><td>' + v.status + '</td><td>' + v.adddt + '</td><td>'+v.optname+'</td><td>'+v.actual+'</td>' +
+						'<td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect">' +
+						'<li class="y_slectItem y_newPop" data-title="修改" data-url="./project/money/pay/change.html?id=' +
+						v.id + '"><a>修改</a></li></ul></div></td></tr>'
+				});
+				if (str == '') {
+					$('.y_tab').hide();
+					noData('.y_body');
+				} else {
+					$('.y_tab').show();
+					$('.y_noData').remove();
+					$('.list').append(str);
+				}
+			}
+
+			/*页码跳转*/
+			$(document).on('click', '.y_page_item', function() {
+				var that = $(this);
+				var cut_page = $('.y_page_item.active').attr('data-page');
+				if (that.attr('data-page') == cut_page) {
+					return
+				} else {
+					pages = that.attr('data-page') - 0;
+					getList()
+				}
+			})
+
+			/*标题搜索*/
+			$('.serch').click(function() {
+				title = $('.serch_title').val().trim();
+				pages = 1;
+				getList();
+			});
+			
+			/* 各种分类 */
+			$('.skz').click(function() {
+				st = 1
+				getList();
+			});
+			$('.yyq').click(function() {
+				st = 2
+				getList();
+			});
+			$('.ywc').click(function() {
+				st = 3
+				getList();
+			});
+			
+			$('.jedx').click(function() {
+				ord = 1
+				getList();
+			});
+			$('.jezx').click(function() {
+				ord = 2
+				getList();
+			});
+			$('.sjdx').click(function() {
+				ord = 3
+				getList();
+			});
+			$('.sjzx').click(function() {
+				ord = 4
+				getList();
+			});
+			
+			$('.cl').click(function() {
+				cate =1
+				getList();
+			});
+			$('.rg').click(function() {
+				cate =2
+				getList();
+			});
+			$('.jx').click(function() {
+				cate =3
+				getList();
+			});
+		});
+	</script>
+</html>

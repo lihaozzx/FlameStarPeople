@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../../aaa/css/public.css" />
+		<script src="../../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<table class="y_tab y_border y_top20">
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead">*</i>大类：</td>
+					<td colspan="5">
+						<span id="cateName"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead">*</i>小类：</td>
+					<td colspan="5">
+						<span id="tname"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead">*</i>收付款时间：</td>
+					<td colspan="5">
+						<span id="starTime"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead">*</i>实际收款时间：</td>
+					<td colspan="5">
+						<span id="endTime"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead">*</i>收入：</td>
+					<td colspan="5">
+						<span id="income"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead">*</i>状态：</td>
+					<td colspan="5">
+						<span id="status"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="y_textRight"><i class="y_colorRead"></i>实际金额：</td>
+					<td colspan="5">
+						<span id="actual"></span>
+					</td>
+				</tr>
+			</table>
+			<div class="logs y_none y_top20">
+				<p class="y_popSpeed">收款记录</p>
+				<table class="y_tab y_bordtr y_textCenter">
+					<thead class="y_bgcPrim">
+						<tr>
+							<td>收款时间</td>
+							<td>备注</td>
+							<td>付款</td>
+							<td>相关图片</td>
+						</tr>
+					</thead>
+					<tbody class="y_exchag y_hover list">
+			
+					</tbody>
+				</table>
+			</div>
+			<div class="bill y_top20">
+				<p class="y_popSpeed">添加收款记录</p>
+				<form id="check_form">
+					<table class="y_tab y_border">
+						<thead>
+							<tr>
+								<td class="y_textRight">金额：</td>
+								<td>
+									<input type="text" name="money" class="y_input block" />
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="y_textRight">说明：</td>
+								<td><textarea class="y_input" name="content"></textarea></td>
+							</tr>
+							<tr>
+								<td class="y_textRight">相关图片 ：</td>
+								<td>
+									<ul class="y_file">
+									</ul>
+									<input class="y_none " id="fileH" type="file" id="" value="" />
+									<span class="fileC">+添加文件</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="hidden" name="images" class="images" value="" />
+								</td>
+								<td><a class="y_btn info do_subcheck">提交处理</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+			<div class="y_inPopFoot">
+			</div>
+			<div class="y_top20"></div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		var id = getIdFromUrl();
+		var dizhi = [];
+		$('.bill_id').val(id);
+		/*提交*/
+		initInfo(id);
+		$('.do_subcheck').click(function() {
+			$('.token').val(tokens);
+			$('.images').val(dizhi);
+			do_sub();
+		});
+
+		/* 上传*/
+		$('.fileC').on('click', function() {
+			$('#fileH').trigger('click');
+		});
+		$('#fileH').on('change', function(e) {
+			var reader = new FileReader();
+			var AllowImgFileSize = 2100000; //上传图片最大值(单位字节)（ 2 M = 2097152 B ）超过2M上传失败
+			var file = document.getElementById("fileH").files[0];
+			var imgUrlBase64;
+			var asd = e;
+			if (file) {
+				//将文件以Data URL形式读入页面
+				imgUrlBase64 = reader.readAsDataURL(file);
+				reader.onload = function(e) {
+					//var ImgFileSize = reader.result.substring(reader.result.indexOf(",") + 1).length;//截取base64码部分（可选可不选，需要与后台沟通）
+					if (AllowImgFileSize != 0 && AllowImgFileSize < reader.result.length) {
+						alert('上传失败，请上传不大于2M的图片！');
+						return;
+					} else {
+						//执行上传操作
+						let name = asd.target.value.split('\\')[2];
+						$('.y_file').append('<li><span>' + name + '</span></li>')
+						$.ajax({
+							url: reqUrl + "/api/public/uploadImg",
+							type: 'post',
+							data: {
+								img: reader.result,
+								wjName: name
+							},
+							dataType: 'json',
+							success: function(res) {
+								console.log(res);
+								if (res.status == 0) {
+									dizhi.push(res.data);
+								}
+							},
+							error: function(data, status, e) {}
+						});
+					}
+				}
+			}
+		})
+
+		function do_sub() {
+			parent.window.loading();
+			console.log(dizhi);
+			$.ajax({
+				type: "get",
+				url: reqUrl + '/api/projects/savePayLog',
+				data: {
+					type: '2',
+					money: $('input[name="money"]').val(),
+					content: $('textarea[name="content"]').val(),
+					images: dizhi,
+					payid: id,
+					token:tokens
+				},
+				dataType: "json",
+				error: function(request) {
+					parent.window.loading('none');
+					parent.window.Alert('提交失败');
+				},
+				success: function(data) {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						if (data.status == 0) {
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							})
+						}
+					});
+				},
+				complete: function() {
+					parent.window.loading('none');
+				}
+			});
+		}
+	});
+
+	function initInfo(id) {
+		parent.window.loading();
+		let str = '';
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/projects/payInfo',
+			data: {
+				id: id
+			},
+			dataType: "json",
+			success: function(res) {
+				if (res.status == 0) {
+					let o = res.data;
+					$('span[id="actual"]').html(o.actual);
+					$('span[id="cateName"]').html(o.cateName);
+					$('span[id="income"]').html(o.income);
+					$('span[id="optContent"]').html(o.optContent);
+					$('span[id="pay"]').html(o.pay);
+					$('span[id="starTime"]').html(o.starTime);
+					$('span[id="status"]').html(o.status);
+					$('span[id="tname"]').html(o.tname);
+					$('span[id="uname"]').html(o.uname);
+					$.ajax({
+						type: "post",
+						url: reqUrl + '/api/projects/payLogs',
+						data: {
+							pid: id,
+							type:1
+						},
+						dataType: "json",
+						success: function(res) {
+							if (res.status == 0) {
+								$('.logs').show();
+								let str = '';
+								res.data.forEach(p=>{
+									str += '<tr><td>'+p.adddt+'</td><td>'+p.content+'</td><td>'+p.pay+'</td><td><img src="'+reqUrl+p.images+'" ></td></tr>'
+								})
+								$('.list').append(str)
+								parent.window.loading('none');
+							} else {
+								parent.window.loading('none');
+								parent.window.Alert(data.msg, function() {
+									parent.window.closePop('', function() {
+										parent.window.Reload();
+									})
+								});
+							}
+						}
+					});
+				} else {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						parent.window.closePop('', function() {
+							parent.window.Reload();
+						})
+					});
+				}
+			}
+		});
+	}
+</script>

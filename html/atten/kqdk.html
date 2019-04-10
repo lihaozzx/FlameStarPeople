@@ -77,13 +77,13 @@
 		function getList(){
 			loading();
 			$.ajax({
-				url: reqUrl + '/api/atten/kqdkjl',
+				url: reqUrl + '/api/atten/xkqInfo',
 				type: 'post',
 				data: {token: tokens, dt: dt, p: pages},
 				dataType: 'json',
 				success: function(res){
 					if(res.status == 0){
-						setList(res.data);
+						setList(res.data.kqjl);
 						setPage('.page', res.pager);
 					}else{
 						$('.y_tab').hide();
@@ -103,7 +103,7 @@
 			var i = 0;
 			$.each(data, function(k, v){
 				++i
-				str += 	'<tr><td>'+i+'</td><td>'+v.dkdt+'</td><td>'+v.proname+'</td><td>'+v.ctname+'</td><td>'+v.address+'</td><td>'+v.explains+'</td></tr>'
+				str += 	'<tr><td>'+i+'</td><td>'+v.dkdt+'</td><td>'+v.proname+'</td><td>'+v.cname+'</td><td>'+v.address+'</td><td>'+v.explains+'</td></tr>'
 			})
 			if(str == ''){
 				$('.y_tab').hide();

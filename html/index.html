@@ -49,7 +49,7 @@
 		<div class="y_nav">
 			<div class="y_nav_scroll">
 				<ul class="y_nav_box">
-					<li class="y_nav_item not active">
+					<!-- <li class="y_nav_item not active">
 						<i class="y_nav_item_bg"></i>
 						<a class="y_nav_name home on a_1 y_newHtml" data-class="a_1" data-title="工作台" data-url="./main/home.html">
 							<span>工作台</span><i class="y_nav_icon"></i>
@@ -153,8 +153,8 @@
 					</li>
 					<li class="y_nav_item not active">
 						<i class="y_nav_item_bg"></i>
-						<a class="y_nav_name a_18 y_newHtml" data-class="a_18" data-title="项目管理" data-url="./project/manage.html">
-							<span>我的项目</span><i class="y_nav_icon"></i>
+						<a class="y_nav_name a_18 y_newHtml" data-class="a_18" data-title="我的项目管理" data-url="./project/manage.html">
+							<span>我的项目管理</span><i class="y_nav_icon"></i>
 						</a>
 					</li>
 					<li class="y_nav_item not active">
@@ -235,6 +235,12 @@
 							<span>权限管理</span><i class="y_nav_icon"></i>
 						</a>
 					</li>
+					<li class="y_nav_item not active">
+						<i class="y_nav_item_bg"></i>
+						<a class="y_nav_name a_33 y_newHtml" data-class="a_33" data-title="员工考勤记录" data-url="./atten/yuangonkaoqinminxi.html">
+							<span>员工考勤记录</span><i class="y_nav_icon"></i>
+						</a>
+					</li> -->
 				</ul>
 			</div>
 		</div>
@@ -243,14 +249,14 @@
 			<div class="y_main_head">
 				<div class="y_main_head_scroll">
 					<ul class="y_mhd">
-						<li class="y_mhd_item a_1 home active" data-class="a_1">
+						<li class="y_mhd_item a_qwesvvvvs home active" data-class="a_qwesvvvvs">
 							<a><span class="y_mhd_tx a_1">工作台</span></a>
 						</li>
 					</ul>
 				</div>
 			</div>
 			<div class="y_main_body">
-				<iframe class="y_html a_1 active" src="./main/home.html" data-class="a_1"></iframe>
+				<iframe class="y_html a_qwesvvvvs active" src="./main/home.html" data-class="a_qwesvvvvs"></iframe>
 			</div>
 		</div>
 		<!--修改密码-->
@@ -512,7 +518,7 @@
 	};
 
 	/*获取导航菜单*/
-	/*loading('', '.y_nav');
+	loading('', '.y_nav');
 	$.ajax({
 		url: reqUrl + '/api/main/meun',
 		type: 'post',
@@ -524,28 +530,24 @@
 				var str = ''
 				$.each(arr, function(k, v) {
 					if(v.children[0]){
-						str += '<li class="y_nav_item has"><i class="y_nav_item_bg"></i><div class="y_nav_name"><span>'+v.title+'</span><i class="y_nav_has"></i></div>'
-								+'<ul class="y_nav_item_box">'
+						str += '<li class="y_nav_item has"><i class="y_nav_item_bg"></i><div class="y_nav_name"><span>'+v.name+'</span><i class="y_nav_has"></i></div>'+'<ul class="y_nav_item_box">'
 						$.each(v.children, function(k1, v1) {
 							if(v1.children[0]){
-								str += '<li class="y_nav_item end"><div class="y_nav_names"><span class="y_nav_tex">'+v1.title+'</span><i class="y_nav_hass"></i></div>'
-										+'<ul class="y_nav_items_box">'
+								str += '<li class="y_nav_item end"><div class="y_nav_names"><span class="y_nav_tex">'+v1.name+'</span><i class="y_nav_hass"></i></div>'+'<ul class="y_nav_items_box">'
 								$.each(v1.children, function(k2, v2) {
-									str += '<li class="y_nav_item"><a class="y_nav_name a_'+v2.id+' y_newHtml" data-class="a_'+v2.id+'" data-title="'+v2.title+'" data-url="./'+v2.control+'/'+v2.way+'.html">'
-											+'<span class="y_nav_names_tx a_'+v2.id+'">'+v2.title+'</span><i class="y_nav_icon"></i></a></li>'
+									str += '<li class="y_nav_item"><a class="y_nav_name a_'+v2.id+' y_newHtml" data-class="a_'+v2.id+'" data-title="'+v2.name+'" data-url="'+v2.url+'">'+'<span class="y_nav_names_tx a_'+v2.id+'">'+v2.name+'</span><i class="y_nav_icon"></i></a></li>'
 								});
 								str += '</ul>'
 							}else{
-								str += '<li class="y_nav_item"><a class="y_nav_name a_'+v1.id+' y_newHtml" data-class="a_'+v1.id+'" data-title="'+v1.title+'" data-url="./'+v1.control+'/'+v1.way+'.html">'
-										+'<span class="y_nav_tex a_'+v1.id+'">'+v1.title+'</span><i class="y_nav_icon"></i></a></li>'
+								str += '<li class="y_nav_item"><a class="y_nav_name a_'+v1.id+' y_newHtml" data-class="a_'+v1.id+'" data-title="'+v1.name+'" data-url="'+v1.url+'">'+'<span class="y_nav_tex a_'+v1.id+'">'+v1.name+'</span><i class="y_nav_icon"></i></a></li>'
 							}
 						});
 						str += '</ul>'
 					}else{
-						str += '<li class="y_nav_item not"><i class="y_nav_item_bg"></i><a class="y_nav_name a_'+v.id+' y_newHtml" data-class="a_'+v.id+'" data-title="'+v.title+'" data-url="'+v.control+'">'
-								+'<span>'+v.title+'</span><i class="y_nav_icon"></i></a></li>'
+						str += '<li class="y_nav_item not"><i class="y_nav_item_bg"></i><a class="y_nav_name a_'+v.id+' y_newHtml" data-class="a_'+v.id+'" data-title="'+v.name+'" data-url="'+v.url+'">'+'<span>'+v.name+'</span><i class="y_nav_icon"></i></a></li>'
 					}
 				});
+				$('.y_nav_box').empty();
 				$('.y_nav_box').append(str);
 				navInt();
 			}
@@ -553,6 +555,5 @@
 		complete: function(){
 			loading('none', '.y_nav');
 		}
-	});*/
-	navInt();
+	});
 </script>
