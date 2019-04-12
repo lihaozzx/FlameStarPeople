@@ -17,7 +17,7 @@
 						<span class="a26">2018</span>
 					</span>
 				</div>
-				<div class="div_addPer">
+				<div class="div_addPer" @click="toSee(s.id)">
 					<span class="ts12 b18">查看全部</span>
 					<i class="el-icon-arrow-down"></i>
 				</div>
@@ -87,6 +87,12 @@
 					});
 					load.close()
 				});
+			},
+			toSee(id){
+				this.$router.push({
+					path: '/seepaper',
+					query: { id: id}
+				})
 			}
 		}
 	}
@@ -100,6 +106,10 @@
 		box-sizing: border-box;
 		padding-bottom: 50px;
 		flex-wrap: wrap;
+		overflow-y: auto;
+	}
+	.infoBody::-webkit-scrollbar{
+		display: none;
 	}
 
 	.infoBody_none {

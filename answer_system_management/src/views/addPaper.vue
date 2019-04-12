@@ -1,8 +1,17 @@
 <template>
 	<div class="show">
 		<div class="div_head">
+			<span class="ts30">{{ischange?pagerName:'新建试卷'}}({{paperTopic.length}}题)</span>
+			<div class="search">
+				<el-select v-model="value" placeholder="请选择主题">
+					<el-option v-for="item in cates" :key="item" :label="item" :value="item">
+					</el-option>
+				</el-select>
+			</div>
+			<div class="search">
+				<el-input placeholder="题目搜索" v-model="searchKey" clearable></el-input>
+			</div>
 			<el-button type="primary" @click="sub">完成</el-button>
-			<span class="ts30">新建试卷({{paperTopic.length}}题)</span>
 		</div>
 		<div class="div_clome">
 			<div class="one">
@@ -13,6 +22,9 @@
 								<div class="topinfo">
 									<span>{{k+1}}.</span>
 									<span>{{topic.name}}</span>
+								</div>
+								<div class="del" @click.stop="delt4p(k)">
+									<span>删除</span>
 								</div>
 							</div>
 						</li>
@@ -26,7 +38,7 @@
 					</el-menu>
 				</div>
 				<div class="topics">
-					<transition-group name="letopic" tag="ul">
+					<transition-group v-if="value!=''" name="letopic" tag="ul">
 						<li v-for="(topic,k) in showTopic" :key="topic.id">
 							<div class="onetop">
 								<div class="topinfo">
@@ -52,11 +64,18 @@
 							</div>
 						</li>
 					</transition-group>
+					<div v-else>
+						<span>请先选择题目主题</span>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="div_back b18">
-			<div @click="backsure = true">
+			<div v-if="!ischange" @click="backsure = true">
+				<i class="el-icon-back"></i>
+				<span>返回试卷列表</span>
+			</div>
+			<div v-else @click="goback()">
 				<i class="el-icon-back"></i>
 				<span>返回试卷列表</span>
 			</div>
@@ -69,8 +88,8 @@
 			</span>
 		</el-dialog>
 		<el-dialog title="提示" :visible.sync="subshow" width="30%">
-			<span class="ts18">提交试卷？</span>
-			<el-input v-model="pagerName" placeholder="请输入试卷名称" style="margin-top: 20px;"></el-input>
+			<span class="ts18">{{ischange?'确认修改？':'提交试卷？'}}</span>
+			<el-input v-model="pagerName" placeholder="请输入试卷名称" style="margin-top: 20px;" :disabled="ischange"></el-input>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="subshow = false">取 消</el-button>
 				<el-button type="primary" @click="submit()">确 定</el-button>
@@ -81,9 +100,69 @@
 
 <script>
 	export default {
+		watch: {
+			value(newValue) {
+				/* 添加试卷 */
+				let load = this.$loading({
+					fullscreen: true
+				});
+				this.basis().then(res=>{
+					this.cates = res.data.data.content;
+				})
+				this.bi().then(res => {
+					if (res.data.status == 0) {
+						this.titype = res.data.data.content;
+						let a = [];
+						for (var i = 0; i < this.titype.length; i++) {
+							a.push(this.topics(i,this.value));
+						}
+						let _this = this
+						this.$http.all(a).then(this.$http.spread(function() {
+							for (var i = 0; i < arguments.length; i++) {
+								if (arguments[i].data.status == 0) {
+									_this.tiku.push(arguments[i].data.data)
+								}
+							}
+							load.close();
+						}))
+					} else {
+						load.close();
+						this.$notify.success({
+							title: '错误',
+							iconClass: 'el-icon-warning',
+							message: res.data.msg,
+							showClose: false
+						});
+					}
+				}).catch(() => {
+					load.close();
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '服务器未响应',
+						showClose: false
+					});
+				});
+			}
+		},
 		computed: {
 			showTopic() {
-				return this.tiku[parseInt(this.showTiku)]
+				if (typeof this.tiku[parseInt(this.showTiku)] === 'object') {
+					if (this.searchKey == '') {
+						return this.tiku[parseInt(this.showTiku)];
+					} else {
+						let o = [];
+						this.tiku[parseInt(this.showTiku)].forEach(t => {
+							if (t.name.indexOf(this.searchKey) != -1) {
+								o.push(t)
+							}
+						});
+						return o;
+					}
+				} else {
+					return null;
+				}
+
 			},
 			ids() {
 				let ids = []
@@ -103,71 +182,42 @@
 				nowChose: -1,
 				shangxian: 2,
 				pagerName: '',
-				subshow: false
+				subshow: false,
+				searchKey: '',
+				timer: null,
+				ischange: false,
+				cates:[],
+				value:''
 			};
 		},
 		created() {
-			let load = this.$loading({
-				fullscreen: true
-			});
-			this.bi().then(res => {
-				if (res.data.status == 0) {
-					this.titype = res.data.data.content;
-					let a = [];
-					for (var i = 0; i < this.titype.length; i++) {
-						a.push(this.topics(i));
-					}
-					let _this = this
-					this.$http.all(a).then(this.$http.spread(function() {
-						for (var i = 0; i < arguments.length; i++) {
-							if (arguments[i].data.status == 0) {
-								_this.tiku.push(arguments[i].data.data)
-							}
-						}
-						load.close();
-					}))
-				} else {
-					load.close();
-					this.$notify.success({
-						title: '错误',
-						iconClass: 'el-icon-warning',
-						message: res.data.msg,
-						showClose: false
-					});
-				}
-			}).catch(() => {
-				load.close();
-				this.$notify.success({
-					title: '错误',
-					iconClass: 'el-icon-warning',
-					message: '服务器未响应',
-					showClose: false
-				});
-			});
-		},
-		methods: {
-			sub() {
-				this.subshow = true
-			},
-			submit() {
-				if (this.paperTopic.length == this.shangxian) {
+			if (this.$route.query.id == undefined) {
+				this.basis().then(res=>{
+					this.cates = res.data.data.content;
+				})
+				if(this.value != ''){
+					/* 添加试卷 */
 					let load = this.$loading({
 						fullscreen: true
 					});
-					this.$http.post('/admin/exmaTopic', this.$qs.stringify({
-						token: this.$store.getters.token,
-						ids: this.ids,
-						name: this.pagerName
-					})).then(res => {
+					this.bi().then(res => {
 						if (res.data.status == 0) {
-							setTimeout(() => {
-								this.goback();
-							}, 500)
-							this.$message({
-								type: 'success',
-								message: '提交成功!'
-							});
+							this.titype = res.data.data.content;
+							let a = [];
+							for (var i = 0; i < this.titype.length; i++) {
+								a.push(this.topics(i,this.value));
+							}
+							let _this = this
+							this.$http.all(a).then(this.$http.spread(function() {
+								for (var i = 0; i < arguments.length; i++) {
+									if (arguments[i].data.status == 0) {
+										_this.tiku.push(arguments[i].data.data)
+									}
+								}
+								load.close();
+							}))
 						} else {
+							load.close();
 							this.$notify.success({
 								title: '错误',
 								iconClass: 'el-icon-warning',
@@ -175,16 +225,166 @@
 								showClose: false
 							});
 						}
-						load.close();
 					}).catch(() => {
+						load.close();
 						this.$notify.success({
 							title: '错误',
 							iconClass: 'el-icon-warning',
 							message: '服务器未响应',
 							showClose: false
 						});
-						load.close();
 					});
+				}
+			} else {
+				this.ischange = true;
+				/* 添加试卷 */
+				let load = this.$loading({
+					fullscreen: true
+				});
+				this.bi().then(res => {
+					if (res.data.status == 0) {
+						this.titype = res.data.data.content;
+						let a = [];
+						for (var i = 0; i < this.titype.length; i++) {
+							a.push(this.topics(i));
+						}
+						let _this = this
+						this.$http.all(a).then(this.$http.spread(function() {
+							for (var i = 0; i < arguments.length; i++) {
+								if (arguments[i].data.status == 0) {
+									_this.tiku.push(arguments[i].data.data)
+								}
+							}
+
+							/* 修改试卷 */
+							_this.$http.post('/admin/examInfo', _this.$qs.stringify({
+								id: _this.$route.query.id
+							})).then(res => {
+								if (res.data.status == 0) {
+									_this.pagerName = res.data.data.name
+									_this.paperTopic = res.data.data.topics;
+									res.data.data.topics.forEach(t => {
+										for (var i = 0; i < _this.tiku[parseInt(t.type)].length; i++) {
+											if (_this.tiku[t.type][i].id == t.id) {
+												_this.tiku[t.type].splice(i, 1);
+											}
+										}
+									})
+									load.close();
+								} else {
+									load.close();
+									_this.$notify.success({
+										title: '错误',
+										iconClass: 'el-icon-warning',
+										message: res.data.msg,
+										showClose: false
+									});
+								}
+							}).catch(() => {
+								load.close();
+								this.$notify.success({
+									title: '错误',
+									iconClass: 'el-icon-warning',
+									message: '服务器未响应',
+									showClose: false
+								});
+							});
+						}))
+					} else {
+						load.close();
+						this.$notify.success({
+							title: '错误',
+							iconClass: 'el-icon-warning',
+							message: res.data.msg,
+							showClose: false
+						});
+					}
+				}).catch(() => {
+					load.close();
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '服务器未响应',
+						showClose: false
+					});
+				});
+			}
+
+		},
+		methods: {
+			sub() {
+				this.subshow = true
+			},
+			submit() {
+				// 没有上限
+				if (true) {
+					let load = this.$loading({
+						fullscreen: true
+					});
+					if (this.ischange) {
+						this.$http.post('/admin/upexmaTopic', this.$qs.stringify({
+							ids: this.ids,
+							id: this.$route.query.id
+						})).then(res => {
+							if (res.data.status == 0) {
+								setTimeout(() => {
+									this.goback();
+								}, 500)
+								this.$message({
+									type: 'success',
+									message: '修改成功!'
+								});
+							} else {
+								this.$notify.success({
+									title: '错误',
+									iconClass: 'el-icon-warning',
+									message: res.data.msg,
+									showClose: false
+								});
+							}
+							load.close();
+						}).catch(() => {
+							this.$notify.success({
+								title: '错误',
+								iconClass: 'el-icon-warning',
+								message: '服务器未响应',
+								showClose: false
+							});
+							load.close();
+						});
+					} else {
+						this.$http.post('/admin/exmaTopic', this.$qs.stringify({
+							token: this.$store.getters.token,
+							ids: this.ids,
+							name: this.pagerName
+						})).then(res => {
+							if (res.data.status == 0) {
+								setTimeout(() => {
+									this.goback();
+								}, 500)
+								this.$message({
+									type: 'success',
+									message: '提交成功!'
+								});
+							} else {
+								this.$notify.success({
+									title: '错误',
+									iconClass: 'el-icon-warning',
+									message: res.data.msg,
+									showClose: false
+								});
+							}
+							load.close();
+						}).catch(() => {
+							this.$notify.success({
+								title: '错误',
+								iconClass: 'el-icon-warning',
+								message: '服务器未响应',
+								showClose: false
+							});
+							load.close();
+						});
+					}
 				} else {
 					this.$message({
 						type: 'info',
@@ -192,15 +392,22 @@
 					});
 				}
 			},
-			topics(t) {
+			topics(t,c) {
 				return this.$http.post('/admin/topics', this.$qs.stringify({
 					token: this.$store.getters.token,
-					type: t
+					type: this.titype[t],
+					cate:c
 				}))
 			},
 			bi() {
 				return this.$http.post('/admin/basisInfo', this.$qs.stringify({
 					id: 1,
+					token: this.$store.getters.token
+				}))
+			},
+			basis() {
+				return this.$http.post('/admin/basisInfo', this.$qs.stringify({
+					id: 2,
 					token: this.$store.getters.token
 				}))
 			},
@@ -211,7 +418,7 @@
 				this.showTiku = e
 			},
 			addToPaper(k) {
-				if (this.paperTopic.length >= this.shangxian) {
+				if (false) {
 					this.$notify.success({
 						title: '错误',
 						iconClass: 'el-icon-warning',
@@ -241,6 +448,10 @@
 				} else {
 					this.nowChose = k;
 				}
+			},
+			delt4p(k) {
+				this.tiku[this.paperTopic[k].type].push(this.paperTopic[k]);
+				this.paperTopic.splice(k, 1);
 			}
 		}
 	}
@@ -296,10 +507,21 @@
 					border-radius: 20px;
 					margin-bottom: 26px;
 					display: flex;
+					justify-content: space-between;
 					overflow: hidden;
 					text-overflow: ellipsis;
-					white-space:nowrap;
-					
+					white-space: nowrap;
+
+					.del {
+						width: 70px;
+						border-radius: 0 20px 20px 0;
+						background-color: brown;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						color: #FFFFFF
+					}
+
 					.topinfo {
 						width: 86%;
 						height: 100%;
@@ -389,10 +611,11 @@
 							font-size: 16px;
 							font-weight: 900;
 						}
+
 						span:nth-of-type(2) {
 							overflow: hidden;
 							text-overflow: ellipsis;
-							white-space:nowrap;
+							white-space: nowrap;
 						}
 
 						span:nth-of-type(3) {
@@ -441,11 +664,14 @@
 		width: 100%;
 		height: 60px;
 		display: flex;
-		flex-direction: row-reverse;
 		justify-content: space-between;
 		box-sizing: border-box;
 		padding: 10px;
 		position: relative;
+
+		.search {
+			padding-left: 120px
+		}
 	}
 
 	.div_back {

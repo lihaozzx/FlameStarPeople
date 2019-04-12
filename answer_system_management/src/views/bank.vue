@@ -56,7 +56,7 @@ xuanx: "["\u53bb","\u6211","\u997f"]" -->
 					type: '填空题',
 					timu: []
 				}, {
-					type: '组合体',
+					type: '组合题',
 					timu: []
 				}, ],
 				pageInfo: {

@@ -6,7 +6,7 @@
 			<el-menu-item index="bank">查看题库</el-menu-item>
 			<el-menu-item index="paper">查看考卷</el-menu-item>
 
-			<el-button v-if="activeIndex=='student'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="showInfo = true">新增学生</el-button>
+			<el-button v-if="activeIndex=='student'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="showInfo = true">导入学生</el-button>
 			<el-button v-else-if="activeIndex=='session'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="showInfo = true">新增场次</el-button>
 			<el-button v-else-if="activeIndex=='bank'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="showInfo = true">新增题目</el-button>
 			<el-button v-else-if="activeIndex=='paper'" type="primary" style='position: absolute;right: 1%;top: 20%;' @click="toaddPaper">新增试卷</el-button>
@@ -59,6 +59,7 @@
 						<el-radio-button label="1">导入</el-radio-button>
 					</el-radio-group>
 				</div>
+				<!-- 导入 -->
 				<div class="juzhong" v-if="addTopic.status==1">
 					<el-upload drag action="asd" :before-upload="uploadTopic">
 						<i class="el-icon-upload"></i>
@@ -66,17 +67,18 @@
 						<div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件</div>
 					</el-upload>
 				</div>
+				<!-- 添加 -->
 				<div v-else-if="addTopic.status==0">
 					<div class="ovy">
 						<el-form v-loading="bankLoading" :label-width="formLabelWidth">
 							<el-form-item label="类型">
 								<el-radio-group v-model="addTopic.form.type">
-									<el-radio-button v-for="(s,k) in addTopic.type" :label="k" :key="k">{{s}}</el-radio-button>
+									<el-radio-button v-for="(s,k) in addTopic.type" :label="k" :key="s">{{s}}</el-radio-button>
 								</el-radio-group>
 							</el-form-item>
 							<el-form-item label="主题">
 								<el-select v-model="addTopic.form.cate" filterable placeholder="请选择">
-									<el-option v-for="(c,k) in addTopic.cate" :key="k" :label="c" :value="k"></el-option>
+									<el-option v-for="(c,k) in addTopic.cate" :key="k" :label="c" :value="c"></el-option>
 								</el-select>
 							</el-form-item>
 							<el-form-item label="题目">
@@ -106,28 +108,21 @@
 						<el-button type="primary" @click="submitTopic" :loading="inAdd">添 加</el-button>
 					</div>
 				</div>
+				<!-- 导入列表 -->
 				<div v-else-if="addTopic.status==2">
 					<div class="ovy">
-						<el-table :data="addStu.tableData" style="width: 100%" :border='false'>
-							<el-table-column prop="number" label="序号"></el-table-column>
-							<el-table-column prop="name" label="姓名"></el-table-column>
-							<el-table-column prop="age" label="年龄"></el-table-column>
-							<el-table-column prop="size" label="衣服尺码"></el-table-column>
-							<el-table-column prop="school" label="学校"></el-table-column>
-							<el-table-column prop="grade" label="年级"></el-table-column>
-							<el-table-column prop="class" label="班级"></el-table-column>
-							<el-table-column prop="address" label="地址"></el-table-column>
-							<el-table-column prop="phone" label="电话"></el-table-column>
-							<el-table-column prop="cz" label="提示">
-								<template slot-scope="scope">
-									<span :style="scope.row.cz === 1? 'color:#f5222d':'color:#52c41a'">{{scope.row.cz === 1? '已存在':'正常'}}</span>
-								</template>
-							</el-table-column>
+						<el-table :data="addTopic.tableData" style="width: 100%" :border='false'>
+							<el-table-column prop="type" label="类型"></el-table-column>
+							<el-table-column prop="cate" label="主题"></el-table-column>
+							<el-table-column prop="name" label="题目"></el-table-column>
+							<el-table-column prop="answer" label="答案"></el-table-column>
+							<el-table-column prop="xuanx" label="选项"></el-table-column>
+							<el-table-column prop="score" label="分数"></el-table-column>
 						</el-table>
 					</div>
 					<div slot="footer">
 						<el-button @click="showInfo = false">取 消</el-button>
-						<el-button type="primary" @click="submitStu" :disabled="inAdd">上 传</el-button>
+						<el-button type="primary" @click="submitTopicExc()" :disabled="inAdd">上 传</el-button>
 					</div>
 				</div>
 			</div>
@@ -190,6 +185,8 @@
 					cate: {},
 					type: {},
 					status: 0, //添加0 导入1 导入确认2
+					dizhi:'',
+					tableData:[],
 					form: {
 						type: '',
 						cate: '',
@@ -263,12 +260,11 @@
 			uploadTopic(file) {
 				let fd = new FormData();
 				fd.append('file', file); //传文件
-				fd.append('token', this.$store.getters.token);
-				this.$http.post('/admin/selectkqList', fd).then(res => {
+				this.$http.post('/admin/selecttopicList', fd).then(res => {
 					if (res.data.status == 0) {
-						this.addStu.status = false;
-						this.addStu.dizhi = res.data.data.dizhi;
-						this.addStu.tableData = res.data.data.student
+						this.addTopic.dizhi=res.data.data.dizhi;
+						this.addTopic.tableData=res.data.data.topics;
+						this.addTopic.status=2
 					}
 				});
 				return false
@@ -321,11 +317,59 @@
 							message: res.data.msg,
 							showClose: false
 						});
-
 						this.addTopic = {
 							cate: {},
 							type: {},
 							status: 0, //添加0 导入1 导入确认2
+							form: {
+								type: '',
+								cate: '',
+								name: '',
+								xuanx: [''],
+								score: '',
+								answer: '',
+								id: ''
+							}
+						}
+						this.showInfo = false;
+						this.inAdd = false;
+					} else {
+						this.$notify.success({
+							title: '错误',
+							iconClass: 'el-icon-warning',
+							message: res.data.msg,
+							showClose: false
+						});
+						this.inAdd = false;
+					}
+				}).catch(() => {
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '服务器未响应',
+						showClose: false
+					});
+					this.inAdd = false;
+				});
+			},
+			submitTopicExc(){
+				this.inAdd = true
+				this.$http.post('/admin/daoruTopic', this.$qs.stringify({
+					dizhi:this.addTopic.dizhi
+				})).then(res => {
+					if (res.data.status == 0) {
+						this.$notify.success({
+							title: '成功',
+							message: res.data.msg,
+							showClose: false
+						});
+				
+						this.addTopic = {
+							cate: {},
+							type: {},
+							status: 0, //添加0 导入1 导入确认2
+							dizhi:'',
+							tableData:[],
 							form: {
 								type: '',
 								cate: '',
@@ -407,7 +451,7 @@
 			},
 			toaddPaper() {
 				this.$router.push({
-					path: '/addpaper'
+					path: '/seepaper'
 				})
 			}
 		}

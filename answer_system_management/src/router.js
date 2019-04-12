@@ -53,7 +53,7 @@ export default new Router({
 			}
 		},
 		{
-			path: '/addpaper',
+			path: '/seepaper',
 			name: 'addPaper',
 			component: resolve => require(['./views/addPaper.vue'], resolve),
 			meta: {
