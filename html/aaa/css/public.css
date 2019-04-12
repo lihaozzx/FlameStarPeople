@@ -300,7 +300,8 @@ input.y_btn.block{height: 40px;line-height: 40px;padding: 0;}
 /*表格*/
 .y_tab{max-width: 3000px;min-width: 100%;}
 .y_tab .list td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.y_textCenter>tr>td:nth-last-of-type(1){background-color: #FFFFFF;color: #000000;position: fixed;right: 15px;}
+.y_textCenter>tr{position: relative;}
+.y_textCenter>tr>td:nth-last-of-type(1){background-color: #FFFFFF;color: #000000;position: absolute;right: 15px;}
 .y_textCenter>tr>td:nth-last-of-type(2){padding-right: 60px;}
 .y_tab img{max-width: 80px;max-height: 80px;}
 .y_border td{border: 1px solid #dcdcdc;}
@@ -405,7 +406,7 @@ input.y_btn.block{height: 40px;line-height: 40px;padding: 0;}
 iframe{border: none;outline: none;width: 100%;height: 100%;}
 .y_html{display: none;}
 .y_html.active{display: block;}
-.y_body{padding: 14px;min-width: 1000px;}
+.y_body{padding: 14px;/* min-width: 1000px; */}
 .y_pop{position: fixed;width: 100%;height: 100%;left: 0;top: 0;z-index: 99;}
 .y_popBox{position: absolute;background-color: #fff;overflow: hidden;border-radius: 6px;z-index: 99;width: 1000px;left: 50%;margin-left: -500px;top: -999px;}
 .y_popTit{height: 40px;line-height: 40px;background-color: #628ab2;color: #fff;position: relative;text-align: center;font-size: 16px;}
