@@ -36,7 +36,7 @@
 	export default {
 		data() {
 			return {
-				bankInfo: [{},{},{},{},{},{}],
+				bankInfo: [],
 				pageInfo: {
 					totalCount: 0,
 					size: 1,
@@ -108,8 +108,22 @@
 		flex-wrap: wrap;
 		overflow-y: auto;
 	}
-	.infoBody::-webkit-scrollbar{
-		display: none;
+	.infoBody::-webkit-scrollbar {
+		width: 0.625rem;
+	}
+	
+	/*滚动条里面滑块*/
+	.infoBody::-webkit-scrollbar-thumb {
+		border-radius: 10px;
+		-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		background: #409EFF;
+	}
+	
+	/*滚动条里面轨道*/
+	.infoBody::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		border-radius: 0.3125rem;
+		background: #EDEDED;
 	}
 
 	.infoBody_none {

@@ -228,6 +228,7 @@
 	.stu_tab {
 		box-sizing: border-box;
 		padding-top: 0.625rem;
+		height: calc(100% - 1.82rem - 60px);
 	}
 
 	.div_search {

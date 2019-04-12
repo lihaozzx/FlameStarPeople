@@ -12,14 +12,6 @@
 		</div>
 		<el-dialog title="题目信息" :visible.sync="per" width="70%">
 			<el-table :data="bankInfo[show].timu" style="width: 100%" :height="500" :border='false'>
-				<!-- answer: "0"
-cate: "0"
-id: "2"
-name: "请问"
-score: "12"
-status: "0"
-type: "0"
-xuanx: "["\u53bb","\u6211","\u997f"]" -->
 				<el-table-column prop="cate" label="主题">
 					<template slot-scope="scope">
 						<span>{{scope.row.cate==0?'诗词歌赋':scope.row.cate==1?'人文故事':scope.row.cate==2?'历史故事':'未知'}}</span>
@@ -31,7 +23,7 @@ xuanx: "["\u53bb","\u6211","\u997f"]" -->
 				<el-table-column prop="answer" label="答案"></el-table-column>
 				<el-table-column prop="status" label="状态">
 					<template slot-scope="scope">
-						<span>{{scope.row.status==0?'未登录':scope.row.status==1?'待确认':scope.row.status==2?'已确认':'异常'}}</span>
+						<span>{{scope.row.status==0?'0':scope.row.status==1?'1':scope.row.status==2?'2':'3'}}</span>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -50,59 +42,62 @@ xuanx: "["\u53bb","\u6211","\u997f"]" -->
 		data() {
 			return {
 				bankInfo: [{
-					type: '问答题',
-					timu: []
-				}, {
-					type: '填空题',
-					timu: []
-				}, {
-					type: '组合题',
-					timu: []
-				}, ],
+							type: '暂无',
+							timu: []
+						}],
 				pageInfo: {
 					totalCount: 0,
 					size: 1,
 					nowPage: 1
 				},
-				show:0,
-				per:false
+				show: 0,
+				per: false
 			};
 		},
 		created() {
-			/* 题库 */
-			this.$http.get('/admin/topics', {
-				params: {
-					type: 0
-				}
-			}).then(res => {
-				if(res.data.status == 0){
-					this.bankInfo[0].timu = res.data.data
-				}
+			/* 题型 */
+			let load = this.$loading({
+				fullscreen: true
 			});
-			this.$http.get('/admin/topics', {
-				params: {
-					type: 1
-				}
-			}).then(res => {
-				if(res.data.status == 0){
-					this.bankInfo[1].timu = res.data.data
-				}
-			});
-			this.$http.get('/admin/topics', {
-				params: {
-					type: 2
-				}
-			}).then(res => {
-				if(res.data.status == 0){
-					this.bankInfo[2].timu = res.data.data
+			let http = [];
+			this.$http.post('/admin/basisInfo', this.$qs.stringify({
+				id: 1,
+				token: this.$store.getters.token
+			})).then(res => {
+				if (res.data.status == 0) {
+					this.bankInfo=[]
+					res.data.data.content.forEach(t => {
+						this.bankInfo.push({
+							type: t,
+							timu: []
+						});
+						http.push(this.topic(t));
+					});
+					/* 题库 */
+					let _this = this;
+					this.$http.all(http).then(this.$http.spread(function () {
+						for (var i = 0; i < arguments.length; i++) {
+							if (arguments[i].data.status == 0) {
+								_this.bankInfo[i].timu=arguments[i].data.data
+							}
+						}
+						load.close();
+					}));
 				}
 			});
 		},
 		methods: {
 			// 组件的方法
-			seeBank(k){
+			seeBank(k) {
 				this.per = true
 				this.show = k
+			},
+			topic(i){
+				return this.$http.get('/admin/topics', {
+					params: {
+						type: i
+					}
+				})
 			}
 		}
 	}
@@ -113,16 +108,17 @@ xuanx: "["\u53bb","\u6211","\u997f"]" -->
 		width: 100%;
 		height: 100%;
 		display: flex;
-		justify-content: space-around;
-		align-items: center;
 		box-sizing: border-box;
 		padding-bottom: 50px;
 		flex-wrap: wrap;
+		overflow-y: auto;
 	}
 
 	.one_bank_info {
 		width: 350px;
 		height: 235px;
+		margin-top: 40px;
+		margin-left: 50px;
 		background-color: #FFFFFF;
 		border-radius: 20px;
 		box-shadow: 0 0 0.75rem 0.2rem #ececec;
@@ -132,9 +128,11 @@ xuanx: "["\u53bb","\u6211","\u997f"]" -->
 		flex-direction: column;
 		justify-content: space-between;
 	}
-	.title{
+
+	.title {
 		font-size: 30px;
 	}
+
 	.div_addPer {
 		width: 100%;
 		display: flex;
@@ -142,5 +140,4 @@ xuanx: "["\u53bb","\u6211","\u997f"]" -->
 		justify-content: center;
 		align-items: center;
 	}
-
 </style>

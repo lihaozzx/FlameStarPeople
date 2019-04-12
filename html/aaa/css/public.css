@@ -94,7 +94,7 @@ body{
 .y_bgcFaut{background-color: #c4c4c4;color: #fff;}
 .y_bgcPurp{background-color: #a696ce;color: #fff;}
 /*外边距*/
-.y_top10{margin-top: 10px;}
+.y_top10{margin-top: 10px;width: 100%;overflow-x: auto;}
 .y_top20{margin-top: 20px;}
 .y_lef10{margin-left: 10px;}
 .y_lef20{margin-left: 20px;}
@@ -298,7 +298,10 @@ input.y_btn.block{height: 40px;line-height: 40px;padding: 0;}
 .y_box.purp{border-color: #a696ce;}
 .y_box.purp .y_boxTit{background-color: #a696ce;border-bottom: 1px solid #a696ce;color: #fff;}
 /*表格*/
-.y_tab{width: 100%;}
+.y_tab{max-width: 3000px;min-width: 100%;}
+.y_tab .list td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.y_textCenter>tr>td:nth-last-of-type(1){background-color: #FFFFFF;color: #000000;position: fixed;right: 15px;}
+.y_textCenter>tr>td:nth-last-of-type(2){padding-right: 60px;}
 .y_tab img{max-width: 80px;max-height: 80px;}
 .y_border td{border: 1px solid #dcdcdc;}
 .y_bordtr tr{border: 1px solid #dcdcdc;}

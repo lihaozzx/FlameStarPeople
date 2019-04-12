@@ -18,7 +18,7 @@
 			</el-form>
 		</div>
 
-		<el-table v-loading="loadingTable" :data="tableData" style="width: 100%" :height="height*0.55" :border='false' ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange">
+		<el-table v-loading="loadingTable" :data="canaddStu" style="width: 100%" :height="height*0.55" :border='false' ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange">
 			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column prop="number" label="序号"> </el-table-column>
 			<el-table-column prop="name" label="姓名"></el-table-column>
@@ -36,19 +36,17 @@
 		</div>
 
 		<div class="infoFooter">
-			
 			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selStu"></el-pagination>
 		</div>
 
 		<!-- 弹窗 -->
 		<el-dialog title="学校信息" :visible.sync="showInfo">
-			<el-table v-loading="loadingTable" :data="choseStu" style="width: 100%" :height="height*0.5" :border='false'>
+			<el-table v-loading="loadingTable" :data="showChoseStu" style="width: 100%" :height="height*0.5" :border='false'>
 				<el-table-column prop="number" label="座位号">
 					<template slot-scope="scope">
-						<el-input v-model="scope.row.numbers" placeholder="座位号"></el-input>
+						<el-input :disabled="!scope.row.isnew" v-model="scope.row.number" placeholder="座位号"></el-input>
 					</template>
 				</el-table-column>
-				<el-table-column prop="number" label="序号"> </el-table-column>
 				<el-table-column prop="name" label="姓名"></el-table-column>
 				<el-table-column prop="school" label="学校"></el-table-column>
 				<el-table-column prop="grade" label="年级"></el-table-column>
@@ -73,9 +71,35 @@
 				this.choseStu.forEach(s => {
 					o.push({
 						id: s.id,
-						number: s.numbers
+						number: s.number
 					})
 				});
+				return o
+			},
+			canaddStu(){
+				let o = [];
+				this.tableData.forEach(all=>{
+					let a = true;
+					for (var i = 0; i < this.chosedStu.length; i++) {
+						if(this.chosedStu[i].pid==all.id){
+							a = false;
+							return;
+						}
+					}
+					if(a){
+						o.push(all)
+					}
+				});
+				return o;
+			},
+			showChoseStu(){
+				let o = [];
+				this.choseStu.forEach(a=>{
+					o.push(a)
+				})
+				this.chosedStu.forEach(a=>{
+					o.push(a)
+				})
 				return o
 			}
 		},
@@ -107,12 +131,14 @@
 				},
 				inAdd: false,
 				id: '',
-				choseStu: []
+				choseStu: [],
+				chosedStu:[]
 			};
 		},
 		created() {
 			this.id = this.$route.params.id
 			this.selStu();
+			this.findAdded();
 		},
 		methods: {
 			// 组件的方法
@@ -140,13 +166,22 @@
 					this.loadingTable = false
 				})
 			},
+			findAdded() {
+				this.$http.post('/admin/gamesPlayer', this.$qs.stringify({
+					id: this.id
+				})).then(res => {
+					if(res.data.status == 0){
+						this.chosedStu=res.data.data
+					}
+				})
+			},
 			handleSelectionChange(val) {
 				this.choseStu = [];
 				val.forEach(v => {
-					this.choseStu.push({
-						...v,
-						numbers: ''
-					})
+					let a = {...v,
+					isnew:true};
+					a.number = ''
+					this.choseStu.push(a);
 				})
 			},
 			seeInfo() {
@@ -154,9 +189,9 @@
 			},
 			submitSch() {
 				this.inAdd = true
-				this.$http.post('/admin/addGamesPlayer',this.$qs.stringify({
-					players:this.out,
-					id:this.id
+				this.$http.post('/admin/addGamesPlayer', this.$qs.stringify({
+					players: this.out,
+					id: this.id
 				})).then(res => {
 					if (res.data.status == 0) {
 						this.$notify.success({
@@ -199,14 +234,14 @@
 					sname: ''
 				}
 			},
-			goback(){
+			goback() {
 				this.$router.go(-1)
 			}
 		}
 	}
 </script>
 
-<style>
+<style scoped>
 	.stu_tab {
 		height: 100%;
 		box-sizing: border-box;
@@ -222,7 +257,7 @@
 		box-sizing: border-box;
 		height: 1.82rem;
 	}
-	
+
 	.div_back {
 		width: 100%;
 		height: 30px;

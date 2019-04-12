@@ -4,6 +4,12 @@
 			<view class="view_navigation"></view>
 			<image class="logo" src="/static/login_bg.png"></image>
 		</view>
+		
+		<!-- 删除 -->
+		<view class="asd" @tap="asd">
+			进入答题
+		</view>
+		<!-- 删除 -->
 
 		<view class="login" v-if="show==0">
 			<view class="title">输入信息</view>
@@ -25,14 +31,14 @@
 			<view class="infos">
 				<div class="img" style="background-image: url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554980610251&di=201ce787e28c8bbda1df254194512515&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg);">
 				</div>
-				<text>编号:01</text>
+				<text>座号:01</text>
 				<text>姓名:蕾米莉亚</text>
-				<text>学号:666</text>
+				<text>学校:成都七中</text>
 				<text>班级:三年级一班</text>
 			</view>
 			<view class="tishi">
 				<text>注意：如信息有误，请联系现场工作人员</text>
-				<image src="../../static/set.png" mode=""></image>
+				<image src="../../static/set.png"  mode=""></image>
 			</view>
 			<view v-if="!insure" class="sure" @tap="sureInfo">
 				确认信息
@@ -62,18 +68,31 @@
 			},
 			login(){
 				this.show=1
+			},
+			asd(){
+				uni.navigateTo({
+					url:'../ans/ans'
+				})
 			}
 		}
 	}
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+	.asd{
+		z-index: 2;
+		position: absolute;
+		right: 20upx;
+		top: 40upx;
+		font-size: 24upx;
+	}
+	
+	
 	.content {
 		position: relative;
 		width: 1202upx;
 		height: 706upx;
 		overflow: hidden;
-		background-color: #7eca1e;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -86,12 +105,11 @@
 			left: 0;
 
 			.view_navigation {
-				height: 25px;
-				background-color: #000000;
+				height: 25upx;
 			}
 
 			.logo {
-				height: calc(100% - 25px);
+				height: calc(100% - 25upx);
 				width: 100%;
 			}
 		}

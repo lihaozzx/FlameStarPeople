@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>主题：</td>
+						<td colspan="5">
+							<input type="text" name="name" class="y_input block" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>会议地点：</td>
+						<td colspan="2">
+							<input type="text" name="mRoom" class="y_input block" />
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>开始时间：</td>
+						<td colspan="2">
+							<input type="text" name="statdt" readonly="readonly" class="y_input y_dat_opens" />
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>所属员工：</td>
+						<td colspan="5">
+							<input type="text" class="y_input long y_rit10 distname2" readonly="readonly" placeholder="点击按钮选择" />
+							<input type="hidden" name="ids" class="distid2" />
+							<span class="y_btn prim ch2">选择</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead"></i>备注：</td>
+						<td colspan="5">
+							<textarea class="y_input block" name="content"></textarea>
+						</td>
+					</tr>
+				</table>
+				<div class="y_inPopFoot">
+					<input type="hidden" name="token" class="token" value="" />
+					<span class="y_btn lg y_rit20 prim submit">发 布</span>
+				</div>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		let id = getIdFromUrl();
+		/*提交*/
+		parent.window.loading();
+		/*获取人员信息*/
+		$.ajax({
+			type: "post",
+			url: reqUrl + "/api/conference/confInfo",
+			data: {
+				token: tokens,
+				id:id
+			},
+			dataType: 'json',
+			success: function(res) {
+				console.log(res);
+				if (res.status == 0) {
+					Use = {}
+					Use.status = 2;
+					Use.data = res.data;
+					$('.ch2').click(function() {
+						parent.window.ChousPerson(Use, 'two', $('.distid2').val(), function(tex, val) {
+							$('.distname2').val(tex);
+							$('.distid2').val(val);
+						})
+					});
+					parent.window.loading('none');
+				}
+			}
+		});
+		
+		$('.submit').click(function() {
+			$('.token').val(tokens);
+			do_sub();
+		})
+
+		function do_sub() {
+			parent.window.loading();
+			$.ajax({
+				type: "get",
+				url: reqUrl + '/api/conference/addConf',
+				data: $('#check_form').serialize(),
+				dataType: "json",
+				error: function(request) {
+					parent.window.loading('none');
+					parent.window.Alert('提交失败');
+				},
+				success: function(data) {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						if (data.status == 0) {
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							});
+						}
+					});
+				}
+			});
+		}
+		
+	})
+</script>

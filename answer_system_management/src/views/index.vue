@@ -22,7 +22,7 @@
 					<el-upload drag action="asd" :before-upload="upload">
 						<i class="el-icon-upload"></i>
 						<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-						<div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件</div>
+						<div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件<span @click="downMOban" style="color:#409EFF;cursor: pointer">  下载模板</span></div>
 					</el-upload>
 				</div>
 				<div v-else>
@@ -453,6 +453,10 @@
 				this.$router.push({
 					path: '/seepaper'
 				})
+			},
+			downMOban(){
+				let urls = this.$rurl+'/uploads/download/hx.xlsx';
+				location.href = urls;
 			}
 		}
 	}
@@ -483,7 +487,7 @@
 
 	.infoFooter {
 		position: absolute;
-		right: 0;
+		right: 5px;
 		bottom: 1%;
 	}
 

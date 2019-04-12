@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="y_popBody">
+			<form id="check_form">
+				<table class="y_tab y_border y_top20">
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>文件名称：</td>
+						<td colspan="2">
+							<span id='name'></span>
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>添加人：</td>
+						<td colspan="2">
+							<span id='optname'></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>文件类型：</td>
+						<td colspan="2">
+							<span id='filetype'></span>
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>文件大小：</td>
+						<td colspan="2">
+							<span id='filesizecn'></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>文件地址：</td>
+						<td colspan="2">
+							<span id="filepath"></span>
+						</td>
+						<td class="y_textRight"><i class="y_colorRead">*</i>添加时间：</td>
+						<td colspan="2">
+							<span id="optdt"></span>
+						</td>
+					</tr>
+				</table>
+				<div class="y_top20"></div>
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		let id = getIdFromUrl();
+		initInfo(id);
+		parent.window.loading();
+		
+		function initInfo(id) {
+			$.ajax({
+				type: "post",
+				url: reqUrl + "/api/files/fileInfo",
+				data: {
+					token: tokens,
+					id:id
+				},
+				dataType: 'json',
+				success: function(res) {
+					if (res.status == 0) {
+						let o = res.data;
+						$('span[id="name"]').html(o.name);
+						$('span[id="filepath"]').html(o.filepath);
+						$('span[id="filesizecn"]').html(o.filesizecn);
+						$('span[id="filetype"]').html(o.filetype);
+						$('span[id="optdt"]').html(o.optdt);
+						parent.window.loading('none');
+					}
+				}
+			});
+			
+		}
+	})
+</script>

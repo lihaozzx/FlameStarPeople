@@ -97,7 +97,7 @@ $(function() {
 			}
 
 			that.children('.y_slect').css({
-				left: w,
+				right: 30,
 				top: h
 			})
 		} else {

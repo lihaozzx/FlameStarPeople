@@ -64,7 +64,7 @@
 							</div>
 						</li>
 					</transition-group>
-					<div v-else>
+					<div v-else class="nocate">
 						<span>请先选择题目主题</span>
 					</div>
 				</div>
@@ -101,7 +101,7 @@
 <script>
 	export default {
 		watch: {
-			value(newValue) {
+			value() {
 				/* 添加试卷 */
 				let load = this.$loading({
 					fullscreen: true
@@ -118,6 +118,7 @@
 						}
 						let _this = this
 						this.$http.all(a).then(this.$http.spread(function() {
+							_this.tiku=[];
 							for (var i = 0; i < arguments.length; i++) {
 								if (arguments[i].data.status == 0) {
 									_this.tiku.push(arguments[i].data.data)
@@ -209,6 +210,7 @@
 							}
 							let _this = this
 							this.$http.all(a).then(this.$http.spread(function() {
+								_this.tiku=[];
 								for (var i = 0; i < arguments.length; i++) {
 									if (arguments[i].data.status == 0) {
 										_this.tiku.push(arguments[i].data.data)
@@ -252,6 +254,7 @@
 						this.$http.all(a).then(this.$http.spread(function() {
 							for (var i = 0; i < arguments.length; i++) {
 								if (arguments[i].data.status == 0) {
+									
 									_this.tiku.push(arguments[i].data.data)
 								}
 							}
@@ -646,6 +649,11 @@
 							color: white;
 						}
 					}
+				}
+				.nocate{
+					font-size: 30px;
+					text-align: center;
+					color: #8c8c8c;
 				}
 			}
 
