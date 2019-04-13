@@ -9,8 +9,8 @@ import VueVideoPlayer from 'vue-video-player'
 import 'video.js/dist/video-js.css'
 
 Vue.use(VueVideoPlayer)
-Vue.prototype.$rurl='http://bs.nzjykj.com/'
-axios.defaults.baseURL = 'http://bs.nzjykj.com/';
+Vue.prototype.$rurl='http://192.168.1.100:9001'
+axios.defaults.baseURL = 'http://192.168.1.100:9001';
 axios.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
 	let a = config.url.split('/');
@@ -27,7 +27,12 @@ axios.interceptors.request.use(function (config) {
   });
 axios.interceptors.response.use(function (response) {
     // 对响应数据做点什么
-    return response;
+	if(response.data.status>=1000){
+		router.push('asd');
+	}else{
+		return response;
+	}
+   
   }, function (error) {
     // 对响应错误做点什么
     return Promise.reject(error);

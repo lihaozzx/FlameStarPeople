@@ -148,7 +148,7 @@
 					this.pageInfo.nowPage = p;
 				}
 
-				this.$http.get('/admin/student', {
+				this.$http.get('/admin/student2', {
 					params: {
 						p: this.pageInfo.nowPage,
 						name: this.search.name,

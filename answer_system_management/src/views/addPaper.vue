@@ -1,9 +1,9 @@
 <template>
 	<div class="show">
 		<div class="div_head">
-			<span class="ts30">{{ischange?pagerName:'新建试卷'}}({{paperTopic.length}}题)</span>
+			<span class="ts24">{{ischange?pagerName:'新建试卷'}}({{paperTopic.length}}题)</span>
 			<div class="search">
-				<el-select v-model="value" placeholder="请选择主题">
+				<el-select v-model="value" placeholder="请选择主题" :disabled="id!=undefined">
 					<el-option v-for="item in cates" :key="item" :label="item" :value="item">
 					</el-option>
 				</el-select>
@@ -20,8 +20,8 @@
 						<li v-for="(topic,k) in paperTopic" :key="topic.id" @click="choseTopic(k)">
 							<div class="onetop" :class="nowChose==k?'active':'none'">
 								<div class="topinfo">
-									<span>{{k+1}}.</span>
-									<span>{{topic.name}}</span>
+									<span class="bianhan">{{k+1}}.</span>
+									<span class="tigan">{{topic.name}}</span>
 								</div>
 								<div class="del" @click.stop="delt4p(k)">
 									<span>删除</span>
@@ -103,10 +103,15 @@
 		watch: {
 			value() {
 				/* 添加试卷 */
-				let load = this.$loading({
-					fullscreen: true
-				});
-				this.basis().then(res=>{
+				if (!this.ischange) {
+					this.paperTopic = [];
+					let load = this.$loading({
+						fullscreen: true
+					});
+				} else {
+					return
+				}
+				this.basis().then(res => {
 					this.cates = res.data.data.content;
 				})
 				this.bi().then(res => {
@@ -114,11 +119,11 @@
 						this.titype = res.data.data.content;
 						let a = [];
 						for (var i = 0; i < this.titype.length; i++) {
-							a.push(this.topics(i,this.value));
+							a.push(this.topics(i, this.value));
 						}
 						let _this = this
 						this.$http.all(a).then(this.$http.spread(function() {
-							_this.tiku=[];
+							_this.tiku = [];
 							for (var i = 0; i < arguments.length; i++) {
 								if (arguments[i].data.status == 0) {
 									_this.tiku.push(arguments[i].data.data)
@@ -187,16 +192,18 @@
 				searchKey: '',
 				timer: null,
 				ischange: false,
-				cates:[],
-				value:''
+				cates: [],
+				value: '',
+				id: null
 			};
 		},
 		created() {
+			this.id = this.$route.query.id
 			if (this.$route.query.id == undefined) {
-				this.basis().then(res=>{
+				this.basis().then(res => {
 					this.cates = res.data.data.content;
 				})
-				if(this.value != ''){
+				if (this.value != '') {
 					/* 添加试卷 */
 					let load = this.$loading({
 						fullscreen: true
@@ -206,11 +213,11 @@
 							this.titype = res.data.data.content;
 							let a = [];
 							for (var i = 0; i < this.titype.length; i++) {
-								a.push(this.topics(i,this.value));
+								a.push(this.topics(i, this.value));
 							}
 							let _this = this
 							this.$http.all(a).then(this.$http.spread(function() {
-								_this.tiku=[];
+								_this.tiku = [];
 								for (var i = 0; i < arguments.length; i++) {
 									if (arguments[i].data.status == 0) {
 										_this.tiku.push(arguments[i].data.data)
@@ -243,6 +250,9 @@
 				let load = this.$loading({
 					fullscreen: true
 				});
+				this.basis().then(res => {
+					this.cates = res.data.data.content;
+				})
 				this.bi().then(res => {
 					if (res.data.status == 0) {
 						this.titype = res.data.data.content;
@@ -254,7 +264,6 @@
 						this.$http.all(a).then(this.$http.spread(function() {
 							for (var i = 0; i < arguments.length; i++) {
 								if (arguments[i].data.status == 0) {
-									
 									_this.tiku.push(arguments[i].data.data)
 								}
 							}
@@ -264,12 +273,14 @@
 								id: _this.$route.query.id
 							})).then(res => {
 								if (res.data.status == 0) {
+									_this.value = res.data.data.cate
 									_this.pagerName = res.data.data.name
 									_this.paperTopic = res.data.data.topics;
 									res.data.data.topics.forEach(t => {
-										for (var i = 0; i < _this.tiku[parseInt(t.type)].length; i++) {
-											if (_this.tiku[t.type][i].id == t.id) {
-												_this.tiku[t.type].splice(i, 1);
+										for (var i = 0; i < _this.tiku[_this.type2num(t.type)].length; i++) {
+											if (_this.tiku[_this.type2num(t.type)][i].id == t.id) {
+												console.log(i);
+												_this.tiku[_this.type2num(t.type)].splice(i, 1);
 											}
 										}
 									})
@@ -327,7 +338,7 @@
 					if (this.ischange) {
 						this.$http.post('/admin/upexmaTopic', this.$qs.stringify({
 							ids: this.ids,
-							id: this.$route.query.id
+							id: this.$route.query.id,
 						})).then(res => {
 							if (res.data.status == 0) {
 								setTimeout(() => {
@@ -359,7 +370,8 @@
 						this.$http.post('/admin/exmaTopic', this.$qs.stringify({
 							token: this.$store.getters.token,
 							ids: this.ids,
-							name: this.pagerName
+							name: this.pagerName,
+							cate: this.value
 						})).then(res => {
 							if (res.data.status == 0) {
 								setTimeout(() => {
@@ -395,11 +407,11 @@
 					});
 				}
 			},
-			topics(t,c) {
+			topics(t, c) {
 				return this.$http.post('/admin/topics', this.$qs.stringify({
 					token: this.$store.getters.token,
 					type: this.titype[t],
-					cate:c
+					cate: c
 				}))
 			},
 			bi() {
@@ -432,6 +444,17 @@
 					this.paperTopic.push(this.showTopic.splice(k, 1)[0]);
 				}
 			},
+			choseTopic(k) {
+				if (this.nowChose == k) {
+					this.nowChose = -1;
+				} else {
+					this.nowChose = k;
+				}
+			},
+			delt4p(k) {
+				this.tiku[this.type2num(this.paperTopic[k].type)].push(this.paperTopic[k]);
+				this.paperTopic.splice(k, 1);
+			},
 			changeToPaper(k) {
 				if (this.paperTopic[this.nowChose].type == this.showTopic[k].type) {
 					this.paperTopic.splice(this.nowChose, 1, this.showTopic.splice(k, 1, this.paperTopic[this.nowChose])[0]);
@@ -443,18 +466,11 @@
 						showClose: false
 					});
 				}
-
 			},
-			choseTopic(k) {
-				if (this.nowChose == k) {
-					this.nowChose = -1;
-				} else {
-					this.nowChose = k;
+			type2num(k) {
+				for (var i = 0; i < this.titype.length; i++) {
+					if (k == this.titype[i]) return i
 				}
-			},
-			delt4p(k) {
-				this.tiku[this.paperTopic[k].type].push(this.paperTopic[k]);
-				this.paperTopic.splice(k, 1);
 			}
 		}
 	}
@@ -470,6 +486,10 @@
 	.letopic-leave-to {
 		opacity: 0;
 		transform: translateY(30px);
+	}
+
+	.el-menu--horizontal>.el-menu-item {
+		font-size: 20px !important;
 	}
 
 	.show {
@@ -501,7 +521,12 @@
 				overflow: auto;
 
 				ul {
+					width: 100%;
 					padding: 5px;
+
+					li {
+						width: 100%;
+					}
 				}
 
 				.onetop {
@@ -529,6 +554,19 @@
 						width: 86%;
 						height: 100%;
 						padding: 5px 10px;
+						position: relative;
+
+						.bianhan {
+							position: absolute;
+							top: 6px;
+						}
+
+						.tigan {
+							margin-left: 16px;
+							display: inline-block;
+							white-space: pre-wrap;
+							width: 90%;
+						}
 					}
 
 					.btn {
@@ -650,7 +688,8 @@
 						}
 					}
 				}
-				.nocate{
+
+				.nocate {
 					font-size: 30px;
 					text-align: center;
 					color: #8c8c8c;

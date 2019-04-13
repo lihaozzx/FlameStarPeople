@@ -29,7 +29,7 @@
 	export default {
 		data() {
 			return {
-				perNum: [1, 2, 3, 4,{name:'asd',img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'}]
+				perNum: [1, 2, 3, 4,{name:'asd',img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'},{name:'asd',img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'},{name:'asd',img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'}]
 			};
 		},
 		methods: {
@@ -74,12 +74,16 @@
 		box-sizing: border-box;
 		padding: 1%;
 	}
+	
+	.perinfo{
+		padding-bottom: 10%;
+	}
 
 	.perInfo1 {
 		width: calc(88% / 3);
 		height: calc(93% / 3);
 		margin: 1% 2% 1% 2%;
-		font-size: 1.875rem;
+		font-size: 1.6rem;
 	}
 
 	.perInfo2 {

@@ -214,8 +214,10 @@
 					id: 1
 				}
 			}).then(res => {
-				for (var i = 0; i < res.data.data.content.length; i++) {
-					this.addTopic.type[i] = res.data.data.content[i];
+				if(res.data.status==0){
+					for (var i = 0; i < res.data.data.content.length; i++) {
+						this.addTopic.type[i] = res.data.data.content[i];
+					}
 				}
 				this.a = false
 			});
@@ -225,8 +227,10 @@
 					id: 2
 				}
 			}).then(res => {
-				for (var i = 0; i < res.data.data.content.length; i++) {
-					this.addTopic.cate[i] = res.data.data.content[i];
+				if(res.data.status ==0){
+					for (var i = 0; i < res.data.data.content.length; i++) {
+						this.addTopic.cate[i] = res.data.data.content[i];
+					}
 				}
 				this.b = false
 			});
@@ -234,6 +238,8 @@
 			this.$http.get('/admin/selectexam').then(res => {
 				if (res.data.status == 0) {
 					this.paperInfo = res.data.data
+				}else{
+					this.paperInfo = ['请添加试卷']
 				}
 			});
 		},

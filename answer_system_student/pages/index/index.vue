@@ -4,10 +4,13 @@
 			<view class="view_navigation"></view>
 			<image class="logo" src="/static/login_bg.png"></image>
 		</view>
-		
+
 		<!-- 删除 -->
 		<view class="asd" @tap="asd">
 			进入答题
+		</view>
+		<view class="asd2" @tap="asd2">
+			websocket
 		</view>
 		<!-- 删除 -->
 
@@ -38,12 +41,12 @@
 			</view>
 			<view class="tishi">
 				<text>注意：如信息有误，请联系现场工作人员</text>
-				<image src="../../static/set.png"  mode=""></image>
+				<image src="../../static/set.png" mode=""></image>
 			</view>
 			<view v-if="!insure" class="sure" @tap="sureInfo">
 				确认信息
 			</view>
-			<view v-else  class="issure">
+			<view v-else class="issure">
 				<text>请等待答题开始</text>
 			</view>
 		</view>
@@ -56,38 +59,52 @@
 		data() {
 			return {
 				show: 0,
-				insure:false
+				insure: false
 			}
 		},
 		onLoad() {
 
 		},
 		methods: {
-			sureInfo(){
+			sureInfo() {
 				this.insure = true
 			},
-			login(){
-				this.show=1
+			login() {
+				this.show = 1
 			},
-			asd(){
+			asd() {
 				uni.navigateTo({
-					url:'../ans/ans'
+					url: '../ans/ans'
 				})
+			},
+			asd2() {
+				console.log(123);
+				uni.sendSocketMessage({
+					data: '{"type":"login","client_name":"qwe","room_id":"1"}'
+				});
 			}
 		}
 	}
 </script>
 
 <style scoped lang="scss">
-	.asd{
+	.asd {
 		z-index: 2;
 		position: absolute;
 		right: 20upx;
 		top: 40upx;
 		font-size: 24upx;
 	}
-	
-	
+
+	.asd2 {
+		z-index: 2;
+		position: absolute;
+		right: 20upx;
+		top: 80upx;
+		font-size: 24upx;
+	}
+
+
 	.content {
 		position: relative;
 		width: 1202upx;
@@ -158,21 +175,22 @@
 				align-items: center;
 				margin-top: 80upx;
 				line-height: 60upx;
-				
-				.img{
+
+				.img {
 					width: 40%;
 					padding-top: 40%;
 					background-size: cover;
 					border-radius: 100upx
 				}
 			}
-			
-			.tishi{
+
+			.tishi {
 				font-size: 18upx;
 				color: #FF0000;
 				position: absolute;
 				bottom: 5upx;
-				image{
+
+				image {
 					width: 24upx;
 					height: 24upx;
 					position: relative;
@@ -196,8 +214,8 @@
 				position: absolute;
 				bottom: 40upx;
 			}
-			
-			.issure{
+
+			.issure {
 				color: #FAAD14;
 				font-size: 36upx;
 				font-weight: 900;

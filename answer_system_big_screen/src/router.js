@@ -5,7 +5,7 @@ import info from './views/answerInfo.vue'
 import paimin from './views/paimin.vue'
 import answer from './views/answer.vue'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
 	routes: [{

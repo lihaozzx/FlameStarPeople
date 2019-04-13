@@ -28,7 +28,7 @@
 				<view class="b4"></view>
 			</view>
 			<view v-else class="daan2">
-				<view class="one" v-for="(v,k) in daans" :key="k" @click="chzuhe(k)">{{v.val}}</view>
+				<view class="one" v-for="(v,k) in daans" :key="k" @click="chzuhe(k)" :class="v.ed?'ched':''">{{v.val}}</view>
 				<view class="b1"></view>
 				<view class="b2"></view>
 				<view class="b5"></view>
@@ -259,24 +259,60 @@
 						}
 					} else {
 						//以选择
-						this.daans.splice(k,1,{
-							val:this.daans[k].val,
-							ed:true
-						});
-						this.ans.splice(this.nowCh,1,{
-							val:this.daans[k].val,
-							k:k
-						});
+						if(this.ans[i].val == ''){
+							this.daans.splice(k,1,{
+								val:this.daans[k].val,
+								ed:true
+							});
+							this.ans.splice(this.nowCh,1,{
+								val:this.daans[k].val,
+								k:k
+							});
+						}else{
+							this.daans.splice(k,1,{
+								val:this.daans[k].val,
+								ed:true
+							});
+							this.daans.splice(this.ans[this.nowCh].k,1,{
+								val:this.ans[this.nowCh].val,
+								ed:false
+							});
+							this.ans.splice(this.nowCh,1,{
+								val:this.daans[k].val,
+								k:k
+							});
+						}
 					}
 				}
 			},
 			delZuheans() {
 				if (this.nowCh == -1) {
 					// 未选择
-					
+					for (var i = this.ans.length-1; i >= 0; i--) {
+						if(this.ans[i].val != ''){
+							this.daans.splice(this.ans[i].k,1,{
+								val:this.ans[i].val,
+								ed:false
+							});
+							this.ans.splice(i,1,{
+								val:'',
+								k:-1
+							});
+							return;
+						}
+					}
 				} else {
 					//以选择
-					
+					if(this.ans[this.nowCh].val!=''){
+						this.daans.splice(this.ans[this.nowCh].k,1,{
+							val:this.ans[this.nowCh].val,
+							ed:false
+						});
+						this.ans.splice(this.nowCh,1,{
+							val:'',
+							k:-1
+						});
+					}
 				}
 			}
 		}
@@ -326,6 +362,9 @@
 		}
 
 		.content {
+			.ched {
+				opacity: 0.3;
+			}
 			width: 850upx;
 			height: 100%;
 			z-index: 2;
@@ -379,10 +418,6 @@
 				display: flex;
 				flex-wrap: wrap;
 				position: relative;
-
-				.ched {
-					opacity: 0.3;
-				}
 
 				.one {
 					width: calc(100% / 3);

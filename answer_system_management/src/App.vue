@@ -51,6 +51,9 @@
 	.ts30{
 		font-size: 30px;
 	}
+	.ts24{
+		font-size: 24px;
+	}
 	
 	.ts18 {
 		font-size: 18px;

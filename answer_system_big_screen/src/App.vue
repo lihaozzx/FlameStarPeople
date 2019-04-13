@@ -15,8 +15,41 @@
 	import img_r from '@/assets/icon_right.png'
 	export default {
 		name: 'app',
-		computed:{
-			title(){
+		created() {
+			this.initWebSocket();
+		},
+		methods: {
+			initWebSocket() { //初始化weosocket
+				const wsuri = `ws://192.168.1.100:7272` //这个地址由后端童鞋提供
+				this.websock = new WebSocket(wsuri);
+				this.websock.onmessage = this.websocketonmessage;
+				this.websock.onopen = this.websocketonopen;
+				this.websock.onerror = this.websocketonerror;
+				this.websock.onclose = this.websocketclose;
+			},
+			websocketonopen() { //连接建立之后执行send方法发送数据
+				this.websocketsend({
+					type: "login",
+					client_name: "bigScreen",
+					room_id: "1"
+				})
+			},
+			websocketonerror() { //连接建立失败重连
+				this.initWebSocket()
+			},
+			websocketonmessage(e) {
+				console.log(e.data);
+			},
+			websocketsend(Data) { //数据发送
+			console.log(this.$qs.stringify(Data));
+				this.websock.send(this.$qs.stringify(Data))
+			},
+			websocketclose(e) { //关闭
+				console.log('断开连接', e)
+			}
+		},
+		computed: {
+			title() {
 				return this.$store.getters.nowTitle;
 			}
 		},
@@ -25,7 +58,8 @@
 				transitionName: 'slide-right',
 				height: innerHeight,
 				img_l,
-				img_r
+				img_r,
+				websock: null
 			}
 		},
 		watch: {
@@ -49,13 +83,13 @@
 		min-width: 100vw;
 		overflow: hidden;
 	}
-	
-	body{
+
+	body {
 		background-image: url(assets/background.png);
 		background-size: cover;
 	}
-	
-	.top_title{
+
+	.top_title {
 		width: 100vw;
 		display: flex;
 		align-items: center;
@@ -65,13 +99,14 @@
 		position: absolute;
 		top: 5%;
 	}
-	.img_title{
+
+	.img_title {
 		margin: 0 1.875rem;
-		width:6rem;
+		width: 6rem;
 		height: 2.125rem;
 	}
-	
-	.bottom_yunwen{
+
+	.bottom_yunwen {
 		position: absolute;
 		bottom: -2.2%;
 		height: 8.125rem;
@@ -103,8 +138,8 @@
 		-webkit-transform: translate(-100%, 0);
 		transform: translate(-100% 0);
 	}
-	
-	.abs{
+
+	.abs {
 		position: absolute;
 	}
 </style>

@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		title: '',
-		answerNum:0
+		answerNum:0,
+		ws:null
 	},
 	mutations: {
 		changeTitle(state,k){
@@ -14,6 +15,9 @@ export default new Vuex.Store({
 		},
 		nextAns(state){
 			state.answerNum++;
+		},
+		initws(state,k){
+			state.ws = k;
 		}
 	},
 	actions: {

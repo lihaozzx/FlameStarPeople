@@ -219,6 +219,7 @@
 				}).then(res => {
 					if (res.data.status == 0) {
 						this.per = true;
+						this.tableData=[]
 						for (var i = 0; i < res.data.data.length; i++) {
 							this.tableData.push({
 								...res.data.data[i],

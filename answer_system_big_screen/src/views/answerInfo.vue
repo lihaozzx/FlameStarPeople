@@ -47,7 +47,21 @@
 			};
 		},
 		created() {
-
+			this.$a.then(res=>{
+				console.log(res);
+			})
+			this.$b.then(res=>{
+				console.log(res);
+			})
+			this.$c.then(res=>{
+				console.log(res);
+			})
+			this.$d.then(res=>{
+				console.log(res);
+			})
+			this.$e.then(res=>{
+				console.log(res);
+			})
 		},
 		methods: {
 			// 组件的方法
