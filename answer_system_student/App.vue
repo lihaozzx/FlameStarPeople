@@ -9,9 +9,26 @@
 			});
 			uni.onSocketError(function(res) {
 				console.log('WebSocket连接打开失败，请检查！');
+				uni.connectSocket({
+					url: 'ws://192.168.1.100:7272'
+				});
 			});
-			uni.onSocketMessage(function(res) {
-				console.log('收到服务器内容：' + res.data);
+			uni.onSocketMessage(res => {
+				let e = JSON.parse(res.data);
+				if (e.type == 'login') {
+					console.log('已登录');
+				}
+				if (e.from_client_name == 'bigScreen') {
+					if (e.type == 'say') {
+						let data = e.content;
+						switch (data.type) {
+							case value:
+								break;
+							case value:
+								break;
+						}
+					}
+				}
 			});
 		},
 		onShow: function() {},

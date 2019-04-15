@@ -9,8 +9,8 @@
 		<view class="asd" @tap="asd">
 			进入答题
 		</view>
-		<view class="asd2" @tap="asd2">
-			websocket
+		<view class="asd3" @tap="asd3">
+			websocketSend
 		</view>
 		<!-- 删除 -->
 
@@ -21,15 +21,19 @@
 					<input type="text" password placeholder="授权码" />
 				</view>
 				<view class="shuru">
-					<input type="text" placeholder="选手编号" />
+					<input type="text" v-model="num" placeholder="座位号" />
 				</view>
 			</view>
 			<view class="sure" @tap="login">
 				确认
 			</view>
 		</view>
+		
+		<view class="login" v-else-if="show==1">
+			<text>请等待比赛开始</text>
+		</view>
 
-		<view class="login" v-if="show==1">
+		<view class="login" v-if="show==2">
 			<view class="title">核对信息</view>
 			<view class="infos">
 				<div class="img" style="background-image: url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554980610251&di=201ce787e28c8bbda1df254194512515&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg);">
@@ -59,7 +63,8 @@
 		data() {
 			return {
 				show: 0,
-				insure: false
+				insure: false,
+				num:''
 			}
 		},
 		onLoad() {
@@ -70,19 +75,33 @@
 				this.insure = true
 			},
 			login() {
-				this.show = 1
+				if(this.num != ''){
+					this.wslogin();
+					this.show = 1;
+				}else{
+					uni.showToast({
+						title:'请输入座位号',
+						icon:'none'
+					})
+				}
 			},
 			asd() {
 				uni.navigateTo({
 					url: '../ans/ans'
 				})
 			},
-			asd2() {
-				console.log(123);
+			wslogin() {
 				uni.sendSocketMessage({
-					data: '{"type":"login","client_name":"qwe","room_id":"1"}'
+					data: '{"type":"login","client_name":"pad'+this.num+'","room_id":"1"}'
+				});
+			},
+			asd3() {
+				uni.sendSocketMessage({
+					// "from_client_id":xxx,
+					data: '{"type":"say","to_client_id":"all","content":"我就是饿死，从这里跳下去","time":"xxx"}'
 				});
 			}
+			
 		}
 	}
 </script>
@@ -101,6 +120,13 @@
 		position: absolute;
 		right: 20upx;
 		top: 80upx;
+		font-size: 24upx;
+	}
+	.asd3 {
+		z-index: 2;
+		position: absolute;
+		right: 20upx;
+		top: 120upx;
 		font-size: 24upx;
 	}
 

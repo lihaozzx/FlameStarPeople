@@ -1,9 +1,12 @@
 <template>
 	<div>
 		<jz>
+			<div style="position: absolute;top: 0;" @click="gua">websocketSendMessageTest</div>
+			<div style="position: absolute;top: 20px;" @click="gua2">websocketSendObjectTest</div>
 			<div class="content">
 				<div class="c1">
-					<div :class="perNum.length<10?'perInfo1':perNum.length<17?'perInfo2':perNum.length<26?'perInfo3':perNum.length<37?'perInfo4':perNum.length<50?'perInfo5':'perInfo6' " v-for="(p,k) in perNum" :key="k">
+					<div :class="perNum.length<10?'perInfo1':perNum.length<17?'perInfo2':perNum.length<26?'perInfo3':perNum.length<37?'perInfo4':perNum.length<50?'perInfo5':'perInfo6' "
+					 v-for="(p,k) in perNum" :key="k">
 						<div class="infos">
 							<span>{{p.name}}</span>
 							<div class="head" v-if="perNum.length<26" :style="'background-image: url('+p.img+');'"></div>
@@ -12,7 +15,8 @@
 					</div>
 				</div>
 				<div class="c1">
-					<div :class="perNum.length<10?'perInfo1':perNum.length<17?'perInfo2':perNum.length<26?'perInfo3':perNum.length<37?'perInfo4':perNum.length<50?'perInfo5':'perInfo6' " v-for="(p,k) in perNum" :key="k">
+					<div :class="perNum.length<10?'perInfo1':perNum.length<17?'perInfo2':perNum.length<26?'perInfo3':perNum.length<37?'perInfo4':perNum.length<50?'perInfo5':'perInfo6' "
+					 v-for="(p,k) in perNum" :key="k">
 						<div class="infos">
 							<span>{{p.name}}</span>
 							<div class="head" v-if="perNum.length<26" :style="'background-image: url('+p.img+');'"></div>
@@ -27,13 +31,60 @@
 
 <script>
 	export default {
+		computed: {
+			wsm() {
+				return this.$store.getters.wsmg
+			}
+		},
+		watch: {
+			wsm(n) {
+				if (n.type == 'say') {
+					console.log(n.content);
+					console.log(this.$qs.parse(n.content));
+				}
+			}
+		},
 		data() {
 			return {
-				perNum: [1, 2, 3, 4,{name:'asd',img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'},{name:'asd',img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'},{name:'asd',img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'}]
+				perNum: [1, 2, 3, 4, {
+					name: 'asd',
+					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
+				}, {
+					name: 'asd',
+					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
+				}, {
+					name: 'asd',
+					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
+				}]
 			};
 		},
 		methods: {
 			// 组件的方法
+			gua() {
+				// {"type":"say","to_client_id":"all","content":"我就是饿死，从这里跳下去","time":"xxx"}
+				let d = {
+					type: 'say',
+					to_client_id: 'all',
+					content: '我就是饿死，从这里跳下去'
+				}
+				this.$store.dispatch('send', d)
+			},
+			gua2() {
+				// {"type":"say","to_client_id":"all","content":"我就是饿死，从这里跳下去","time":"xxx"}
+				// this.$qs.stringify()
+				let d = {
+					type: 'say',
+					to_client_id: 'all',
+					content: {
+						type: 'start',
+						data:['asd','a','ww',1,{as:11,sd:'asd'}]
+					}
+				}
+				this.$store.dispatch('send', d)
+			},
+			obj2str(o) {
+				let str = '';
+			}
 		}
 	}
 </script>
@@ -74,8 +125,8 @@
 		box-sizing: border-box;
 		padding: 1%;
 	}
-	
-	.perinfo{
+
+	.perinfo {
 		padding-bottom: 10%;
 	}
 
@@ -120,7 +171,8 @@
 		margin: 0.3% 0.5% 0.3% 0.5%;
 		font-size: 1.3rem;
 	}
-	.head{
+
+	.head {
 		width: 35%;
 		background-size: cover;
 		padding-bottom: 35%;

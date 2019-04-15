@@ -42,7 +42,7 @@
 						<li v-for="(topic,k) in showTopic" :key="topic.id">
 							<div class="onetop">
 								<div class="topinfo">
-									<span>{{topic.name}}</span>
+									<span>{{k+1}}{{topic.name}}</span>
 									<span>选项:{{topic.xuanx}}</span>
 									<!-- <span style="color: #006400;">答案:{{topic.answer}}</span> -->
 									<span>分数:{{topic.score}}</span>
@@ -67,6 +67,7 @@
 					<div v-else class="nocate">
 						<span>请先选择题目主题</span>
 					</div>
+					<el-button :loading="topLoading" @click="nextTopics" v-if="value!=''">下一波</el-button>
 				</div>
 			</div>
 		</div>
@@ -103,17 +104,16 @@
 		watch: {
 			value() {
 				/* 添加试卷 */
+				let load = null;
 				if (!this.ischange) {
 					this.paperTopic = [];
-					let load = this.$loading({
+					load = this.$loading({
 						fullscreen: true
 					});
 				} else {
 					return
 				}
-				this.basis().then(res => {
-					this.cates = res.data.data.content;
-				})
+				
 				this.bi().then(res => {
 					if (res.data.status == 0) {
 						this.titype = res.data.data.content;
@@ -126,7 +126,8 @@
 							_this.tiku = [];
 							for (var i = 0; i < arguments.length; i++) {
 								if (arguments[i].data.status == 0) {
-									_this.tiku.push(arguments[i].data.data)
+									_this.tiku.push(arguments[i].data.data);
+									_this.topicPage.push({now:1})
 								}
 							}
 							load.close();
@@ -194,7 +195,9 @@
 				ischange: false,
 				cates: [],
 				value: '',
-				id: null
+				id: null,
+				topicPage:[],
+				topLoading:false
 			};
 		},
 		created() {
@@ -202,51 +205,10 @@
 			if (this.$route.query.id == undefined) {
 				this.basis().then(res => {
 					this.cates = res.data.data.content;
-				})
-				if (this.value != '') {
-					/* 添加试卷 */
-					let load = this.$loading({
-						fullscreen: true
-					});
-					this.bi().then(res => {
-						if (res.data.status == 0) {
-							this.titype = res.data.data.content;
-							let a = [];
-							for (var i = 0; i < this.titype.length; i++) {
-								a.push(this.topics(i, this.value));
-							}
-							let _this = this
-							this.$http.all(a).then(this.$http.spread(function() {
-								_this.tiku = [];
-								for (var i = 0; i < arguments.length; i++) {
-									if (arguments[i].data.status == 0) {
-										_this.tiku.push(arguments[i].data.data)
-									}
-								}
-								load.close();
-							}))
-						} else {
-							load.close();
-							this.$notify.success({
-								title: '错误',
-								iconClass: 'el-icon-warning',
-								message: res.data.msg,
-								showClose: false
-							});
-						}
-					}).catch(() => {
-						load.close();
-						this.$notify.success({
-							title: '错误',
-							iconClass: 'el-icon-warning',
-							message: '服务器未响应',
-							showClose: false
-						});
-					});
-				}
+				});
 			} else {
 				this.ischange = true;
-				/* 添加试卷 */
+				/* 修改试卷 */
 				let load = this.$loading({
 					fullscreen: true
 				});
@@ -265,6 +227,7 @@
 							for (var i = 0; i < arguments.length; i++) {
 								if (arguments[i].data.status == 0) {
 									_this.tiku.push(arguments[i].data.data)
+									_this.topicPage.push({now:1})
 								}
 							}
 
@@ -279,7 +242,6 @@
 									res.data.data.topics.forEach(t => {
 										for (var i = 0; i < _this.tiku[_this.type2num(t.type)].length; i++) {
 											if (_this.tiku[_this.type2num(t.type)][i].id == t.id) {
-												console.log(i);
 												_this.tiku[_this.type2num(t.type)].splice(i, 1);
 											}
 										}
@@ -471,6 +433,36 @@
 				for (var i = 0; i < this.titype.length; i++) {
 					if (k == this.titype[i]) return i
 				}
+			},
+			nextTopics(){
+				this.topLoading = true;
+				this.$http.post('/admin/topics', this.$qs.stringify({
+					type: this.titype[this.showTiku],
+					cate: this.value,
+					p:++this.topicPage[this.showTiku].now
+				})).then(res=>{
+					if(res.data.status == 0){
+						res.data.data.forEach(a=>{
+							this.tiku[parseInt(this.showTiku)].push(a)
+						});
+					}else{
+						this.$notify.success({
+							title: '错误',
+							iconClass: 'el-icon-warning',
+							message: '题目加载完成',
+							showClose: false
+						});
+					}
+					this.topLoading = false;
+				}).catch(()=>{
+					this.topLoading = false;
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '服务器未响应',
+						showClose: false
+					});
+				})
 			}
 		}
 	}
@@ -628,6 +620,7 @@
 				padding: 24px;
 				padding-right: 11px;
 				overflow: auto;
+				position: relative;
 
 				.onetop {
 					width: 100%;
@@ -693,6 +686,19 @@
 					font-size: 30px;
 					text-align: center;
 					color: #8c8c8c;
+				}
+				.nextTopic{
+					position: absolute;
+					right: 0;
+					font-size: 20px;
+					color: #1890FF;
+					cursor: pointer;
+				}
+				
+				.infoFooterTopic{
+					position: absolute;
+					right: 5px;
+					bottom:0px ;
 				}
 			}
 

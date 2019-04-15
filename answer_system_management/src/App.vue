@@ -1,5 +1,8 @@
 <template>
 	<div id="app">
+		<div class="logout">
+			<el-button type="danger" @click="logout">退出登录</el-button>
+		</div>
 		<div style="height: 74.07%;width: 66.67%;">
 			<router-view></router-view>
 		</div>
@@ -8,7 +11,13 @@
 
 <script>
 	export default {
-		name: 'app'
+		name: 'app',
+		methods: {
+			logout(){
+				this.$store.commit('setToken',null);
+				this.$router.push({path:'/asdsa'})
+			}
+		}
 	}
 </script>
 
@@ -34,6 +43,13 @@
 		justify-content: center;
 		align-items: center;
 		overflow: auto;
+		position: relative;
+	}
+	
+	.logout{
+		position: absolute;
+		top:10px;
+		right: 10px;
 	}
 	
 	.ovy{

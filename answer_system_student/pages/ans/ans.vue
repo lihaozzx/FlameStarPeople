@@ -258,8 +258,8 @@
 							}
 						}
 					} else {
-						//以选择
-						if(this.ans[i].val == ''){
+						//已选择
+						if(this.ans[this.nowCh].val == ''){
 							this.daans.splice(k,1,{
 								val:this.daans[k].val,
 								ed:true

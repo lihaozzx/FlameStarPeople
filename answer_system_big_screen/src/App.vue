@@ -26,23 +26,24 @@
 				this.websock.onopen = this.websocketonopen;
 				this.websock.onerror = this.websocketonerror;
 				this.websock.onclose = this.websocketclose;
+				this.$store.commit('initws',this.websock);
 			},
 			websocketonopen() { //连接建立之后执行send方法发送数据
 				this.websocketsend({
-					type: "login",
-					client_name: "bigScreen",
-					room_id: "1"
+					type:"login",
+					client_name:"bigScreen",
+					room_id:"1"
 				})
 			},
 			websocketonerror() { //连接建立失败重连
 				this.initWebSocket()
 			},
-			websocketonmessage(e) {
-				console.log(e.data);
+			websocketonmessage(e) {//收到消息
+				let r = JSON.parse(e.data);
+				this.$store.commit('onMessage',r);
 			},
 			websocketsend(Data) { //数据发送
-			console.log(this.$qs.stringify(Data));
-				this.websock.send(this.$qs.stringify(Data))
+				this.websock.send(JSON.stringify(Data))
 			},
 			websocketclose(e) { //关闭
 				console.log('断开连接', e)

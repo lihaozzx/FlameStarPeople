@@ -7,7 +7,8 @@ export default new Vuex.Store({
 	state: {
 		title: '',
 		answerNum:0,
-		ws:null
+		ws:null,
+		message:null
 	},
 	mutations: {
 		changeTitle(state,k){
@@ -18,10 +19,18 @@ export default new Vuex.Store({
 		},
 		initws(state,k){
 			state.ws = k;
+		},
+		initws(state,k){
+			state.ws = k;
+		},
+		onMessage(state,msg){
+			state.message= msg;
 		}
 	},
 	actions: {
-
+		send({ commit, state },d){
+			state.ws.send(JSON.stringify(d))
+		}
 	},
 	getters:{
 		nowTitle(state){
@@ -29,6 +38,9 @@ export default new Vuex.Store({
 		},
 		ans(state){
 			return state.answerNum
+		},
+		wsmg(state){
+			return state.message
 		}
 	}
 })
