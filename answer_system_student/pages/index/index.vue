@@ -5,21 +5,9 @@
 			<image class="logo" src="/static/login_bg.png"></image>
 		</view>
 
-		<!-- 删除 -->
-		<view class="asd" @tap="asd">
-			进入答题
-		</view>
-		<view class="asd3" @tap="asd3">
-			websocketSend
-		</view>
-		<!-- 删除 -->
-
 		<view class="login" v-if="show==0">
 			<view class="title">输入信息</view>
 			<view class="info">
-				<view class="shuru">
-					<input type="text" password placeholder="授权码" />
-				</view>
 				<view class="shuru">
 					<input type="text" v-model="num" placeholder="座位号" />
 				</view>
@@ -29,7 +17,7 @@
 			</view>
 		</view>
 		
-		<view class="login" v-else-if="show==1">
+		<view class="login wait" v-else-if="show==1">
 			<text>请等待比赛开始</text>
 		</view>
 
@@ -60,6 +48,19 @@
 
 <script>
 	export default {
+		computed: {
+			wsm() {
+				return this.$store.getters.wsmg
+			}
+		},
+		watch: {
+			wsm(n) {
+				for (let a in n) {
+					console.log(a);
+					console.log(n[a]);
+				}
+			}
+		},
 		data() {
 			return {
 				show: 0,
@@ -68,7 +69,6 @@
 			}
 		},
 		onLoad() {
-
 		},
 		methods: {
 			sureInfo() {
@@ -247,6 +247,12 @@
 				font-weight: 900;
 			}
 
+		}
+		.wait{
+			font-size: 30upx;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 	}
 </style>

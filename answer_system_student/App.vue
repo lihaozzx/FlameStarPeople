@@ -20,13 +20,7 @@
 				}
 				if (e.from_client_name == 'bigScreen') {
 					if (e.type == 'say') {
-						let data = e.content;
-						switch (data.type) {
-							case value:
-								break;
-							case value:
-								break;
-						}
+						this.$store.commit('onMessage',e.content)
 					}
 				}
 			});
