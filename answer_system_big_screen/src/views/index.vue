@@ -1,23 +1,11 @@
 <template>
 	<div>
 		<jz>
-			<div style="position: absolute;top: 0;" @click="gua">websocketSendMessageTest</div>
-			<div style="position: absolute;top: 20px;" @click="gua2">websocketSendObjectTest</div>
 			<div class="content">
 				<div class="c1">
 					<div :class="perNum.length<10?'perInfo1':perNum.length<17?'perInfo2':perNum.length<26?'perInfo3':perNum.length<37?'perInfo4':perNum.length<50?'perInfo5':'perInfo6' "
 					 v-for="(p,k) in perNum" :key="k">
-						<div class="infos">
-							<span>{{p.name}}</span>
-							<div class="head" v-if="perNum.length<26" :style="'background-image: url('+p.img+');'"></div>
-							<span>名称</span>
-						</div>
-					</div>
-				</div>
-				<div class="c1">
-					<div :class="perNum.length<10?'perInfo1':perNum.length<17?'perInfo2':perNum.length<26?'perInfo3':perNum.length<37?'perInfo4':perNum.length<50?'perInfo5':'perInfo6' "
-					 v-for="(p,k) in perNum" :key="k">
-						<div class="infos">
+						<div class="infos" :class="p.isSure?'coming':''">
 							<span>{{p.name}}</span>
 							<div class="head" v-if="perNum.length<26" :style="'background-image: url('+p.img+');'"></div>
 							<span>名称</span>
@@ -38,53 +26,45 @@
 		},
 		watch: {
 			wsm(n) {
-				if (n.type == 'say') {
-					console.log(n.content);
-					console.log(this.$qs.parse(n.content));
+				switch (n.type) {
+					case 'stuInfo':
+						// 学生信息
+						this.perNum = n.data
+						this.$store.commit('saveStuinfo', n.data);
+						break;
+					case 'nextTopic':
+						// 下一题
+						this.$router.push({
+							name: 'answer',
+							params: {
+								topic:n.data
+							}
+						})
+						break;
+					case 'startGame':
+						// 开始比赛
+						this.$router.push({
+							name: 'play',
+							params: {
+								dizhi: n.data
+							}
+						})
+						break;
+					default:
+						break;
 				}
 			}
 		},
 		data() {
 			return {
-				perNum: [1, 2, 3, 4, {
-					name: 'asd',
-					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
-				}, {
-					name: 'asd',
-					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
-				}, {
-					name: 'asd',
-					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
-				}]
+				perNum: []
 			};
+		},
+		created() {
+			this.perNum = this.$store.getters.stuinfo;
 		},
 		methods: {
 			// 组件的方法
-			gua() {
-				// {"type":"say","to_client_id":"all","content":"我就是饿死，从这里跳下去","time":"xxx"}
-				let d = {
-					type: 'say',
-					to_client_id: 'all',
-					content: '我就是饿死，从这里跳下去'
-				}
-				this.$store.dispatch('send', d)
-			},
-			gua2() {
-				// {"type":"say","to_client_id":"all","content":"我就是饿死，从这里跳下去","time":"xxx"}
-				// this.$qs.stringify()
-				let d = {
-					type: 'say',
-					to_client_id: 'all',
-					content: {
-						type: 'start',
-						data:['asd','a','ww',1,{as:11,sd:'asd'}]
-					}
-				}
-				this.$store.dispatch('send', d)
-			},
-			obj2str(o) {
-				let str = '';
-			}
 		}
 	}
 </script>
@@ -99,7 +79,7 @@
 	}
 
 	.c1 {
-		width: 50%;
+		width: 100%;
 		height: 100%;
 		display: flex;
 		flex-wrap: wrap;
@@ -126,47 +106,51 @@
 		padding: 1%;
 	}
 
+	.coming {
+		background-color: #F5222D;
+	}
+
 	.perinfo {
 		padding-bottom: 10%;
 	}
 
 	.perInfo1 {
-		width: calc(88% / 3);
+		width: calc(88% / 3 / 2);
 		height: calc(93% / 3);
 		margin: 1% 2% 1% 2%;
 		font-size: 1.6rem;
 	}
 
 	.perInfo2 {
-		width: calc(88% / 4);
+		width: calc(88% / 4 / 2);
 		height: calc(92% / 4);
 		margin: 1% 1.5% 1% 1.5%;
 		font-size: 1.3rem;
 	}
 
 	.perInfo3 {
-		width: calc(85% / 5);
+		width: calc(85% / 5 / 2);
 		height: calc(90% / 5);
 		margin: 1% 1.5% 1% 1.5%;
 		font-size: 1.1rem;
 	}
 
 	.perInfo4 {
-		width: calc(85.6% / 6);
+		width: calc(85.6% / 6 / 2);
 		height: calc(88% / 6);
 		margin: 1% 1.2% 1% 1.2%;
 		font-size: 0.8rem;
 	}
 
 	.perInfo5 {
-		width: calc(91.6% / 7);
+		width: calc(91.6% / 7 / 2);
 		height: calc(94.4% / 7);
 		margin: 0.4% 0.6% 0.4% 0.6%;
 		font-size: 1.5rem;
 	}
 
 	.perInfo6 {
-		width: calc(92% / 8);
+		width: calc(92% / 8 / 2);
 		height: calc(95.2% / 8);
 		margin: 0.3% 0.5% 0.3% 0.5%;
 		font-size: 1.3rem;

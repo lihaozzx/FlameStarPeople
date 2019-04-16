@@ -42,7 +42,7 @@
 						<li v-for="(topic,k) in showTopic" :key="topic.id">
 							<div class="onetop">
 								<div class="topinfo">
-									<span>{{k+1}}{{topic.name}}</span>
+									<span>{{k+1}}.{{topic.name}}</span>
 									<span>选项:{{topic.xuanx}}</span>
 									<!-- <span style="color: #006400;">答案:{{topic.answer}}</span> -->
 									<span>分数:{{topic.score}}</span>

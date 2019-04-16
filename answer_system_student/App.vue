@@ -18,10 +18,8 @@
 				if (e.type == 'login') {
 					console.log('已登录');
 				}
-				if (e.from_client_name == 'bigScreen') {
-					if (e.type == 'say') {
-						this.$store.commit('onMessage',e.content)
-					}
+				if (e.type == 'say') {
+					this.$store.commit('onMessage', e.content)
 				}
 			});
 		},

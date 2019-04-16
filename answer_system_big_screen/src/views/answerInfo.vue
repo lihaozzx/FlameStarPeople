@@ -2,22 +2,11 @@
 	<div>
 		<jz>
 			<div class="content">
-				<div class="kuang">
+				<div class="kuang" v-for="(k,s) in info" :key='k.id'>
 					<div class="img_title_ans" :style="'background-image: url('+info[0].img+');'"></div>
-					<span style="font-size: 4rem;">第一名</span>
-					<span>{{info[0].num}} | {{info[0].name}}</span>
-					<span>{{info[0].time}}</span>
-				</div>
-				<div class="kuang">
-					<div class="img_title_ans" :style="'background-image: url('+info[1].img+');'"></div>
-					<span style="font-size: 4rem;">第二名</span>
-					<span>{{info[1].num}} | {{info[1].name}}</span>
-					<span>{{info[1].time}}</span>
-				</div><div class="kuang">
-					<div class="img_title_ans" :style="'background-image: url('+info[2].img+');'"></div>
-					<span style="font-size: 4rem;">第三名</span>
-					<span>{{info[2].num}} | {{info[2].name}}</span>
-					<span>{{info[2].time}}</span>
+					<span style="font-size: 4rem;">第{{s+1}}名</span>
+					<span>{{k.score}}分 | {{k.name}}</span>
+					<span>{{k.timeCost}}</span>
 				</div>
 			</div>
 		</jz>
@@ -26,6 +15,42 @@
 
 <script>
 	export default {
+		computed: {
+			wsm() {
+				return this.$store.getters.wsmg
+			}
+		},
+		watch: {
+			wsm(n) {
+				switch (n.type) {
+					case 'stuInfo':
+						// 学生信息
+						this.perNum = n.data
+						this.$store.commit('saveStuinfo', n.data);
+						break;
+					case 'nextTopic':
+						// 下一题
+						this.$router.push({
+							name: 'answer',
+							params: {
+								topic:n.data
+							}
+						})
+						break;
+					case 'startGame':
+						// 开始比赛
+						this.$router.push({
+							name: 'play',
+							params: {
+								dizhi: n.data
+							}
+						})
+						break;
+					default:
+						break;
+				}
+			}
+		},
 		data() {
 			return {
 				info:[{
@@ -47,21 +72,7 @@
 			};
 		},
 		created() {
-			this.$a.then(res=>{
-				console.log(res);
-			})
-			this.$b.then(res=>{
-				console.log(res);
-			})
-			this.$c.then(res=>{
-				console.log(res);
-			})
-			this.$d.then(res=>{
-				console.log(res);
-			})
-			this.$e.then(res=>{
-				console.log(res);
-			})
+			this.info = this.$route.params.rank
 		},
 		methods: {
 			// 组件的方法
@@ -89,6 +100,12 @@
 		flex-direction: column;
 		color: #F0B74A;
 		font-size: 3rem;
+	}
+	.kuang>span:nth-of-type(2){
+		margin-top: 20px;
+	}
+	.kuang>span:nth-of-type(3){
+		margin-top: 40px;
 	}
 	
 	.img_title_ans{

@@ -2,11 +2,11 @@
 	<div>
 		<jz>
 			<div class="paimin">
-				<div class="one_paimin" v-for="k in 20" :key='k'>
+				<div class="one_paimin" v-for="(k,s) in info" :key='k.id'>
 					<div class="info">
-						<div  class="img_title_rank" :style="'background-image: url('+info[0].img+');'"></div>
-						<span>{{k}}</span>
-						<span>{{info[0].name}}</span>
+						<div  class="img_title_rank" :style="'background-image: url('+k.img+');'"></div>
+						<span>{{s+1}}</span>
+						<span>{{k.name}}</span>
 					</div>
 				</div>
 			</div>
@@ -16,6 +16,51 @@
 
 <script>
 	export default {
+		computed: {
+			wsm() {
+				return this.$store.getters.wsmg
+			}
+		},
+		watch: {
+			wsm(n) {
+				switch (n.type) {
+					case 'nextTopic':
+						// 下一题
+						this.$router.push({
+							name: 'answer',
+							params: {
+								topic:n.data
+							}
+						})
+						break;
+					case 'toindex':
+						/* 跳转主页 */
+						this.$router.push({
+							name: 'index'
+						})
+						break;
+					case 'seeRaking':
+						/* 查看排名 */
+						this.$router.push({name:'Ranking',params:{
+							paimin:n.data
+						}})
+						break;
+					case 'gameswitch':
+						// 初始化比赛
+						this.$store.commit('initAns');
+						this.$store.commit('initStuinfo');
+						this.$router.push({
+							name: 'index'
+						})
+						break;
+					default:
+						break;
+				}
+			}
+		},
+		created(){
+			this.info = this.$route.params.paimin
+		},
 		data() {
 			return {
 				info:[

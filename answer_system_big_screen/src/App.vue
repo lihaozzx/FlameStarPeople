@@ -40,7 +40,9 @@
 			},
 			websocketonmessage(e) {//收到消息
 				let r = JSON.parse(e.data);
-				this.$store.commit('onMessage',r);
+				if(r.type == 'say'){
+					this.$store.commit('onMessage',r.content);
+				}
 			},
 			websocketsend(Data) { //数据发送
 				this.websock.send(JSON.stringify(Data))

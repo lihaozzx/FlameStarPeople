@@ -36,7 +36,7 @@
 	}
 
 	.root {
-		height: 62%;
+		height: 72%;
 		width: 93%;
 		background-image: url(../assets/background_juanzhou.png);
 		background-size: auto 100%;

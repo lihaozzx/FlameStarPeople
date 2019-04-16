@@ -8,11 +8,15 @@ export default new Vuex.Store({
 		title: '',
 		answerNum:0,
 		ws:null,
-		message:null
+		message:null,
+		si:[]
 	},
 	mutations: {
 		changeTitle(state,k){
 			state.title = k;
+		},
+		initAns(state){
+			state.answerNum=0
 		},
 		nextAns(state){
 			state.answerNum++;
@@ -25,6 +29,12 @@ export default new Vuex.Store({
 		},
 		onMessage(state,msg){
 			state.message= msg;
+		},
+		saveStuinfo(state,k){
+			state.si=k;
+		},
+		initStuinfo(state){
+			state.si=[];
 		}
 	},
 	actions: {
@@ -41,6 +51,9 @@ export default new Vuex.Store({
 		},
 		wsmg(state){
 			return state.message
+		},
+		stuinfo(state){
+			return state.si;
 		}
 	}
 })

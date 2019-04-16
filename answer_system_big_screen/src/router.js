@@ -4,6 +4,8 @@ import index from './views/index.vue'
 import info from './views/answerInfo.vue'
 import paimin from './views/paimin.vue'
 import answer from './views/answer.vue'
+import play from './views/playVideo.vue'
+import correctRate from './views/zhenquelv.vue'
 
 Vue.use(Router);
 
@@ -36,6 +38,22 @@ export default new Router({
 			path: '/answer',
 			name: 'answer',
 			component: answer
+		},
+		{
+			path: '/play',
+			name: 'play',
+			component: play,
+			meta: {
+				title: '视频'
+			}
+		},
+		{
+			path: '/asdf',
+			name: 'zhenquelv',
+			component: correctRate,
+			meta: {
+				title: '本题正确率'
+			}
 		}
 		//     {
 		//       path: '/about',
