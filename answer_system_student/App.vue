@@ -1,6 +1,10 @@
 <script>
 	export default {
 		onLaunch: function() {
+			var self = plus.webview.currentWebview();
+			self.setStyle({
+				videoFullscreen: 'landscape'
+			});
 			uni.connectSocket({
 				url: 'ws://192.168.1.100:7272'
 			});
