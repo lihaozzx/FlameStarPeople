@@ -42,6 +42,11 @@
             /* ios打包配置 */
             "sdkConfigs" : {
                 "push" : {}
+            },
+            "splashscreen" : {
+                "android" : {
+                    "xxhdpi" : "C:/Users/MR-Crystal/Desktop/新建文件夹/图片2.png"
+                }
             }
         }
     },
