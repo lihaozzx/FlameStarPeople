@@ -3,67 +3,36 @@
 		<div class="content">
 			<div class="show">
 				<div class="asd">
-					<span>正确{{info.dui}}人</span>
-					<span>错误{{info.cuo}}人</span>
+					<span>正确<br>{{info.dui}}人</span>
+					<span>错误<br>{{info.cuo}}人</span>
 				</div>
-				<span>正确率{{info.duib}}人</span>
-				<img :src="asd" class="asdasd">
+				<span style="position: relative;top: 200px;font-size: 50px;color: #F0B74A;font-weight: 900;">正确率{{info.duib}}人</span>
+				<img :src="asd1" class="asdasd1">
+				<img :src="asd2" class="asdasd2">
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import asd from '@/assets/asdasdasd.png'
+	import asd1 from '@/assets/asdasdasd1.png'
+	import asd2 from '@/assets/asdasdasd2.png'
 	export default {
-		computed: {
-			wsm() {
-				return this.$store.getters.wsmg
-			}
-		},
-		watch: {
-			wsm(n) {
-				switch (n.type) {
-					case 'stuInfo':
-						// 学生信息
-						this.perNum = n.data
-						this.$store.commit('saveStuinfo', n.data);
-						break;
-					case 'nextTopic':
-						// 下一题
-						this.$router.push({
-							name: 'answer',
-							params: {
-								topic:n.data
-							}
-						})
-						break;
-					case 'startGame':
-						// 开始比赛
-						this.$router.push({
-							name: 'play',
-							params: {
-								dizhi: n.data
-							}
-						})
-						break;
-					default:
-						break;
-				}
-			}
-		},
 		data() {
 			return {
 				info: {
-					dui: '答对数量',
-					cuo: '答错数量',
-					duib: '答对百分比',
+					dui: '12',
+					cuo: '8',
+					duib: '60%',
 					cuob: '答错百分比'
-				},asd
+				},asd1,asd2
 			};
 		},
 		created() {
-			this.info = this.$route.params.zhenquelv
+			if(this.$route.params.zhenquelv!=undefined){
+				this.info = this.$route.params.zhenquelv
+			}
+			
 		},
 		methods: {
 			// 组件的方法
@@ -86,10 +55,10 @@
 
 	.show {
 		width: 1000px;
-		height: 300px;
+		height: 200px;
 		background: rgba(12, 52, 84, 1);
 		border: 2px solid rgba(240, 183, 74, 1);
-		border-radius: 150px;
+		border-radius: 100px;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -102,10 +71,17 @@
 		height: 200px;
 		display: flex;
 		justify-content: space-between;
+		font-size: 48px;
+		color: #F0B74A;
+		box-sizing: border-box;
+		padding-top: 50px;
 	}
-	.asdasd{
+	.asdasd1{
+		width: 400px;
+		position: absolute;top: -50px;
+	}
+	.asdasd2{
 		width: 500px;
-		height: 500px;
-		position: absolute;top: -200px;
+		position: absolute;top: -230px;left: 275px;
 	}
 </style>

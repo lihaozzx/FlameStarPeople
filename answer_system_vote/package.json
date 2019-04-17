@@ -1,29 +1,23 @@
 {
-  "name": "answer_system_big_screen",
+  "name": "answer_system_vote",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-		"analyz": "set NODE_ENV=production && set npm_config_report=true && npm run dist"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "element-ui": "^2.4.5",
-    "vue": "^2.6.6",
-    "vue-router": "^3.0.1",
-    "vue-socket.io": "^3.0.7",
-    "vuex": "^3.0.1"
+    "core-js": "^2.6.5",
+    "vue": "^2.6.10"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.5.0",
-    "@vue/cli-plugin-eslint": "^3.5.0",
-    "@vue/cli-service": "^3.5.0",
+    "@vue/cli-plugin-babel": "^3.6.0",
+    "@vue/cli-plugin-eslint": "^3.6.0",
+    "@vue/cli-service": "^3.6.0",
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.8.0",
+    "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-cli-plugin-element": "^1.0.1",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {

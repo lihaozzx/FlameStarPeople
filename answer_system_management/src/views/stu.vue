@@ -39,7 +39,7 @@
 		</div>
 
 		<!-- 弹窗 -->
-		<el-dialog title="学校信息" :visible.sync="showInfo">
+		<el-dialog title="学生信息" :visible.sync="showInfo">
 			<el-form :model="form" :label-width="formLabelWidth">
 				<el-form-item label="序号">
 					<el-input v-model="form.number" autocomplete="off"></el-input>
@@ -65,9 +65,9 @@
 				<el-form-item label="电话">
 					<el-input v-model="form.phone" autocomplete="off"></el-input>
 				</el-form-item>
-
 			</el-form>
 			<div slot="footer" class="dialog-footer">
+				<!-- <el-button type="danger" @click="delStu" :disabled="inAdd">删 除</el-button> -->
 				<el-button @click="showInfo = false">取 消</el-button>
 				<el-button type="primary" @click="submitSch" :disabled="inAdd">修 改</el-button>
 			</div>
@@ -189,6 +189,39 @@
 					});
 					this.inAdd = false;
 				})
+			},
+			delStu(){
+// 				this.inAdd = true
+// 				let out = this.oco(this.form, this.oldForm);
+// 				this.$http.post('/admin/upStudent', this.$qs.stringify({ ...out,
+// 					token: this.$store.getters.token
+// 				})).then(res => {
+// 					if (res.data.status == 0) {
+// 						this.showInfo = false;
+// 						this.$notify.success({
+// 							title: 'Info',
+// 							message: '修改成功',
+// 							showClose: false
+// 						});
+// 						this.getStuInfo();
+// 					} else {
+// 						this.$notify.success({
+// 							title: '错误',
+// 							iconClass: 'el-icon-warning',
+// 							message: res.data.msg,
+// 							showClose: false
+// 						});
+// 					}
+// 					this.inAdd = false;
+// 				}).catch(() => {
+// 					this.$notify.success({
+// 						title: '错误',
+// 						iconClass: 'el-icon-warning',
+// 						message: '服务器未响应',
+// 						showClose: false
+// 					});
+// 					this.inAdd = false;
+// 				})
 			},
 			showInfoFun(e) {
 				this.showInfo = true

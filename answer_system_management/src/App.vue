@@ -3,7 +3,7 @@
 		<div class="logout">
 			<el-button type="danger" @click="logout">退出登录</el-button>
 		</div>
-		<div style="height: 74.07%;width: 66.67%;">
+		<div style="height: 74.07%;width: 66.67%;min-width: 1300px;min-height: 600px;">
 			<router-view></router-view>
 		</div>
 	</div>

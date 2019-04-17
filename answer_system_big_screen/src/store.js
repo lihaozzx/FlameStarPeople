@@ -6,54 +6,73 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		title: '',
-		answerNum:0,
-		ws:null,
-		message:null,
-		si:[]
+		answerNum: 0,
+		ws: null,
+		message: null,
+		si: [],
+		topic: {
+			name: '无',
+			xuanx: []
+		}
 	},
 	mutations: {
-		changeTitle(state,k){
+		changeTitle(state, k) {
 			state.title = k;
 		},
-		initAns(state){
-			state.answerNum=0
+		initAns(state) {
+			state.answerNum = 0
 		},
-		nextAns(state){
+		nextAns(state) {
 			state.answerNum++;
 		},
-		initws(state,k){
+		initws(state, k) {
 			state.ws = k;
 		},
-		initws(state,k){
+		initws(state, k) {
 			state.ws = k;
 		},
-		onMessage(state,msg){
-			state.message= msg;
+		onMessage(state, msg) {
+			state.message = msg;
 		},
-		saveStuinfo(state,k){
-			state.si=k;
+		saveStuinfo(state, k) {
+			state.si = k;
 		},
-		initStuinfo(state){
-			state.si=[];
+		initStuinfo(state) {
+			state.si = [];
+		},
+		saveTopic(state, k) {
+			state.topic = k;
+		},
+		initTopic(state) {
+			state.topic = {
+				name: '无',
+				xuanx: []
+			}
 		}
 	},
 	actions: {
-		send({ commit, state },d){
+		send({
+			commit,
+			state
+		}, d) {
 			state.ws.send(JSON.stringify(d))
 		}
 	},
-	getters:{
-		nowTitle(state){
+	getters: {
+		nowTitle(state) {
 			return state.title
 		},
-		ans(state){
+		ans(state) {
 			return state.answerNum
 		},
-		wsmg(state){
+		wsmg(state) {
 			return state.message
 		},
-		stuinfo(state){
+		stuinfo(state) {
 			return state.si;
+		},
+		topic(state) {
+			return state.topic;
 		}
 	}
 })

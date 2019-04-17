@@ -12,11 +12,16 @@
 		</div>
 		<el-dialog title="题目信息" :visible.sync="per" width="70%">
 			<el-table v-loading="loadingTable" :data="bankInfo[show].timu" style="width: 100%" :height="500" :border='false'>
-				<el-table-column prop="cate" label="主题"></el-table-column>
+				<el-table-column prop="cate" label="主题" width="100"></el-table-column>
 				<el-table-column prop="name" label="题目"></el-table-column>
-				<el-table-column prop="score" label="分数"></el-table-column>
+				<el-table-column prop="score" label="分数" width="50"></el-table-column>
 				<el-table-column prop="xuanx" label="选项"></el-table-column>
-				<el-table-column prop="answer" label="答案"></el-table-column>
+				<el-table-column prop="answer" label="答案" width="200"></el-table-column>
+				<el-table-column fixed="right" label="操作" width="100">
+					<template slot-scope="scope">
+						<el-button @click="showInfoFun(scope.row)" type="text" size="small">编辑</el-button>
+					</template>
+				</el-table-column>
 				<!-- <el-table-column prop="status" label="状态">
 					<template slot-scope="scope">
 						<span>{{scope.row.status==0?'0':scope.row.status==1?'1':scope.row.status==2?'2':'3'}}</span>
@@ -29,6 +34,46 @@
 			<div class="infoFooterDialog">
 				<el-pagination layout="prev, pager, next" :total="pageInfo[show].totalCount" :page-size="pageInfo[show].size"
 				 :current-page="pageInfo[show].nowPage" @current-change="selTop"></el-pagination>
+			</div>
+		</el-dialog>
+		<!-- 弹窗 -->
+		<el-dialog title="试题" :visible.sync="showInfo">
+			<el-form label-width="7rem">
+				<el-form-item label="类型">
+					<template slot-scope="scope">
+						<span>{{form.type}}</span>
+					</template>
+				</el-form-item>
+				<el-form-item label="主题">
+					<el-select v-model="form.cate" filterable placeholder="请选择">
+						<el-option v-for="(c,k) in addTopic.cate" :key="k" :label="c" :value="c"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="题目">
+					<el-input v-model="form.name"></el-input>
+				</el-form-item>
+				<el-form-item label="选项">
+					<div v-for="(x,k) in form.xuanx" :key="k" style="display: flex;margin-bottom: 10px;">
+						<span style="margin-right: 5px;">{{k+1}}.</span>
+						<el-input v-model="form.xuanx[k]"></el-input>
+						<el-button v-if="k!=0" style="margin-left: 5px;" icon="el-icon-minus" circle @click="minusxuanx(k)"></el-button>
+						<div v-else style="width: 52px; height: 27px;"></div>
+					</div>
+					<div style="margin-top: 5px;display: flex;align-items: center;justify-content: center;">
+						<el-button icon="el-icon-plus" circle @click="addxuanx"></el-button>
+					</div>
+				</el-form-item>
+				<el-form-item label="分数">
+					<el-input v-model="form.score"></el-input>
+				</el-form-item>
+				<el-form-item label="答案">
+					<el-input v-model="form.answer"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<!-- <el-button type="danger" @click="delStu" :disabled="inAdd">删 除</el-button> -->
+				<el-button @click="showInfo = false">取 消</el-button>
+				<el-button type="primary" @click="submitTopic" :disabled="inAdd">修 改</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -49,7 +94,15 @@
 				}],
 				show: 0,
 				per: false,
-				loadingTable: false
+				loadingTable: false,
+				showInfo:false,
+				form:{},
+				oldForm:{},
+				inAdd:false,
+				addTopic:{
+					type:[],
+					cate:[]
+				}
 			};
 		},
 		created() {
@@ -63,6 +116,9 @@
 				token: this.$store.getters.token
 			})).then(res => {
 				if (res.data.status == 0) {
+					for (var i = 0; i < res.data.data.content.length; i++) {
+						this.addTopic.type[i] = res.data.data.content[i];
+					}
 					this.bankInfo = []
 					res.data.data.content.forEach(t => {
 						this.bankInfo.push({
@@ -90,6 +146,19 @@
 						load.close();
 					}));
 				}
+			});
+			/* 题目主题 */
+			this.$http.get('/admin/basisInfo', {
+				params: {
+					id: 2
+				}
+			}).then(res => {
+				if(res.data.status ==0){
+					for (var i = 0; i < res.data.data.content.length; i++) {
+						this.addTopic.cate[i] = res.data.data.content[i];
+					}
+				}
+				this.b = false
 			});
 		},
 		methods: {
@@ -137,6 +206,51 @@
 					params: {
 						type: i
 					}
+				})
+			},
+			showInfoFun(e){
+				this.showInfo = true;
+				e.xuanx = e.xuanx.split('|');
+				this.form = {...e};
+				this.oldForm = { ...this.form
+				}
+			},
+			addxuanx(){
+				this.form.xuanx.push('');
+			},
+			minusxuanx(k){
+				this.form.xuanx.splice(k,1);
+			},
+			submitTopic(){
+				this.inAdd = true
+				this.$http.post('/admin/saveTopic', this.$qs.stringify({ ...this.form,
+					token: this.$store.getters.token
+				})).then(res => {
+					if (res.data.status == 0) {
+						this.showInfo = false;
+						this.$notify.success({
+							title: 'Info',
+							message: '修改成功',
+							showClose: false
+						});
+						this.selTop(this.pageInfo.nowPage);
+					} else {
+						this.$notify.success({
+							title: '错误',
+							iconClass: 'el-icon-warning',
+							message: res.data.msg,
+							showClose: false
+						});
+					}
+					this.inAdd = false;
+				}).catch(() => {
+					this.$notify.success({
+						title: '错误',
+						iconClass: 'el-icon-warning',
+						message: '服务器未响应',
+						showClose: false
+					});
+					this.inAdd = false;
 				})
 			}
 		}

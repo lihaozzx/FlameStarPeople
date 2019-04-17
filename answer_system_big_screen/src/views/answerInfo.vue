@@ -15,59 +15,23 @@
 
 <script>
 	export default {
-		computed: {
-			wsm() {
-				return this.$store.getters.wsmg
-			}
-		},
-		watch: {
-			wsm(n) {
-				switch (n.type) {
-					case 'stuInfo':
-						// 学生信息
-						this.perNum = n.data
-						this.$store.commit('saveStuinfo', n.data);
-						break;
-					case 'nextTopic':
-						// 下一题
-						this.$router.push({
-							name: 'answer',
-							params: {
-								topic:n.data
-							}
-						})
-						break;
-					case 'startGame':
-						// 开始比赛
-						this.$router.push({
-							name: 'play',
-							params: {
-								dizhi: n.data
-							}
-						})
-						break;
-					default:
-						break;
-				}
-			}
-		},
 		data() {
 			return {
-				info:[{
-					num:'01',
-					name:'阿萨德',
-					time:'1分21',
-					img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
-				},{
-					num:'02',
-					name:'版本',
-					time:'1分21',
-					img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
-				},{
-					num:'023',
-					name:'气味儿',
-					time:'1分21',
-					img:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
+				info: [{
+					num: '01',
+					name: '阿萨德',
+					time: '1分21',
+					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
+				}, {
+					num: '02',
+					name: '版本',
+					time: '1分21',
+					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
+				}, {
+					num: '023',
+					name: '气味儿',
+					time: '1分21',
+					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553944090284&di=06cb60eeb9de011111d23a63beb51bf7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F06%2F20160806181034_WNiP3.jpeg'
 				}]
 			};
 		},
@@ -101,14 +65,16 @@
 		color: #F0B74A;
 		font-size: 3rem;
 	}
-	.kuang>span:nth-of-type(2){
+
+	.kuang>span:nth-of-type(2) {
 		margin-top: 20px;
 	}
-	.kuang>span:nth-of-type(3){
+
+	.kuang>span:nth-of-type(3) {
 		margin-top: 40px;
 	}
-	
-	.img_title_ans{
+
+	.img_title_ans {
 		width: 67%;
 		background-size: cover;
 		padding-bottom: 67%;

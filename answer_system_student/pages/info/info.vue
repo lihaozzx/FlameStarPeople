@@ -10,7 +10,7 @@
 			<view class="info">
 				<view class="topicInfo" v-for="t in topicInfo" :key="t.id" :class="parseInt(t.score)>0?'right':'wrong'">
 					<text>{{parseInt(t.score)>0?'正确':'错误'}}</text>
-					<text>{{t.score}} 分</text>
+					<text class="nowr">{{t.score}} 分</text>
 				</view>
 			</view>
 		</view>
@@ -34,10 +34,11 @@
 		watch: {
 			wsm(n) {
 				switch (n.type) {
-					case 'nextTopic':
-						// 题目信息
-						this.start = true;
-						this.setTopic(n.data);
+					case 'gameswitch':
+						// 学生信息
+						uni.redirectTo({
+							url:'../index/index?type=next'
+						})
 						break;
 					default:
 						break;
@@ -135,9 +136,9 @@
 				flex-wrap: wrap;
 
 				.topicInfo {
-					width: 8%;
+					width: 9%;
 					height: 25%;
-					margin: 10upx 1%;
+					margin: 10upx 0.5%;
 					color: #FFFFFF;
 					display: flex;
 					flex-direction: column;
@@ -146,6 +147,10 @@
 					box-sizing: border-box;
 					padding: 10upx 0;
 					font-size: 30upx;
+					
+					.nowr{
+						white-space: nowrap;
+					}
 				}
 
 				.right {

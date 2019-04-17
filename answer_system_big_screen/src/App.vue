@@ -14,6 +14,108 @@
 	import img_l from '@/assets/icon_left.png'
 	import img_r from '@/assets/icon_right.png'
 	export default {
+		computed: {
+			title() {
+				return this.$store.getters.nowTitle;
+			},
+			wsm() {
+				return this.$store.getters.wsmg
+			}
+		},
+		watch: {
+			'$route'() {
+				let isBack = this.$router.isBack //  监听路由变化时的状态为前进还是后退
+				if (isBack) {
+					this.transitionName = 'slide-right'
+				} else {
+					this.transitionName = 'slide-left'
+				}
+				this.$router.isBack = false
+			},
+			wsm(n) {
+				switch (n.type) {
+					case 'nextTopic':
+						// 下一题
+						if (this.$router.history.current.name == "answer") {
+							this.$store.commit('saveTopic', n.data);
+							this.$store.commit('nextAns');
+						} else {
+							this.$router.push({
+								name: 'answer',
+								params: {
+									topic: n.data
+								}
+							})
+						}
+						break;
+					case 'toindex':
+						/* 跳转主页 */
+						this.$router.push({
+							name: 'index'
+						})
+						break;
+					case 'seeans':
+						/* 公布答案 */
+						this.$store.commit('showans');
+						this.$router.push({
+							name: 'answer'
+						})
+						break;
+					case 'seeRaking':
+						/* 显示选手排名页面 */
+						this.$router.push({
+							name: 'Ranking',
+							params: {
+								paimin: n.data
+							}
+						})
+						break;
+					case 'seeResult':
+						/* 查看正确率 */
+						this.$router.push({
+							name: 'zhenquelv',
+							params: {
+								zhenquelv: n.data
+							}
+						})
+						break;
+					case 'seeTherr':
+						/* 查看本题答对前三 */
+						this.$router.push({
+							name: 'info',
+							params: {
+								rank: n.data
+							}
+						})
+						break;
+					case 'gameswitch':
+						// 初始化比赛
+						this.$store.commit('initAns');
+						this.$store.commit('initStuinfo');
+						this.$store.commit('initTopic');
+						this.$router.push({
+							name: 'index'
+						})
+						break;
+					case 'stuInfo':
+						// 学生信息
+						this.$store.commit('saveStuinfo', n.data);
+						this.$router.push({
+							name: 'index'
+						})
+						break;
+					case 'startGame':
+						// 开始比赛
+						this.$router.push({
+							name: 'play',
+							params: {
+								dizhi: n.data
+							}
+						})
+						break;
+				}
+			}
+		},
 		name: 'app',
 		created() {
 			this.initWebSocket();
@@ -26,22 +128,22 @@
 				this.websock.onopen = this.websocketonopen;
 				this.websock.onerror = this.websocketonerror;
 				this.websock.onclose = this.websocketclose;
-				this.$store.commit('initws',this.websock);
+				this.$store.commit('initws', this.websock);
 			},
 			websocketonopen() { //连接建立之后执行send方法发送数据
 				this.websocketsend({
-					type:"login",
-					client_name:"bigScreen",
-					room_id:"1"
+					type: "login",
+					client_name: "bigScreen",
+					room_id: "1"
 				})
 			},
 			websocketonerror() { //连接建立失败重连
 				this.initWebSocket()
 			},
-			websocketonmessage(e) {//收到消息
+			websocketonmessage(e) { //收到消息
 				let r = JSON.parse(e.data);
-				if(r.type == 'say'){
-					this.$store.commit('onMessage',r.content);
+				if (r.type == 'say') {
+					this.$store.commit('onMessage', r.content);
 				}
 			},
 			websocketsend(Data) { //数据发送
@@ -51,11 +153,6 @@
 				console.log('断开连接', e)
 			}
 		},
-		computed: {
-			title() {
-				return this.$store.getters.nowTitle;
-			}
-		},
 		data() {
 			return {
 				transitionName: 'slide-right',
@@ -63,17 +160,6 @@
 				img_l,
 				img_r,
 				websock: null
-			}
-		},
-		watch: {
-			'$route'() {
-				let isBack = this.$router.isBack //  监听路由变化时的状态为前进还是后退
-				if (isBack) {
-					this.transitionName = 'slide-right'
-				} else {
-					this.transitionName = 'slide-left'
-				}
-				this.$router.isBack = false
 			}
 		}
 	}

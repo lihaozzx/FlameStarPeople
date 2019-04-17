@@ -8,7 +8,8 @@
 					<span class="title">{{num2str(nowTopic)}}</span>
 					<span class="topictitle">{{paper[nowTopic-1].name}}</span>
 					<div v-if="paper[nowTopic-1].type == '组合题'" class="zuhe">
-						<div :class="paper[nowTopic-1].xuanx.length == 9?'zuhe_son':'zuhe_son2' " v-for="(t,k) in paper[nowTopic-1].xuanx" :key="k">
+						<div :class="paper[nowTopic-1].xuanx.length == 9?'zuhe_son':'zuhe_son2' " v-for="(t,k) in paper[nowTopic-1].xuanx"
+						 :key="k">
 							<span>{{t}}</span>
 						</div>
 					</div>
@@ -21,35 +22,48 @@
 				</div>
 			</div>
 			<div class="anniu">
-				<div class="btn" @click="sendToindex">
-					<span>显示选手到位页面</span>
+				<div class="btn_box">
+					<span>大屏幕</span>
+					<div class="btn_box_r">
+						<div class="btn" @click="sendToindex">
+							<span>显示选手到位页面</span>
+						</div>
+						<div class="btn" @click="sendSeeAns">
+							<span>公布答案</span>
+						</div>
+						<div class="btn" @click="sendRaking">
+							<span>显示选手排名页面</span>
+						</div>
+						<div class="btn" @click="sendTherr">
+							<span>显示本题答对前三</span>
+						</div>
+						<div class="btn" @click="sendResult">
+							<span>显示本题正确率</span>
+						</div>
+					</div>
 				</div>
-				<div class="btn" @click="sendSeeAns">
-					<span>公布答案</span>
-				</div>
-				<div class="btn" @click="sendRaking">
-					<span>显示选手排名页面</span>
-				</div>
-				<div class="btn" @click="sendTherr">
-					<span>显示本题答对前三</span>
-				</div>
-				<div class="btn" @click="sendResult">
-					<span>显示本题正确率</span>
-				</div>
-				<div :class="nextStr.can?'disbtn':'btn'" @click="nextTopic">
-					<span>{{nextStr.val}}</span>
-				</div>
-				<div class="btn" @click="startAnswer">
-					<span>开始答题</span>
-				</div>
-				<div class="btn" @click="switchGame">
-					<span>切换比赛</span>
-				</div>
-				<div class="btn" @click="startGame">
-					<span>开始比赛,播选题视频</span>
-				</div>
-				<div class="btn" @click="sendPlayers">
-					<span>再次发送选手信息</span>
+				<div class="btn_box">
+					<span>流程控制</span>
+					<div class="btn_box_r">
+						<div :class="nextStr.can?'disbtn':'btn'" @click="nextTopic">
+							<span>{{nextStr.val}}</span>
+						</div>
+						<div class="btn" @click="startAnswer">
+							<span>开始答题</span>
+						</div>
+						<div class="btn" @click="sendStartGame">
+							<span>开始比赛,播选题视频</span>
+						</div>
+						<div class="btn" @click="sendPlayers">
+							<span>再次发送选手信息</span>
+						</div>
+						<div class="btn" @click="endGame">
+							<span>结束比赛</span>
+						</div>
+						<div class="btn" @click="switchGame">
+							<span>切换比赛</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -61,6 +75,11 @@
 				<img :src="left" style="width: 50px;height:50px ;position: relative;right: 50px;" @click="loginFun">
 			</div>
 		</div>
+		<div v-if="endGames" class="endgame">
+			<span>输入授权码后将结束本次比赛</span>
+			<input type="text" v-model="code2" placeholder="授权码" @keyup.enter="endGameFun">
+			<img :src="left" style="width: 50px;height:50px ;position: relative;right: 50px;" @click="endGameFun">
+		</div>
 	</div>
 </template>
 
@@ -68,22 +87,25 @@
 	import left from '@/assets/left.png'
 	export default {
 		watch: {
-			players() {
-				this.sendPlayers();
-			},
-			wsm(n){
+// 			players(n,o) {
+// 				console.log(o);
+// 				console.log(n.length == 0);
+// 				if(n!=[]){
+// 					this.sendPlayers();
+// 				}
+// 			},
+			wsm(n) {
 				switch (n.type) {
 					case 'infoErr':
 						// 学生信息错误
-						if(n.data.code == this.code){
-							console.log(123);
-							alert('座位号：'+n.data.num+' 的学生信息错误，请于后台改正')
+						if (n.data.code == this.code) {
+							alert('座位号：' + n.data.num + ' 的学生信息错误，请于后台改正')
 						}
 						break;
 					case 'sureInfo':
 						// 学生确认信息
-						this.players.forEach(per=>{
-							if(per.number == n.data){
+						this.players.forEach(per => {
+							if (per.number == n.data) {
 								per.isSure = true;
 							}
 						});
@@ -104,6 +126,7 @@
 				wsm: null,
 				login: false,
 				code: '',
+				code2: '',
 				left,
 				gameInfo: null,
 				loding: false,
@@ -113,7 +136,8 @@
 					val: '下一题',
 					can: false
 				},
-				players:[]
+				players: [],
+				endGames: false
 			}
 		},
 		methods: {
@@ -130,19 +154,23 @@
 									gid: res.data.data.id
 								})).then(ress => {
 									if (res.data.status == 0) {
-										ress.data.data.forEach(per=>{
+										ress.data.data.forEach(per => {
 											this.players.push({
 												...per,
-												isSure:false
+												isSure: false
 											})
-										})
+										});
+										this.sendPlayers();
 										this.login = true;
+										this.loding = false;
+									} else {
+										alert(res.data.msg);
 										this.loding = false;
 									}
 								})
 								this.gameInfo = res.data.data;
-							}else{
-								alert('授权码错误');
+							} else {
+								alert(res.data.msg);
 								this.loding = false;
 							}
 						})
@@ -179,106 +207,137 @@
 					}
 				}
 			},
-			startGame(){
-				/* 开始比赛 */
-				this.websock.send(this.$mso({
-					type:'startGame',
-					date:this.gameInfo.video
-				}))
-			},
-			startAnswer(){
+			startAnswer() {
+				/* 开始答题 */
 				this.sendStart()
 			},
-			switchGame(){
+			switchGame() {
+				/* 切换比赛 */
 				this.sendSwitch()
-				this.login=false;
-				this.code='';
+				this.login = false;
+				this.code = '';
+				this.code2='';
 				this.paper = [];
-				this.nowTopic=0;
-				this.players=[];
-				this.nextStr= {
+				this.nowTopic = 0;
+				this.players = [];
+				this.nextStr = {
 					val: '下一题',
 					can: false
 				}
 			},
+			endGame() {
+				this.endGames = true;
+			},
+			endGameFun() {
+				if (!this.loding) {
+					this.loding = true;
+					if (this.code2 != '') {
+						this.$http.post('/stock/jsgames', this.$qs.stringify({
+							id:this.gameInfo.id,
+							warrant: this.code2
+						})).then(res => {
+							if (res.data.status == 0) {
+								this.endGames = false;
+								alert('该比赛已结束，请点击切换比赛重新开始');
+							} else {
+								alert(res.data.msg);
+								this.loding = false;
+							}
+						})
+					}
+				}
+			},
 			/* wssendmessage */
-			sendOver(){
+			sendStartGame() {
+				/* 开始比赛 */
 				this.websock.send(this.$mso({
-					type:'gameover'
+					type: 'startGame',
+					date: this.gameInfo.video
 				}))
 			},
-			sendTopic(){
+			sendOver() {
 				this.websock.send(this.$mso({
-					type:'nextTopic',
-					data:this.paper[this.nowTopic-1]
+					type: 'gameover'
 				}))
 			},
-			sendToindex(){
+			sendTopic() {
 				this.websock.send(this.$mso({
-					type:'toindex'
+					type: 'nextTopic',
+					data: this.paper[this.nowTopic - 1]
 				}))
 			},
-			sendSwitch(){
+			sendToindex() {
 				this.websock.send(this.$mso({
-					type:'gameswitch'
+					type: 'toindex'
 				}))
 			},
-			sendPlayers(){
+			sendSwitch() {
 				this.websock.send(this.$mso({
-					type:'stuInfo',
-					data:this.players
+					type: 'gameswitch'
 				}))
 			},
-			sendStart(){
+			sendPlayers() {
 				this.websock.send(this.$mso({
-					type:'start!!!!!!',
+					type: 'stuInfo',
+					data: this.players
 				}))
 			},
-			sendSeeAns(){
+			sendStart() {
 				this.websock.send(this.$mso({
-					type:'seeans',
+					type: 'start!!!!!!',
 				}))
 			},
-			sendRaking(){
-				this.$http.get('/stock/maxScore',{params:{
-					gid:this.gameInfo.id
-				}}).then(res=>{
-					if(res.data.status == 0){
+			sendSeeAns() {
+				this.websock.send(this.$mso({
+					type: 'seeans',
+				}))
+			},
+			sendRaking() {
+				this.$http.get('/stock/maxScore', {
+					params: {
+						gid: this.gameInfo.id
+					}
+				}).then(res => {
+					if (res.data.status == 0) {
 						this.websock.send(this.$mso({
-							type:'seeRaking',
-							data:res.data.data
+							type: 'seeRaking',
+							data: res.data.data
 						}))
-					}else{
+					} else {
 						alert('查询失败')
 					}
 				})
 			},
-			sendResult(){
-				this.$http.get('/stock/rightOrwrong',{params:{
-					gid:this.gameInfo.id,
-					tid:this.paper[this.nowTopic-1].id
-				}}).then(res=>{
-					if(res.data.status == 0){
+			sendResult() {
+				this.$http.get('/stock/rightOrwrong', {
+					params: {
+						gid: this.gameInfo.id,
+						tid: this.paper[this.nowTopic - 1].id
+					}
+				}).then(res => {
+					if (res.data.status == 0) {
 						this.websock.send(this.$mso({
-							type:'seeResult',
-							data:res.data.data
+							type: 'seeResult',
+							data: res.data.data
 						}))
-					}else{
+					} else {
 						alert('查询失败')
 					}
 				})
 			},
-			sendTherr(){
-				this.$http.get('/stock/fastest',{params:{
-					gid:this.gameInfo.id,
-					tid:this.paper[this.nowTopic-1].id
-				}}).then(res=>{
-					if(res.data.status == 0){
+			sendTherr() {
+				this.$http.get('/stock/fastest', {
+					params: {
+						gid: this.gameInfo.id,
+						tid: this.paper[this.nowTopic - 1].id
+					}
+				}).then(res => {
+					if (res.data.status == 0) {
 						this.websock.send(this.$mso({
-							type:'seeTherr',
-							data:res.data.data
+							type: 'seeTherr',
+							data: res.data.data
 						}))
-					}else{
+					} else {
 						alert('查询失败')
 					}
 				})
@@ -304,7 +363,7 @@
 			},
 			websocketonmessage(e) { //收到消息
 				let r = JSON.parse(e.data);
-				if(r.type=='say'){
+				if (r.type == 'say') {
 					this.wsm = r.content
 				}
 			},
@@ -529,8 +588,27 @@
 		border-top: 1px solid #1890FF;
 	}
 
+	.btn_box {
+		width: 100%;
+		border-radius: 20px;
+		margin-bottom: 15px;
+		border: 3px solid #8c8c8c;
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		font-size: 30px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.btn_box_r {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
 	.btn {
-		width: 300px;
+		width: 280px;
 		height: 80px;
 		background-color: #1890FF;
 		border-radius: 10px;
@@ -539,14 +617,14 @@
 		justify-content: center;
 		color: white;
 		font-size: 30px;
-		margin: 0 50px;
+		margin: 15px 50px;
 		cursor: pointer;
 		-webkit-user-select: none;
 		user-select: none;
 	}
 
 	.disbtn {
-		width: 300px;
+		width: 280px;
 		height: 80px;
 		background-color: #BEBEBE;
 		border-radius: 10px;
@@ -558,5 +636,36 @@
 		margin: 0 50px;
 		-webkit-user-select: none;
 		user-select: none;
+	}
+
+	.endgame {
+		width: 800px;
+		height: 300px;
+		border-radius: 30px;
+		padding: 50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: linear-gradient(-30deg, #8c8c8c, #E3E3E3, #8c8c8c);
+		;
+		top: 500px;
+		left: 200px;
+		position: absolute;
+		color: red;
+	}
+
+	.endgame>span {
+		position: absolute;
+		top: 100px;
+		font-size: 30px;
+	}
+
+	.endgame>input {
+		border: none;
+		color: #FFFFFF;
+		background: none;
+		font-size: 50px;
+		outline: none;
+		border-bottom: #FFFFFF solid 1px;
 	}
 </style>

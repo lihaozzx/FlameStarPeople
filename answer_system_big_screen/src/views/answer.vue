@@ -33,9 +33,6 @@
 			ans() {
 				return this.$store.getters.ans
 			},
-			wsm() {
-				return this.$store.getters.wsmg
-			},
 			suiji() {
 				let newone = [...this.topic.xuanx];
 				let o = []
@@ -43,6 +40,9 @@
 					o.push(newone.splice(Math.floor(Math.random() * newone.length), 1)[0])
 				}
 				return o
+			},
+			topicFromX(){
+				return this.$store.getters.topic;
 			}
 		},
 		watch: {
@@ -50,68 +50,17 @@
 				this.$store.commit('changeTitle', this.numToStr(this.ans));
 				document.title = this.numToStr(n);
 			},
-			wsm(n) {
-				switch (n.type) {
-					case 'nextTopic':
-						// 下一题
-						this.topic = n.data;
-						this.$store.commit('nextAns');
-						break;
-					case 'toindex':
-						/* 跳转主页 */
-						this.$router.push({
-							name: 'index'
-						})
-						break;
-					case 'seeans':
-						/* 公布答案 */
-						this.showans = false
-						break;
-					case 'seeRaking':
-						/* 查看排名 */
-						this.$router.push({
-							name: 'Ranking',
-							params: {
-								paimin: n.data
-							}
-						})
-						break;
-					case 'seeResult':
-						/* 查看正确率 */
-						this.$router.push({
-							name: 'zhenquelv',
-							params: {
-								zhenquelv: n.data
-							}
-						})
-						break;
-					case 'seeTherr':
-						/* 查看前三 */
-						this.$router.push({
-							name: 'info',
-							params: {
-								rank: n.data
-							}
-						})
-						break;
-					case 'gameswitch':
-						// 初始化比赛
-						this.$store.commit('initAns');
-						this.$store.commit('initStuinfo');
-						this.$router.push({
-							name: 'index'
-						})
-						break;
-					default:
-						break;
-				}
+			topicFromX(n){
+				this.topic = n;
 			}
 		},
 		created() {
-			console.log();
 			if (this.$route.params.topic != undefined) {
 				this.topic = this.$route.params.topic;
+				this.$store.commit('saveTopic',this.$route.params.topic);
 				this.$store.commit('nextAns');
+			}else{
+				this.topic = this.$store.getters.topic;
 			}
 			this.$store.commit('changeTitle', this.numToStr(this.ans));
 			document.title = this.numToStr(this.ans);

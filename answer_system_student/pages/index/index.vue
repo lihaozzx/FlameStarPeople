@@ -48,6 +48,12 @@
 
 <script>
 	export default {
+		onLoad(obj){
+			if(obj.type){
+				this.num = uni.getStorageSync('zuoweihao');
+				this.show = 1;
+			}
+		},
 		computed: {
 			wsm() {
 				return this.$store.getters.wsmg
@@ -58,15 +64,15 @@
 				switch (n.type) {
 					case 'stuInfo':
 						// 学生信息
-						n.data.forEach(stu=>{
-							if(stu.number==this.num){
+						n.data.forEach(stu => {
+							if (stu.number == this.num) {
 								this.stuInfo = stu;
 								uni.setStorageSync('stuId', stu.pid);
 								uni.setStorageSync('id', stu.id);
 								this.show = 2;
 							}
 						});
-						if(this.show == 1){
+						if (this.show == 1) {
 							this.str = '座位号信息错误'
 						}
 						break;
@@ -83,7 +89,7 @@
 		},
 		data() {
 			return {
-				str:'请等待答题开始',
+				str: '请等待答题开始',
 				show: 0,
 				insure: false,
 				num: '',
@@ -96,10 +102,10 @@
 				}
 			}
 		},
-		onLoad() {},
 		methods: {
 			login() {
 				if (this.num != '') {
+					uni.setStorageSync('zuoweihao',this.num);
 					this.wslogin();
 					this.show = 1;
 				} else {
@@ -135,8 +141,8 @@
 							data: this.$mso({
 								type: 'infoErr',
 								data: {
-									num:this.num,
-									code:e.value
+									num: this.num,
+									code: e.value
 								}
 							})
 						});

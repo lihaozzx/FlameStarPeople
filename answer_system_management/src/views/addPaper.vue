@@ -9,7 +9,7 @@
 				</el-select>
 			</div>
 			<div class="search">
-				<el-input placeholder="题目搜索" v-model="searchKey" clearable></el-input>
+				<el-input placeholder="搜索" v-model="searchKey" clearable></el-input>
 			</div>
 			<el-button type="primary" @click="sub">完成</el-button>
 		</div>
@@ -44,8 +44,9 @@
 								<div class="topinfo">
 									<span>{{k+1}}.{{topic.name}}</span>
 									<span>选项:{{topic.xuanx}}</span>
-									<!-- <span style="color: #006400;">答案:{{topic.answer}}</span> -->
+									
 									<span>分数:{{topic.score}}</span>
+									<span style="color: #006400;">答案:{{topic.answer}}</span>
 								</div>
 								<div class="btn">
 									<div class="replace juzhong" @click="changeToPaper(k)">
@@ -67,7 +68,6 @@
 					<div v-else class="nocate">
 						<span>请先选择题目主题</span>
 					</div>
-					<el-button :loading="topLoading" @click="nextTopics" v-if="value!=''">下一波</el-button>
 				</div>
 			</div>
 		</div>
@@ -150,26 +150,44 @@
 						showClose: false
 					});
 				});
-			}
+			},
 		},
 		computed: {
 			showTopic() {
-				if (typeof this.tiku[parseInt(this.showTiku)] === 'object') {
-					if (this.searchKey == '') {
-						return this.tiku[parseInt(this.showTiku)];
+				if(isNaN(parseInt(this.searchKey))){
+					if (typeof this.tiku[parseInt(this.showTiku)] === 'object') {
+						if (this.searchKey == '') {
+							return this.tiku[parseInt(this.showTiku)];
+						} else {
+							let o = [];
+							this.tiku[parseInt(this.showTiku)].forEach(t => {
+								if (t.name.indexOf(this.searchKey) != -1) {
+									o.push(t)
+								}
+							});
+							return o;
+						}
 					} else {
-						let o = [];
-						this.tiku[parseInt(this.showTiku)].forEach(t => {
-							if (t.name.indexOf(this.searchKey) != -1) {
-								o.push(t)
-							}
-						});
-						return o;
+						return null;
 					}
-				} else {
-					return null;
+				}else{
+					let score = parseInt(this.searchKey);
+					if (typeof this.tiku[parseInt(this.showTiku)] === 'object') {
+						if (this.searchKey == '') {
+							return this.tiku[parseInt(this.showTiku)];
+						} else {
+							let o = [];
+							this.tiku[parseInt(this.showTiku)].forEach(t => {
+								if (parseInt(t.score) == score) {
+									o.push(t)
+								}
+							});
+							return o;
+						}
+					} else {
+						return null;
+					}
 				}
-
 			},
 			ids() {
 				let ids = []
@@ -201,6 +219,7 @@
 			};
 		},
 		created() {
+			console.log(parseInt('asd'));
 			this.id = this.$route.query.id
 			if (this.$route.query.id == undefined) {
 				this.basis().then(res => {
@@ -370,7 +389,7 @@
 				}
 			},
 			topics(t, c) {
-				return this.$http.post('/admin/topics', this.$qs.stringify({
+				return this.$http.post('/admin/Alltopics', this.$qs.stringify({
 					token: this.$store.getters.token,
 					type: this.titype[t],
 					cate: c

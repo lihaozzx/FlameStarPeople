@@ -11,7 +11,7 @@
 				</div>
 				<div class="login_inp">
 					<i class="inp_icon pasd"></i>
-					<input type="password" class="inp_val" placeholder="密码" v-model="pas" />
+					<input type="password" class="inp_val" placeholder="密码" v-model="pas" @keyup.enter="login"/>
 				</div>
 				<div class="rember">
 					<el-checkbox v-model="remeber">记住密码</el-checkbox>

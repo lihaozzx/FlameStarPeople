@@ -10,28 +10,6 @@
 
 <script>
 	export default {
-		computed: {
-			wsm() {
-				return this.$store.getters.wsmg
-			}
-		},
-		watch: {
-			wsm(n) {
-				switch (n.type) {
-					case 'nextTopic':
-						// 下一题
-						this.$router.push({
-							name: 'answer',
-							params: {
-								topic:n.data
-							}
-						})
-						break;
-					default:
-						break;
-				}
-			}
-		},
 		created() {
 			this.dizhi = this.$route.params.dizhi
 		},

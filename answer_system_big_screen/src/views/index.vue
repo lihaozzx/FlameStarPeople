@@ -19,40 +19,14 @@
 
 <script>
 	export default {
-		computed: {
-			wsm() {
-				return this.$store.getters.wsmg
+		computed:{
+			si(){
+				return this.$store.getters.stuinfo
 			}
 		},
 		watch: {
-			wsm(n) {
-				switch (n.type) {
-					case 'stuInfo':
-						// 学生信息
-						this.perNum = n.data
-						this.$store.commit('saveStuinfo', n.data);
-						break;
-					case 'nextTopic':
-						// 下一题
-						this.$router.push({
-							name: 'answer',
-							params: {
-								topic:n.data
-							}
-						})
-						break;
-					case 'startGame':
-						// 开始比赛
-						this.$router.push({
-							name: 'play',
-							params: {
-								dizhi: n.data
-							}
-						})
-						break;
-					default:
-						break;
-				}
+			si(n) {
+				this.perNum = n;
 			}
 		},
 		data() {

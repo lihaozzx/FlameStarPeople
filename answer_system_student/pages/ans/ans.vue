@@ -52,7 +52,7 @@
 				<text>锁定答案</text>
 			</view>
 			<view class="daojishi">
-				<text>倒计时：30 秒</text>
+				<text>倒计时：{{timeCost}} 秒</text>
 			</view>
 		</view>
 		<view v-else class="content">
@@ -92,7 +92,7 @@
 				}
 			},
 			timeCost(n) {
-				if (n == 0) {
+				if (n <= 0) {
 					clearInterval(this.timeCostIn);
 					if (this.iszuhe) {
 						this.subZuhe()
@@ -162,8 +162,9 @@
 				topicName: '',
 				topicId: '',
 				sub: false,
-				timeCost: 3000,
-				timeCostIn: null
+				timeCost: 30,
+				timeCostIn: null,
+				thisTopicstart:null
 			};
 		},
 		methods: {
@@ -286,7 +287,7 @@
 						data: {
 							pid: uni.getStorageSync('stuId'),
 							id: this.topicId,
-							timeCost: this.timeCost,
+							timeCost: new Date() - this.thisTopicstart.getTime(),
 							answer: out
 						},
 						success: res => {
@@ -312,21 +313,18 @@
 					this.sub = true;
 					let out = '';
 					if (this.isduoxuan) {
-						out += this.anss[this.ch]
-					} else {
-						this.ans.forEach(a => {
-							if (a.val != '') {
-								out += this.anss[a]
-							}
+						this.chs.forEach(a => {
+							out += this.anss[a]
 						});
+					} else {
+						out += this.anss[this.ch]
 					}
-					console.log(out);
 					uni.request({
 						url: this.$api + '/stock/subAnswer',
 						data: {
 							pid: uni.getStorageSync('stuId'),
 							id: this.topicId,
-							timeCost: this.timeCost,
+							timeCost: new Date() - this.thisTopicstart.getTime(),
 							answer: out
 						},
 						success: res => {
@@ -354,10 +352,11 @@
 				this.nowTopicNumstr = this.numToStr(this.nowTopicNum)
 				this.topicName = topic.name;
 				this.topicId = topic.id;
-				this.timeCost = 30000;
+				this.thisTopicstart=new Date();
+				this.timeCost = 30;
 				this.timeCostIn = setInterval(() => {
 					this.timeCost--;
-				}, 1)
+				}, 1000)
 				let newone = [...topic.xuanx];
 				let o = []
 				if (topic.type == '组合题') {
