@@ -8,8 +8,8 @@
 			<view class="title">答题结束</view>
 			<text space="emsp" style="position: absolute;font-size: 20upx;font-weight: 900;top: 50upx;">总分：{{allnum}} 分</text>
 			<view class="info">
-				<view class="topicInfo" v-for="t in topicInfo" :key="t.id" :class="parseInt(t.score)>0?'right':'wrong'">
-					<text>{{parseInt(t.score)>0?'正确':'错误'}}</text>
+				<view class="topicInfo" v-for="t in topicInfo" :key="t.id" :class="t.score!='0.0'?'right':'wrong'">
+					<text>{{t.score!='0.0'>0?'正确':'错误'}}</text>
 					<text class="nowr">{{t.score}} 分</text>
 				</view>
 			</view>
@@ -49,11 +49,11 @@
 			uni.request({
 				url: this.$api + '/stock/playerInfo',
 				data: {
-					id: uni.getStorageSync('pid')
+					id: uni.getStorageSync('id')
 				},
 				success: res => {
 					if (res.data.status == 0) {
-						this.topicInfo = res.data.data
+						this.topicInfo = res.data.data;
 					}
 				}
 			})

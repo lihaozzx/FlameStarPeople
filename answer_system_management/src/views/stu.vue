@@ -18,7 +18,7 @@
 		</div>
 
 		<el-table v-loading="loadingTable" :data="tableData" style="width: 100%" :height="height*0.5" :border='false'>
-			<el-table-column prop="number" label="序号"> </el-table-column>
+			<el-table-column prop="serial" label="序号"> </el-table-column>
 			<el-table-column prop="name" label="姓名"></el-table-column>
 			<el-table-column prop="age" label="年龄"></el-table-column>
 			<el-table-column prop="size" label="衣服尺码"></el-table-column>
@@ -42,7 +42,7 @@
 		<el-dialog title="学生信息" :visible.sync="showInfo">
 			<el-form :model="form" :label-width="formLabelWidth">
 				<el-form-item label="序号">
-					<el-input v-model="form.number" autocomplete="off"></el-input>
+					<el-input v-model="form.serial" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="姓名">
 					<el-input v-model="form.name" autocomplete="off"></el-input>

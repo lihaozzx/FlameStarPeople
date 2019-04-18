@@ -3,9 +3,9 @@
 		<jz>
 			<div class="infoans">
 				<div class="cont">
-					<span>{{topic.name}}</span>
-					<div class="ans" v-if="showans">
-						<div class="oneans" v-for="(t,k) in suiji" :key="t">
+					<span class="anstitle">{{topic.name}}</span>
+					<div class="ans" v-if="!showanss">
+						<div :class="suiji.length<5?'oneans2':'oneans'" v-for="(t,k) in suiji" :key="t">
 							<span>{{k+1}}.{{t}}</span>
 						</div>
 					</div>
@@ -25,8 +25,7 @@
 				topic: {
 					name: '无',
 					xuanx: []
-				},
-				showans: true
+				}
 			};
 		},
 		computed: {
@@ -43,6 +42,9 @@
 			},
 			topicFromX(){
 				return this.$store.getters.topic;
+			},
+			showanss(){
+				return this.$store.getters.showans;
 			}
 		},
 		watch: {
@@ -192,14 +194,22 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		box-sizing: border-box;
+		padding-top: 10px;
+	}
+	
+	.anstitle{
+		width: 95%;
+		text-align: left;
 	}
 
 	.ans {
+		width: 100%;
 		margin-top: 10px;
 		display: flex;
 		flex-wrap: wrap;
 		box-sizing: border-box;
-		padding: 10px 50px;
+		padding: 10px 50px 10px 130px;
 	}
 
 	.oneans {
@@ -208,5 +218,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+	.oneans2{
+		min-width: 450px;
+		margin: 20px 50px;
+		display: flex;
+		align-items: center;
 	}
 </style>

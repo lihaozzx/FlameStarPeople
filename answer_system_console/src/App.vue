@@ -3,10 +3,11 @@
 		<div v-if="login" class="index">
 			<div class="back"></div>
 			<div class="ti">
-				<span v-if="nowTopic==0" style="font-size: 100px; color: #BEBEBE;">{{gameInfo.ffg}}</span>
+				<span v-if="nowTopic==0" style="font-size: 50px; color: #BEBEBE;">{{gameInfo.ffg}}</span>
 				<div class="showtimu" v-else>
 					<span class="title">{{num2str(nowTopic)}}</span>
 					<span class="topictitle">{{paper[nowTopic-1].name}}</span>
+					<span style="position: absolute;left: 10%;font-size: 30px;">正确答案:{{paper[nowTopic-1].answer}}</span>
 					<div v-if="paper[nowTopic-1].type == '组合题'" class="zuhe">
 						<div :class="paper[nowTopic-1].xuanx.length == 9?'zuhe_son':'zuhe_son2' " v-for="(t,k) in paper[nowTopic-1].xuanx"
 						 :key="k">
@@ -45,12 +46,15 @@
 				<div class="btn_box">
 					<span>流程控制</span>
 					<div class="btn_box_r">
-						<div :class="nextStr.can?'disbtn':'btn'" @click="nextTopic">
+						<div v-if="daojishi==0" :class="nextStr.can?'disbtn':'btn'" @click="nextTopic">
 							<span>{{nextStr.val}}</span>
 						</div>
-						<div class="btn" @click="startAnswer">
-							<span>开始答题</span>
+						<div v-else class="disbtn">
+							<span>{{nextStr.val}}({{daojishi}})</span>
 						</div>
+						<!-- <div class="btn" @click="startAnswer">
+							<span>开始答题</span>
+						</div> -->
 						<div class="btn" @click="sendStartGame">
 							<span>开始比赛,播选题视频</span>
 						</div>
@@ -79,6 +83,7 @@
 			<span>输入授权码后将结束本次比赛</span>
 			<input type="text" v-model="code2" placeholder="授权码" @keyup.enter="endGameFun">
 			<img :src="left" style="width: 50px;height:50px ;position: relative;right: 50px;" @click="endGameFun">
+			<span @click="endGames = false" style="position: absolute;top: 20px; right: 30px;">关闭</span>
 		</div>
 	</div>
 </template>
@@ -87,13 +92,13 @@
 	import left from '@/assets/left.png'
 	export default {
 		watch: {
-// 			players(n,o) {
-// 				console.log(o);
-// 				console.log(n.length == 0);
-// 				if(n!=[]){
-// 					this.sendPlayers();
-// 				}
-// 			},
+			// 			players(n,o) {
+			// 				console.log(o);
+			// 				console.log(n.length == 0);
+			// 				if(n!=[]){
+			// 					this.sendPlayers();
+			// 				}
+			// 			},
 			wsm(n) {
 				switch (n.type) {
 					case 'infoErr':
@@ -137,7 +142,9 @@
 					can: false
 				},
 				players: [],
-				endGames: false
+				endGames: false,
+				daojishi: 0,
+				daojishiIn: null
 			}
 		},
 		methods: {
@@ -179,6 +186,17 @@
 			},
 			nextTopic() {
 				/* 下一题 */
+				if (this.daojishiIn != null) {
+					clearInterval(this.daojishiIn)
+				}
+				this.daojishi = 25;
+				this.daojishiIn = setInterval(() => {
+					if (this.daojishi <= 0) {
+						clearInterval(this.daojishiIn)
+					} else {
+						this.daojishi--;
+					}
+				}, 1000)
 				if (!this.loding) {
 					this.loding = true;
 					if (this.paper.length == 0) {
@@ -209,14 +227,16 @@
 			},
 			startAnswer() {
 				/* 开始答题 */
-				this.sendStart()
+				if (confirm('确定开始下一题吗？')) {
+					this.sendStart()
+				}
 			},
 			switchGame() {
 				/* 切换比赛 */
 				this.sendSwitch()
 				this.login = false;
 				this.code = '';
-				this.code2='';
+				this.code2 = '';
 				this.paper = [];
 				this.nowTopic = 0;
 				this.players = [];
@@ -233,7 +253,7 @@
 					this.loding = true;
 					if (this.code2 != '') {
 						this.$http.post('/stock/jsgames', this.$qs.stringify({
-							id:this.gameInfo.id,
+							id: this.gameInfo.id,
 							warrant: this.code2
 						})).then(res => {
 							if (res.data.status == 0) {
@@ -306,6 +326,8 @@
 					} else {
 						alert('查询失败')
 					}
+				}).catch(() => {
+					alert('查询失败')
 				})
 			},
 			sendResult() {
@@ -321,7 +343,7 @@
 							data: res.data.data
 						}))
 					} else {
-						alert('查询失败')
+						alert('还未答题完成')
 					}
 				})
 			},
@@ -338,8 +360,10 @@
 							data: res.data.data
 						}))
 					} else {
-						alert('查询失败')
+						alert('很遗憾，所有人都答错了')
 					}
+				}).catch(() => {
+					alert('查询失败')
 				})
 			},
 			/* websocket */
@@ -450,13 +474,19 @@
 	html,
 	body {
 		width: 1920px;
-		height: 1080px;
+		height: 100vh;
 		margin: 0;
+	}
+
+	html::-webkit-scrollbar,
+	body::-webkit-scrollbar {
+		display: none;
+		/* width: 3px; */
 	}
 
 	#app {
 		width: 1920px;
-		height: 1080px;
+		height: 100vh;
 		position: relative;
 	}
 
@@ -498,7 +528,7 @@
 
 	.ti {
 		width: 100%;
-		height: 50%;
+		height: 30%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -511,6 +541,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		position: relative;
 	}
 
 	.zuhe {
@@ -523,18 +554,16 @@
 	.tiankong {
 		width: 600px;
 		height: 280px;
-		display: flex;
-		flex-direction: column;
 		overflow-y: auto;
 	}
 
 	.xuanxiang {
 		width: 400px;
 		margin: 10px 50px;
-		height: 70px;
+		height: 40px;
 		background-color: #BEBEBE;
 		color: white;
-		font-size: 35px;
+		font-size: 20px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -567,7 +596,7 @@
 
 	.title {
 		color: #595959;
-		font-size: 72px;
+		font-size: 36px;
 		font-weight: 900;
 	}
 
@@ -575,7 +604,7 @@
 		width: 1200px;
 		text-align: center;
 		color: #595959;
-		font-size: 64px;
+		font-size: 32px;
 	}
 
 	.anniu {
@@ -609,7 +638,7 @@
 
 	.btn {
 		width: 280px;
-		height: 80px;
+		height: 60px;
 		background-color: #1890FF;
 		border-radius: 10px;
 		display: flex;
@@ -625,7 +654,7 @@
 
 	.disbtn {
 		width: 280px;
-		height: 80px;
+		height: 60px;
 		background-color: #BEBEBE;
 		border-radius: 10px;
 		display: flex;
@@ -633,7 +662,7 @@
 		justify-content: center;
 		color: white;
 		font-size: 30px;
-		margin: 0 50px;
+		margin: 15px 50px;
 		-webkit-user-select: none;
 		user-select: none;
 	}

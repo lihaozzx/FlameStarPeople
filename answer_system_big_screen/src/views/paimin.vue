@@ -7,6 +7,7 @@
 						<div class="img_title_rank" :style="'background-image: url('+k.img+');'"></div>
 						<span>{{s+1}}</span>
 						<span>{{k.name}}</span>
+						<span>{{k.score}} 分</span>
 					</div>
 				</div>
 			</div>

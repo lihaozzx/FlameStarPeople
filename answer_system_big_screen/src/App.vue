@@ -36,6 +36,7 @@
 				switch (n.type) {
 					case 'nextTopic':
 						// 下一题
+						this.$store.commit('showansno');
 						if (this.$router.history.current.name == "answer") {
 							this.$store.commit('saveTopic', n.data);
 							this.$store.commit('nextAns');
@@ -57,9 +58,11 @@
 					case 'seeans':
 						/* 公布答案 */
 						this.$store.commit('showans');
-						this.$router.push({
-							name: 'answer'
-						})
+						if (this.$router.history.current.name != "answer") {
+							this.$router.push({
+								name: 'answer'
+							})
+						}
 						break;
 					case 'seeRaking':
 						/* 显示选手排名页面 */

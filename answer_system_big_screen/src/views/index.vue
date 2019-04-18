@@ -6,9 +6,9 @@
 					<div :class="perNum.length<10?'perInfo1':perNum.length<17?'perInfo2':perNum.length<26?'perInfo3':perNum.length<37?'perInfo4':perNum.length<50?'perInfo5':'perInfo6' "
 					 v-for="(p,k) in perNum" :key="k">
 						<div class="infos" :class="p.isSure?'coming':''">
-							<span>{{p.name}}</span>
+							<span>{{p.school}}</span>
 							<div class="head" v-if="perNum.length<26" :style="'background-image: url('+p.img+');'"></div>
-							<span>名称</span>
+							<span>{{p.name}}</span>
 						</div>
 					</div>
 				</div>

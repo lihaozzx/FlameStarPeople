@@ -71,6 +71,7 @@
 		<el-dialog title="人员信息" :visible.sync="per" width="70%">
 			<el-table :data="tableData" style="width: 100%" :height="500" :border='false'>
 				<el-table-column prop="number" label="座位号"></el-table-column>
+				<el-table-column prop="serial" label="序号"></el-table-column>
 				<el-table-column prop="paimin" label="排名"></el-table-column>
 				<el-table-column prop="name" label="姓名"></el-table-column>
 				<el-table-column prop="class" label="班级"></el-table-column>

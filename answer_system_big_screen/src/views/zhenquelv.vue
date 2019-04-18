@@ -6,7 +6,7 @@
 					<span>正确<br>{{info.dui}}人</span>
 					<span>错误<br>{{info.cuo}}人</span>
 				</div>
-				<span style="position: relative;top: 200px;font-size: 50px;color: #F0B74A;font-weight: 900;">正确率{{info.duib}}人</span>
+				<span style="position: relative;top: 200px;font-size: 50px;color: #F0B74A;font-weight: 900;">正确率 {{info.duib*100}} %</span>
 				<img :src="asd1" class="asdasd1">
 				<img :src="asd2" class="asdasd2">
 			</div>
@@ -78,7 +78,7 @@
 	}
 	.asdasd1{
 		width: 400px;
-		position: absolute;top: -50px;
+		position: absolute;top: -50px;left: 275px;
 	}
 	.asdasd2{
 		width: 500px;

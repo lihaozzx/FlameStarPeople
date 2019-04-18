@@ -10,6 +10,7 @@ export default new Vuex.Store({
 		ws: null,
 		message: null,
 		si: [],
+		showans:false,
 		topic: {
 			name: '无',
 			xuanx: []
@@ -48,6 +49,12 @@ export default new Vuex.Store({
 				name: '无',
 				xuanx: []
 			}
+		},
+		showans(state){
+			state.showans = true;
+		},
+		showansno(state){
+			state.showans = false;
 		}
 	},
 	actions: {
@@ -73,6 +80,9 @@ export default new Vuex.Store({
 		},
 		topic(state) {
 			return state.topic;
+		},
+		showans(state){
+			return state.showans;
 		}
 	}
 })

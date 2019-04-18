@@ -44,7 +44,7 @@ export default new Router({
 			name: 'play',
 			component: play,
 			meta: {
-				title: '视频'
+				title: '准备'
 			}
 		},
 		{

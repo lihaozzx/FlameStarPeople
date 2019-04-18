@@ -20,7 +20,7 @@
 
 		<el-table v-loading="loadingTable" :data="canaddStu" style="width: 100%" :height="height*0.55" :border='false' ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange">
 			<el-table-column type="selection" width="55"></el-table-column>
-			<el-table-column prop="number" label="序号"> </el-table-column>
+			<el-table-column prop="serial" label="序号"> </el-table-column>
 			<el-table-column prop="name" label="姓名"></el-table-column>
 			<el-table-column prop="age" label="年龄"></el-table-column>
 			<el-table-column prop="size" label="衣服尺码"></el-table-column>
@@ -47,6 +47,7 @@
 						<el-input :disabled="!scope.row.isnew" v-model="scope.row.number" placeholder="座位号"></el-input>
 					</template>
 				</el-table-column>
+				<el-table-column prop="serial" label="序号"></el-table-column>
 				<el-table-column prop="name" label="姓名"></el-table-column>
 				<el-table-column prop="school" label="学校"></el-table-column>
 				<el-table-column prop="grade" label="年级"></el-table-column>
@@ -177,12 +178,12 @@
 			},
 			handleSelectionChange(val) {
 				this.choseStu = [];
-				val.forEach(v => {
-					let a = {...v,
+				for (var i = 0; i < val.length; i++) {
+					let a = {...val[i],
+					number:i+1,
 					isnew:true};
-					a.number = ''
 					this.choseStu.push(a);
-				})
+				}
 			},
 			seeInfo() {
 				this.showInfo = true;

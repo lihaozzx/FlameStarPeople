@@ -33,11 +33,11 @@
 				<text>锁定答案</text>
 			</view>
 			<view class="daojishi">
-				<text>倒计时：30 秒</text>
+				<text>倒计时：{{timeCost}} 秒</text>
 			</view>
 		</view>
 		<view v-else-if="start&&iszuhe==false" class="content">
-			<text class="fs28 c8c">{{nowTopicNumstr}}</text>
+			<text class="fs28 c8c" space="emsp">{{nowTopicNumstr}} {{topicType}}</text>
 			<text class="ts36 c8c">{{topicName}}</text>
 
 			<view class="xuanzedaan fs30">
@@ -75,12 +75,14 @@
 					case 'nextTopic':
 						// 题目信息
 						this.timuxinxi = n.data;
-						break;
-					case 'start!!!!!!':
-						// 开始
 						this.start = true;
 						this.setTopic(this.timuxinxi);
 						break;
+// 					case 'start!!!!!!':
+// 						// 开始
+// 						this.start = true;
+// 						this.setTopic(this.timuxinxi);
+// 						break;
 					case 'gameover':
 						// 题目信息
 						uni.redirectTo({
@@ -159,10 +161,11 @@
 				anss: ['asdsad', 'asdqwdwd', '按时吃是阿深V阿SaaS大V阿飞大VAV发傻撒大声地', 's发噶大V嘎都是阿斯蒂芬打怪打怪阿飞不上辅导班伤风败俗辅导班是是否报商务部伤风败俗发表是'],
 				nowTopicNumstr: '',
 				nowTopicNum: 0,
+				topicType:'',
 				topicName: '',
 				topicId: '',
 				sub: false,
-				timeCost: 30,
+				timeCost: 25,
 				timeCostIn: null,
 				thisTopicstart:null
 			};
@@ -314,11 +317,12 @@
 					let out = '';
 					if (this.isduoxuan) {
 						this.chs.forEach(a => {
-							out += this.anss[a]
+							out += this.anss[a]+"@";
 						});
 					} else {
 						out += this.anss[this.ch]
 					}
+					out = out.substring(0,out.length)
 					uni.request({
 						url: this.$api + '/stock/subAnswer',
 						data: {
@@ -352,8 +356,12 @@
 				this.nowTopicNumstr = this.numToStr(this.nowTopicNum)
 				this.topicName = topic.name;
 				this.topicId = topic.id;
+				this.topicType = topic.type;
 				this.thisTopicstart=new Date();
-				this.timeCost = 30;
+				this.timeCost = 25;
+				if(this.timeCostIn!=null){
+					clearInterval(this.timeCostIn);
+				}
 				this.timeCostIn = setInterval(() => {
 					this.timeCost--;
 				}, 1000)

@@ -28,7 +28,7 @@
 				<div v-else>
 					<div class="ovy">
 						<el-table :data="addStu.tableData" style="width: 100%" :border='false'>
-							<el-table-column prop="number" label="序号"></el-table-column>
+							<el-table-column prop="serial" label="序号"></el-table-column>
 							<el-table-column prop="name" label="姓名"></el-table-column>
 							<el-table-column prop="age" label="年龄"></el-table-column>
 							<el-table-column prop="size" label="衣服尺码"></el-table-column>
@@ -282,7 +282,7 @@
 				})).then(res => {
 					if (res.data.status == 0) {
 						this.$notify.success({
-							title: '错误',
+							title: '成功',
 							message: res.data.msg,
 							showClose: false
 						});
@@ -293,6 +293,8 @@
 						}
 						this.showInfo = false;
 						this.inAdd = false;
+						window.location.reload()
+						
 					} else {
 						this.$notify.success({
 							title: '错误',
@@ -339,6 +341,7 @@
 						}
 						this.showInfo = false;
 						this.inAdd = false;
+						window.location.reload()
 					} else {
 						this.$notify.success({
 							title: '错误',
@@ -388,6 +391,7 @@
 						}
 						this.showInfo = false;
 						this.inAdd = false;
+						window.location.reload()
 					} else {
 						this.$notify.success({
 							title: '错误',
