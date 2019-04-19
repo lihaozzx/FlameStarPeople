@@ -50,6 +50,9 @@
 				<el-form-item label="年龄">
 					<el-input v-model="form.age" autocomplete="off"></el-input>
 				</el-form-item>
+				<el-form-item label="学校">
+					<el-input v-model="form.school" autocomplete="off"></el-input>
+				</el-form-item>
 				<el-form-item label="年级">
 					<el-input v-model="form.grade" autocomplete="off"></el-input>
 				</el-form-item>
@@ -99,6 +102,7 @@
 					sname: ''
 				},
 				form: {
+					school:'',
 					number: '',
 					name: '',
 					age: '',

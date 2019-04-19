@@ -6,7 +6,7 @@
 		</view>
 
 		<view v-if="start&&iszuhe" class="content">
-			<text class="fs28 c8c">{{nowTopicNumstr}}</text>
+			<text class="fs28 c8c" space="emsp">{{nowTopicNumstr}} {{topicType}}</text>
 			<text class="ts36 c8c">{{topicName}}</text>
 			<view class="ans">
 				<view v-for="(k,i) in ans" :key="i" class="one" :class="nowCh==i?'ch':' no'" @tap="chFont(i)">{{k.val}}</view>
@@ -56,7 +56,8 @@
 			</view>
 		</view>
 		<view v-else class="content">
-			<text>请看大屏幕等待比赛开始</text>
+			<view style="height: 30%;"></view>
+			<text>比赛即将开始，请注意屏幕信息</text>
 		</view>
 	</view>
 	</view>
@@ -74,7 +75,8 @@
 				switch (n.type) {
 					case 'nextTopic':
 						// 题目信息
-						this.timuxinxi = n.data;
+						this.timuxinxi = n.data.topic;
+						this.nowTopicNum= n.data.num+1;
 						this.start = true;
 						this.setTopic(this.timuxinxi);
 						break;
@@ -306,6 +308,9 @@
 							}
 							if (res.data.status == 0) {
 								out(res.data)
+								uni.showToast
+							}else{
+								
 							}
 						}
 					})
@@ -322,7 +327,10 @@
 					} else {
 						out += this.anss[this.ch]
 					}
-					out = out.substring(0,out.length)
+					if(this.isduoxuan){
+						out = out.substring(0,out.length-1);
+					}
+					console.log(out);
 					uni.request({
 						url: this.$api + '/stock/subAnswer',
 						data: {
@@ -344,6 +352,8 @@
 							}
 							if (res.data.status == 0) {
 								out(res.data)
+							}else{
+								out(res.data)
 							}
 						}
 					})
@@ -352,8 +362,10 @@
 			},
 			setTopic(topic) {
 				this.sub = false;
-				this.nowTopicNum++;
 				this.nowTopicNumstr = this.numToStr(this.nowTopicNum)
+				while(topic.name.indexOf('#')!= -1){
+					topic.name = topic.name.substring(0,topic.name.indexOf('#'))+' __ ' + topic.name.substring(topic.name.indexOf('#')+1,topic.name.length)
+				}
 				this.topicName = topic.name;
 				this.topicId = topic.id;
 				this.topicType = topic.type;

@@ -7,6 +7,8 @@
 		<view class="content">
 			<view class="title">答题结束</view>
 			<text space="emsp" style="position: absolute;font-size: 20upx;font-weight: 900;top: 50upx;">总分：{{allnum}} 分</text>
+			<text style="position: absolute;font-size: 30upx;font-weight: 900;top: 0upx;left: 700upx;">{{name}}</text>
+			<text style="position: absolute;font-size: 30upx;font-weight: 900;top: 0upx;left: 900upx;">{{school}}</text>
 			<view class="info">
 				<view class="topicInfo" v-for="t in topicInfo" :key="t.id" :class="t.score!='0.0'?'right':'wrong'">
 					<text>{{t.score!='0.0'>0?'正确':'错误'}}</text>
@@ -56,11 +58,15 @@
 						this.topicInfo = res.data.data;
 					}
 				}
-			})
+			});
+			this.name = uni.getStorageSync('stuName');
+			this.school = uni.getStorageSync('stuSchool');
 		},
 		data() {
 			return {
-				topicInfo: []
+				topicInfo: [],
+				name:'',
+				school:''
 			};
 		},
 		methods: {

@@ -13,8 +13,8 @@
 				</div>
 				<div class="div_text">
 					<span class="ts16">
-						<span class="o26">最后修改日期：</span>
-						<span class="a26">2018</span>
+						<span class="o26">总分：</span>
+						<span class="a26">{{s.total}}</span>
 					</span>
 				</div>
 				<div class="div_addPer" @click="toSee(s.id)">

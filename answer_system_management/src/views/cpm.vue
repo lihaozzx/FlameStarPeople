@@ -77,7 +77,7 @@
 				<el-table-column prop="class" label="班级"></el-table-column>
 				<el-table-column prop="timeCost" label="答题总时长">
 					<template slot-scope="scope">
-						<span>{{(scope.row.timeCost/60+'').split('.')[0]}}分{{scope.row.timeCost%60}}秒</span>
+						<span>{{(scope.row.timeCost/1000/60+'').split('.')[0]}}分{{(scope.row.timeCost/1000%60+'').split('.')[0]}}秒</span>
 					</template>
 				</el-table-column>
 				<el-table-column prop="status" label="状态">
@@ -294,7 +294,7 @@
 					this.paper.splice(k, 1, false);
 					this.oldPaper = this.sessionInfo[k].eid
 				} else {
-					if (this.sessionInfo[k].video != this.oldPaper) {
+					if (this.sessionInfo[k].eid != this.oldPaper) {
 						let load = this.$loading({
 							fullscreen: true
 						});
@@ -337,13 +337,14 @@
 					this.date.splice(k, 1, false);
 					this.oldDate = this.sessionInfo[k].date
 				} else {
-					if (this.sessionInfo[k].video != this.oldPaper) {
+					new Date(this.sessionInfo[k].date.getFullYear()+'-'+this.sessionInfo[k].date.getMonth()+'-'+this.sessionInfo[k].date.getDate())
+					if (this.sessionInfo[k].date != this.oldDate) {
 						let load = this.$loading({
 							fullscreen: true
 						});
 						this.$http.post('/admin/upGames', this.$qs.stringify({
 							id: id,
-							date: this.sessionInfo[k].date
+							date: this.sessionInfo[k].date.getFullYear()+'-'+(this.sessionInfo[k].date.getMonth()+1)+'-'+this.sessionInfo[k].date.getDate()
 						})).then(res => {
 							if (res.data.status == 0) {
 								this.$notify.success({

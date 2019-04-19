@@ -69,6 +69,8 @@
 								this.stuInfo = stu;
 								uni.setStorageSync('stuId', stu.pid);
 								uni.setStorageSync('id', stu.id);
+								uni.setStorageSync('stuName',stu.name);
+								uni.setStorageSync('stuSchool',stu.school);
 								this.show = 2;
 							}
 						});

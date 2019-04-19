@@ -27,25 +27,31 @@
 					<span>大屏幕</span>
 					<div class="btn_box_r">
 						<div class="btn" @click="sendToindex">
-							<span>显示选手到位页面</span>
+							<span>选手到位情况</span>
 						</div>
 						<div class="btn" @click="sendSeeAns">
 							<span>公布答案</span>
 						</div>
 						<div class="btn" @click="sendRaking">
-							<span>显示选手排名页面</span>
+							<span>选手实时排名</span>
 						</div>
 						<div class="btn" @click="sendTherr">
-							<span>显示本题答对前三</span>
+							<span>本题最快前三名</span>
 						</div>
 						<div class="btn" @click="sendResult">
-							<span>显示本题正确率</span>
+							<span>本题正确率情况</span>
+						</div>
+						<div class="btn" @click="sendSeeTopic">
+							<span>显示题干</span>
 						</div>
 					</div>
 				</div>
 				<div class="btn_box">
 					<span>流程控制</span>
 					<div class="btn_box_r">
+						<div class="btn" @click="sendStartGame">
+							<span>开始比赛</span>
+						</div>
 						<div v-if="daojishi==0" :class="nextStr.can?'disbtn':'btn'" @click="nextTopic">
 							<span>{{nextStr.val}}</span>
 						</div>
@@ -55,17 +61,17 @@
 						<!-- <div class="btn" @click="startAnswer">
 							<span>开始答题</span>
 						</div> -->
-						<div class="btn" @click="sendStartGame">
-							<span>开始比赛,播选题视频</span>
-						</div>
 						<div class="btn" @click="sendPlayers">
-							<span>再次发送选手信息</span>
+							<span>发送选手信息</span>
 						</div>
 						<div class="btn" @click="endGame">
 							<span>结束比赛</span>
 						</div>
 						<div class="btn" @click="switchGame">
 							<span>切换比赛</span>
+						</div>
+						<div class="btn" @click="sendRule">
+							<span>显示规则</span>
 						</div>
 					</div>
 				</div>
@@ -283,7 +289,15 @@
 			sendTopic() {
 				this.websock.send(this.$mso({
 					type: 'nextTopic',
-					data: this.paper[this.nowTopic - 1]
+					data: {
+						num:this.nowTopic-1,
+						topic:this.paper[this.nowTopic - 1]
+					}
+				}))
+			},
+			sendSeeTopic() {
+				this.websock.send(this.$mso({
+					type: 'seeTopic',
 				}))
 			},
 			sendToindex() {
@@ -365,6 +379,11 @@
 				}).catch(() => {
 					alert('查询失败')
 				})
+			},
+			sendRule(){
+				this.websock.send(this.$mso({
+					type: 'seeRule',
+				}));
 			},
 			/* websocket */
 			initWebSocket() { //初始化weosocket
@@ -545,10 +564,32 @@
 	}
 
 	.zuhe {
-		width: 600px;
+		width: 610px;
 		height: 260px;
 		display: flex;
 		flex-wrap: wrap;
+		overflow-y: auto;
+	}
+
+	.zuhe::-webkit-scrollbar,.tiankong::-webkit-scrollbar {
+		/*滚动条整体样式*/
+		width: 10px;
+		/*高宽分别对应横竖滚动条的尺寸*/
+		height: 1px;
+	}
+
+	.zuhe::-webkit-scrollbar-thumb,.tiankong::-webkit-scrollbar-thumb {
+		/*滚动条里面小方块*/
+		border-radius: 10px;
+		-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		background: #8c8c8c;
+	}
+
+	.zuhe::-webkit-scrollbar-track,.tiankong::-webkit-scrollbar-track {
+		/*滚动条里面轨道*/
+		-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		border-radius: 10px;
+		background: #EDEDED;
 	}
 
 	.tiankong {
@@ -572,7 +613,7 @@
 
 	.zuhe_son {
 		width: 120px;
-		margin: 0 40px;
+		margin: 10px 40px;
 		height: 70px;
 		background-color: #BEBEBE;
 		color: white;
@@ -584,7 +625,7 @@
 
 	.zuhe_son2 {
 		width: 100px;
-		margin: 0 20px;
+		margin: 10px 20px;
 		height: 70px;
 		background-color: #BEBEBE;
 		color: white;

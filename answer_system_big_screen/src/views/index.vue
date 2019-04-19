@@ -8,7 +8,7 @@
 						<div class="infos" :class="p.isSure?'coming':''">
 							<span>{{p.school}}</span>
 							<div class="head" v-if="perNum.length<26" :style="'background-image: url('+p.img+');'"></div>
-							<span>{{p.name}}</span>
+							<span>{{p.name}} | {{p.number}}</span>
 						</div>
 					</div>
 				</div>
@@ -71,17 +71,18 @@
 		border: 1px solid #F0B74A;
 		width: 100%;
 		height: 100%;
-		color: #F0B74A;
+		color: #FFF;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		flex-direction: column;
 		box-sizing: border-box;
 		padding: 1%;
+		
 	}
 
 	.coming {
-		background-color: #F5222D;
+		background-color: #52c41a;
 	}
 
 	.perinfo {

@@ -13,6 +13,12 @@
 						<span>{{topic.answer}}</span>
 					</div>
 				</div>
+				<div class="dao">
+					<span>{{daojishi}} 秒</span>
+				</div>
+				<div class="typess">
+					<span>{{topic.type}}</span>
+				</div>
 			</div>
 		</jz>
 	</div>
@@ -45,6 +51,9 @@
 			},
 			showanss(){
 				return this.$store.getters.showans;
+			},
+			daojishi(){
+				return this.$store.getters.daojishi;
 			}
 		},
 		watch: {
@@ -53,6 +62,12 @@
 				document.title = this.numToStr(n);
 			},
 			topicFromX(n){
+				while(n.answer.indexOf('@')!= -1){
+					n.answer = n.answer.substring(0,n.answer.indexOf('@'))+'、' + n.answer.substring(n.answer.indexOf('@')+1,n.answer.length)
+				}
+				while(n.name.indexOf('#')!= -1){
+					n.name = n.name.substring(0,n.name.indexOf('#'))+' __ ' + n.name.substring(n.name.indexOf('#')+1,n.name.length)
+				}
 				this.topic = n;
 			}
 		},
@@ -66,6 +81,9 @@
 			}
 			this.$store.commit('changeTitle', this.numToStr(this.ans));
 			document.title = this.numToStr(this.ans);
+			this.$a().then(res=>{
+				console.log(res);
+			})
 		},
 		methods: {
 			// 组件的方法
@@ -185,6 +203,7 @@
 		justify-content: center;
 		font-size: 64px;
 		color: #F0B74A;
+		position: relative;
 	}
 
 	.cont {
@@ -205,8 +224,11 @@
 
 	.ans {
 		width: 100%;
+		height: 76%;
 		margin-top: 10px;
 		display: flex;
+		justify-content: center;
+		align-items: center;
 		flex-wrap: wrap;
 		box-sizing: border-box;
 		padding: 10px 50px 10px 130px;
@@ -224,5 +246,19 @@
 		margin: 20px 50px;
 		display: flex;
 		align-items: center;
+	}
+	.dao{
+		position: absolute;
+		top: -100px;
+		right: 80px;
+		font-size: 48px;
+		color: #F0B74A;
+	}
+	.typess{
+		position: absolute;
+		top: -100px;
+		left: 80px;
+		font-size: 48px;
+		color: #F0B74A;
 	}
 </style>

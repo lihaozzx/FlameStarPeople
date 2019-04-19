@@ -6,6 +6,7 @@ import paimin from './views/paimin.vue'
 import answer from './views/answer.vue'
 import play from './views/playVideo.vue'
 import correctRate from './views/zhenquelv.vue'
+import tupian from './views/tupian.vue'
 
 Vue.use(Router);
 
@@ -53,6 +54,14 @@ export default new Router({
 			component: correctRate,
 			meta: {
 				title: '本题正确率'
+			}
+		},
+		{
+			path: '/rule',
+			name: 'rule',
+			component: tupian,
+			meta: {
+				title: '规则'
 			}
 		}
 		//     {

@@ -14,7 +14,9 @@ export default new Vuex.Store({
 		topic: {
 			name: '无',
 			xuanx: []
-		}
+		},
+		time:0,
+		timeIn:null
 	},
 	mutations: {
 		changeTitle(state, k) {
@@ -23,8 +25,12 @@ export default new Vuex.Store({
 		initAns(state) {
 			state.answerNum = 0
 		},
-		nextAns(state) {
-			state.answerNum++;
+		nextAns(state,k) {
+			if(k){
+				state.answerNum=k;
+			}else{
+				state.answerNum++;
+			}
 		},
 		initws(state, k) {
 			state.ws = k;
@@ -55,6 +61,19 @@ export default new Vuex.Store({
 		},
 		showansno(state){
 			state.showans = false;
+		},
+		startDao(state){
+			state.time = 25;
+			if(state.timeIn!=null){
+				clearInterval(state.timeIn);
+			}
+			state.timeIn = setInterval(()=>{
+				if(state.time <= 0){
+					clearInterval(state.timeIn);
+				}else{
+					state.time--;
+				}
+			},1000)
 		}
 	},
 	actions: {
@@ -83,6 +102,9 @@ export default new Vuex.Store({
 		},
 		showans(state){
 			return state.showans;
+		},
+		daojishi(state){
+			return state.time;
 		}
 	}
 })

@@ -36,16 +36,26 @@
 				switch (n.type) {
 					case 'nextTopic':
 						// 下一题
+						this.$store.commit('startDao');
 						this.$store.commit('showansno');
 						if (this.$router.history.current.name == "answer") {
-							this.$store.commit('saveTopic', n.data);
-							this.$store.commit('nextAns');
+							this.$store.commit('saveTopic', n.data.topic);
+							this.$store.commit('nextAns', n.data.num + 1);
 						} else {
 							this.$router.push({
 								name: 'answer',
 								params: {
-									topic: n.data
+									topic: n.data.topic
 								}
+							})
+						}
+						break;
+					case 'seeTopic':
+						// 跳转题干
+						this.$store.commit('showansno');
+						if (this.$router.history.current.name != "answer") {
+							this.$router.push({
+								name: 'answer'
 							})
 						}
 						break;
@@ -114,6 +124,12 @@
 							params: {
 								dizhi: n.data
 							}
+						})
+						break;
+					case 'seeRule':
+						// 开始比赛
+						this.$router.push({
+							name: 'rule',
 						})
 						break;
 				}

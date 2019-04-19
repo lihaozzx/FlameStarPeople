@@ -1,7 +1,7 @@
 <template>
 	<div class="show">
 		<div class="div_head">
-			<span class="ts24">{{ischange?pagerName:'新建试卷'}}({{paperTopic.length}}题)</span>
+			<span class="ts24">{{ischange?pagerName:'新建试卷'}}({{paperTopic.length}}题)({{allnum}}分)</span>
 			<div class="search">
 				<el-select v-model="value" placeholder="请选择主题" :disabled="id!=undefined">
 					<el-option v-for="item in cates" :key="item" :label="item" :value="item">
@@ -190,11 +190,18 @@
 				}
 			},
 			ids() {
-				let ids = []
+				let ids = [];
 				this.paperTopic.forEach(p => {
-					ids.push(p.id)
-				})
-				return ids
+					ids.push(p.id);
+				});
+				return ids;
+			},
+			allnum(){
+				let score = 0;
+				this.paperTopic.forEach(p => {
+					score += parseInt(p.score);
+				});
+				return score;
 			}
 		},
 		data() {
@@ -352,7 +359,7 @@
 							token: this.$store.getters.token,
 							ids: this.ids,
 							name: this.pagerName,
-							cate: this.value
+							cate: this.value,
 						})).then(res => {
 							if (res.data.status == 0) {
 								setTimeout(() => {
