@@ -8,8 +8,6 @@ axios.defaults.baseURL = '';
 axios.defaults.timeout = 5000;
 Vue.prototype.$http = axios;
 
-axios.get('http://11.22.33.12/asd')//测试
-
 axios.interceptors.request.use(function(config) {
 	// 在发送请求之前做些什么
 	let a = config.url.split('/');
@@ -37,7 +35,7 @@ axios.interceptors.response.use(function(response) {
 		}
 	} else {
 		Vue.prototype.$notify({
-			title: 'HTML 片段',
+			title: '异常',
 			dangerouslyUseHTMLString: true,
 			iconClass: 'el-icon-warning',
 			message: '<strong>服务器未响应，请稍后再试</strong>',

@@ -1,17 +1,35 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import index from './views/index.vue'
+import answer from './views/answer.vue'
+import info from './views/info.vue'
 
 
 Vue.use(Router);
 
 export default new Router({
 	routes: [{
-			path: '/',
+			path: '/asd',
 			name: 'index',
 			component: index,
 			meta: {
 				title: '立德树人'
+			}
+		},
+		{
+			path: '/qwe',
+			name: 'answer',
+			component: answer,
+			meta: {
+				title: '每日答题'
+			}
+		},
+		{
+			path: '/',
+			name: 'info',
+			component: info,
+			meta: {
+				title: '选手信息'
 			}
 		}
 		//     {
