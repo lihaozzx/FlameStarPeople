@@ -29,7 +29,7 @@ axios.interceptors.response.use(function(response) {
 	if (response.status == 200) {
 		if (response.data.status >= 1000) {
 			// 1000表示token失效，重新登录
-			router.push('asd');
+			Vue.prototype.$router.push('asd');
 		} else {
 			return response;
 		}

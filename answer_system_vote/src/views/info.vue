@@ -7,13 +7,46 @@
 			<div class="centent">
 				<span class="tongzhi">重要通知：字段字段字段字段字段字段字段字段字段字段字段字段字</span>
 				<div class="video_div" @click="showcontrols">
-					<video v-if="!showc" :src="shipin" ></video>
+					<video v-if="!showc" :src="shipin"></video>
 					<video v-else :src="shipin" controls></video>
+				</div>
+				<div class="info">
+					<div class="stu_info">
+						<span class="s1">张三</span>
+						<span class="s2">三年级|成都市青羊区第七中学</span>
+					</div>
+					<div class="rank_info">
+						<span class="s1">赛区状元榜结束倒计时</span>
+						<span class="s2">8天5小时42分18秒</span>
+					</div>
+					<div class="num_info">
+						<div class="num">
+							<span class="s1">上榜值</span>
+							<span class="s2">230000</span>
+						</div>
+						<div class="num">
+							<span class="s1">当前排名</span>
+							<span class="s2">20</span>
+						</div>
+					</div>
+				</div>
+				<div class="book">
+					<div class="title">
+						<span class="s1">国学家书</span>
+						<span class="s2">已有7777名选手书写家书</span>
+					</div>
+				</div>
+				<div class="relative">
+					<div class="title">
+						<span class="s1">亲友关爱</span>
+						<span class="s2">已有7777名亲友加油</span>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="btn_bottom">
- <!--  -->
+			<div class="btn">每日一卷</div>
+			<div class="btn">助他上榜</div>
 		</div>
 	</div>
 </template>
@@ -64,7 +97,6 @@
 		.centent {
 			width: 85%;
 			margin: 0 calc(15% / 2);
-			background-color: #A01C19;
 			position: relative;
 			top: -150px;
 			z-index: 2;
@@ -77,17 +109,156 @@
 
 			.video_div {
 				width: 100%;
+				margin-top: 30px;
 
 				video {
 					width: 100%
+				}
+			}
+
+			.info {
+				width: 100%;
+				border-bottom: 2px solid #dfdfdf;
+				padding-bottom: 32px;
+
+				.stu_info {
+					display: flex;
+					flex-direction: column;
+					margin-top: 26px;
+
+					.s1 {
+						font-size: 1.6rem;
+						font-weight: 900;
+					}
+
+					.s2 {
+						margin-top: 6px;
+						font-size: 1.4rem;
+						color: rgba(0, 0, 0, 0.3);
+					}
+				}
+
+				.rank_info {
+					margin-top: 18px;
+					height: 80px;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: space-around;
+					border: 2px solid rgba(171, 31, 30, 1);
+					border-radius: 5px;
+
+					.s1 {
+						font-size: 1.4rem;
+					}
+
+					.s2 {
+						font-size: 1.8rem;
+						color: #AB1F1E;
+					}
+				}
+
+				.num_info {
+					width: 100%;
+					box-sizing: border-box;
+					padding: 0 4px;
+					margin-top: 20px;
+					display: flex;
+					justify-content: space-between;
+
+					.num {
+						width: 120px;
+						height: 120px;
+						border-radius: 63px;
+						border: 5px solid rgba(249, 241, 202, 1);
+						background-color: #FEFAE9;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						flex-direction: column;
+
+						.s1 {
+							font-size: 1.4rem;
+						}
+
+						.s2 {
+							font-size: 1.8rem;
+							color: #AB1F1E;
+						}
+					}
+				}
+			}
+
+			.book {
+				width: 100%;
+				border-bottom: 2px solid #dfdfdf;
+				padding-bottom: 32px;
+
+				.title {
+					display: flex;
+					flex-direction: column;
+					margin-top: 26px;
+
+					.s1 {
+						font-size: 1.6rem;
+						font-weight: 900;
+					}
+
+					.s2 {
+						margin-top: 6px;
+						font-size: 1.2rem;
+						color: rgba(0, 0, 0, 0.3);
+					}
+				}
+			}
+
+			.relative {
+				width: 100%;
+				border-bottom: 2px solid #dfdfdf;
+				padding-bottom: 32px;
+
+				.title {
+					display: flex;
+					flex-direction: column;
+					margin-top: 26px;
+
+					.s1 {
+						font-size: 1.6rem;
+						font-weight: 900;
+					}
+
+					.s2 {
+						margin-top: 6px;
+						font-size: 1.2rem;
+						color: rgba(0, 0, 0, 0.3);
+					}
 				}
 			}
 		}
 	}
 
 	.btn_bottom {
+		width: 100%;
 		height: 80px;
 		position: fixed;
 		bottom: 0;
+		box-sizing: border-box;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 18px;
+
+		.btn {
+			width:150px;
+height:45px;
+			background: rgba(249, 241, 202, 1);
+			opacity: 1;
+			border-radius: 10px;
+			font-size: 2rem;
+			color: #AB1F1E;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 	}
 </style>

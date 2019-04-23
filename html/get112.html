@@ -1,230 +1,25 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta name="robots" content="noindex, nofollow, noarchive" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Database SQL: &quot;SELECT * FROM xc_players WHERE id in(83,82,81,80,79,78,77,76,75,74,73,72,71,70,69) and status = 0 ORDER BY number asc&quot;, ErrorInfo: Unknown column 'number' in 'order clause'</title><style>body{padding:0;margin:0;word-wrap:break-word;word-break:break-all;font-family:Courier,Arial,sans-serif;background:#EBF8FF;color:#5E5E5E;}div,h2,p,span{margin:0; padding:0;}ul{margin:0; padding:0; list-style-type:none;font-size:0;line-height:0;}#body{width:918px;margin:0 auto;}#main{width:918px;margin:13px auto 0 auto;padding:0 0 35px 0;}#contents{width:918px;float:left;margin:13px auto 0 auto;background:#FFF;padding:8px 0 0 9px;}#contents h2{display:block;background:#CFF0F3;font:bold 20px;padding:12px 0 12px 30px;margin:0 10px 22px 1px;}#contents ul{padding:0 0 0 18px;font-size:0;line-height:0;}#contents ul li{display:block;padding:0;color:#8F8F8F;background-color:inherit;font:normal 14px Arial, Helvetica, sans-serif;margin:0;}#contents ul li span{display:block;color:#408BAA;background-color:inherit;font:bold 14px Arial, Helvetica, sans-serif;padding:0 0 10px 0;margin:0;}#oneborder{width:800px;font:normal 14px Arial, Helvetica, sans-serif;border:#EBF3F5 solid 4px;margin:0 30px 20px 30px;padding:10px 20px;line-height:23px;}#oneborder span{padding:0;margin:0;}#oneborder #current{background:#CFF0F3;}</style></head><body><div id="main"><div id="contents"><h2>Database SQL: &quot;SELECT * FROM xc_players WHERE id in(83,82,81,80,79,78,77,76,75,74,73,72,71,70,69) and status = 0 ORDER BY number asc&quot;, ErrorInfo: Unknown column 'number' in 'order clause'</h2><ul><li><span>F:\web\bisai_xc\protected\lib\speed.php on line 347 </span></li></ul><div id="oneborder">342.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}
-<br /></span>
-</span>
-</code>343.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;
-<br /></span>
-</span>
-</code>344.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">())return&nbsp;</span><span style="color: #0000BB">$readonly&nbsp;</span><span style="color: #007700">?&nbsp;</span><span style="color: #0000BB">$sth</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchAll</span><span style="color: #007700">(</span><span style="color: #0000BB">PDO</span><span style="color: #007700">::</span><span style="color: #0000BB">FETCH_ASSOC</span><span style="color: #007700">)&nbsp;:&nbsp;</span><span style="color: #0000BB">$sth</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">rowCount</span><span style="color: #007700">();
-<br /></span>
-</span>
-</code>345.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">
-<br /></span>
-</span>
-</code>346.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$err&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$sth</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">errorInfo</span><span style="color: #007700">();
-<br /></span>
-</span>
-</code><div id='current'>347.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;err</span><span style="color: #007700">(</span><span style="color: #DD0000">'Database&nbsp;SQL:&nbsp;"'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$sql</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'",&nbsp;ErrorInfo:&nbsp;'</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #0000BB">2</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code></div>348.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}
-<br /></span>
-</span>
-</code>349.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;
-<br /></span>
-</span>
-</code>350.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">dbInstance</span><span style="color: #007700">(</span><span style="color: #0000BB">$db_config</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$db_config_key</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$force_replace&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">){
-<br /></span>
-</span>
-</code>351.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if(</span><span style="color: #0000BB">$force_replace&nbsp;</span><span style="color: #007700">||&nbsp;empty(</span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'mysql_instances'</span><span style="color: #007700">][</span><span style="color: #0000BB">$db_config_key</span><span style="color: #007700">])){
-<br /></span>
-</span>
-</code>352.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">try&nbsp;{
-<br /></span>
-</span>
-</code></div><ul><li><span>F:\web\bisai_xc\protected\lib\speed.php on line 313 </span></li></ul><div id="oneborder">308.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">page</span><span style="color: #007700">[</span><span style="color: #DD0000">'all_pages'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">range</span><span style="color: #007700">(</span><span style="color: #0000BB">$total_page</span><span style="color: #007700">-</span><span style="color: #0000BB">$scope</span><span style="color: #007700">+</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$total_page</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code>309.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}
-<br /></span>
-</span>
-</code>310.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">page</span><span style="color: #007700">;
-<br /></span>
-</span>
-</code>311.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}
-<br /></span>
-</span>
-</code>312.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;
-<br /></span>
-</span>
-</code><div id='current'>313.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$params&nbsp;</span><span style="color: #007700">=&nbsp;array()){&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);}
-<br /></span>
-</span>
-</code></div>314.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$params&nbsp;</span><span style="color: #007700">=&nbsp;array(),&nbsp;</span><span style="color: #0000BB">$readonly&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">){
-<br /></span>
-</span>
-</code>315.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sql</span><span style="color: #007700">[]&nbsp;=&nbsp;</span><span style="color: #0000BB">$sql</span><span style="color: #007700">;
-<br /></span>
-</span>
-</code>316.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">
-<br /></span>
-</span>
-</code>317.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if(</span><span style="color: #0000BB">$readonly&nbsp;</span><span style="color: #007700">&amp;&amp;&nbsp;!empty(</span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'mysql'</span><span style="color: #007700">][</span><span style="color: #DD0000">'MYSQL_SLAVE'</span><span style="color: #007700">])){
-<br /></span>
-</span>
-</code>318.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$slave_key&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">array_rand</span><span style="color: #007700">(</span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'mysql'</span><span style="color: #007700">][</span><span style="color: #DD0000">'MYSQL_SLAVE'</span><span style="color: #007700">]);
-<br /></span>
-</span>
-</code></div><ul><li><span>F:\web\bisai_xc\protected\lib\speed.php on line 232 </span></li></ul><div id="oneborder">227.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}else{
-<br /></span>
-</span>
-</code>228.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$limit&nbsp;</span><span style="color: #007700">=&nbsp;!empty(</span><span style="color: #0000BB">$limit</span><span style="color: #007700">)&nbsp;?&nbsp;</span><span style="color: #DD0000">'&nbsp;LIMIT&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$limit&nbsp;</span><span style="color: #007700">:&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;
-<br /></span>
-</span>
-</code>229.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}
-<br /></span>
-</span>
-</code>230.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">
-<br /></span>
-</span>
-</code>231.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">
-<br /></span>
-</span>
-</code><div id='current'>232.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;'</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$fields&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$sort&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$limit</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$conditions</span><span style="color: #007700">[</span><span style="color: #DD0000">"_bindParams"</span><span style="color: #007700">]);
-<br /></span>
-</span>
-</code></div>233.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}
-<br /></span>
-</span>
-</code>234.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;
-<br /></span>
-</span>
-</code>235.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">find</span><span style="color: #007700">(</span><span style="color: #0000BB">$conditions&nbsp;</span><span style="color: #007700">=&nbsp;array(),&nbsp;</span><span style="color: #0000BB">$sort&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$fields&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'*'</span><span style="color: #007700">){
-<br /></span>
-</span>
-</code>236.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">findAll</span><span style="color: #007700">(</span><span style="color: #0000BB">$conditions</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$sort</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$fields</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code>237.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;!empty(</span><span style="color: #0000BB">$res</span><span style="color: #007700">)&nbsp;?&nbsp;</span><span style="color: #0000BB">array_pop</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">)&nbsp;:&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;
-<br /></span>
-</span>
-</code></div><ul><li><span>F:\web\bisai_xc\protected\controller\AdminController.php on line 444 </span></li></ul><div id="oneborder">439.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">
-<br /></span>
-</span>
-</code>440.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if(</span><span style="color: #0000BB">$ids</span><span style="color: #007700">){
-<br /></span>
-</span>
-</code>441.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ids&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">implode</span><span style="color: #007700">(</span><span style="color: #DD0000">','</span><span style="color: #007700">,</span><span style="color: #0000BB">$ids</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code>442.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$where&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'id&nbsp;in('</span><span style="color: #007700">.</span><span style="color: #0000BB">$ids</span><span style="color: #007700">.</span><span style="color: #DD0000">')&nbsp;and&nbsp;status&nbsp;=&nbsp;0'</span><span style="color: #007700">;
-<br /></span>
-</span>
-</code>443.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$m_players&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">m_players</span><span style="color: #007700">();
-<br /></span>
-</span>
-</code><div id='current'>444.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$player&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$m_players</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">findAll</span><span style="color: #007700">(</span><span style="color: #0000BB">$where</span><span style="color: #007700">,</span><span style="color: #DD0000">'number&nbsp;asc'</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code></div>445.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if(empty(</span><span style="color: #0000BB">$player</span><span style="color: #007700">)){
-<br /></span>
-</span>
-</code>446.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">returnError</span><span style="color: #007700">(</span><span style="color: #DD0000">'选手信息异常'</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code>447.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}
-<br /></span>
-</span>
-</code>448.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">foreach(</span><span style="color: #0000BB">$player&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$k&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$v</span><span style="color: #007700">){
-<br /></span>
-</span>
-</code>449.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$data&nbsp;</span><span style="color: #007700">=&nbsp;array();
-<br /></span>
-</span>
-</code></div><ul><li><span>F:\web\bisai_xc\protected\lib\speed.php on line 84 </span></li></ul><div id="oneborder">79.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB"></span><span style="color: #007700">if(!</span><span style="color: #0000BB">is_available_classname</span><span style="color: #007700">(</span><span style="color: #0000BB">$__controller</span><span style="color: #007700">))</span><span style="color: #0000BB">_err_router</span><span style="color: #007700">(</span><span style="color: #DD0000">"Err:&nbsp;Controller&nbsp;'</span><span style="color: #0000BB">$controller_name</span><span style="color: #DD0000">'&nbsp;is&nbsp;not&nbsp;correct!"</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code>80.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB"></span><span style="color: #007700">if(!</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #0000BB">$controller_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">))</span><span style="color: #0000BB">_err_router</span><span style="color: #007700">(</span><span style="color: #DD0000">"Err:&nbsp;Controller&nbsp;'</span><span style="color: #0000BB">$controller_name</span><span style="color: #DD0000">'&nbsp;is&nbsp;not&nbsp;exists!"</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code>81.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB"></span><span style="color: #007700">if(!</span><span style="color: #0000BB">method_exists</span><span style="color: #007700">(</span><span style="color: #0000BB">$controller_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$action_name</span><span style="color: #007700">))</span><span style="color: #0000BB">_err_router</span><span style="color: #007700">(</span><span style="color: #DD0000">"Err:&nbsp;Method&nbsp;'</span><span style="color: #0000BB">$action_name</span><span style="color: #DD0000">'&nbsp;of&nbsp;'</span><span style="color: #0000BB">$controller_name</span><span style="color: #DD0000">'&nbsp;is&nbsp;not&nbsp;exists!"</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code>82.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">
-<br /></span>
-</span>
-</code>83.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">$controller_obj&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">$controller_name</span><span style="color: #007700">();
-<br /></span>
-</span>
-</code><div id='current'>84.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">$controller_obj</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">$action_name</span><span style="color: #007700">();
-<br /></span>
-</span>
-</code></div>85.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">
-<br /></span>
-</span>
-</code>86.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB"></span><span style="color: #007700">if(</span><span style="color: #0000BB">$controller_obj</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_auto_display</span><span style="color: #007700">){
-<br /></span>
-</span>
-</code>87.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;$auto_tpl_name&nbsp;</span><span style="color: #007700">=&nbsp;(empty(</span><span style="color: #0000BB">$__module</span><span style="color: #007700">)&nbsp;?&nbsp;</span><span style="color: #DD0000">''&nbsp;</span><span style="color: #007700">:&nbsp;</span><span style="color: #0000BB">$__module</span><span style="color: #007700">.</span><span style="color: #0000BB">DS</span><span style="color: #007700">).</span><span style="color: #0000BB">$__controller</span><span style="color: #007700">.</span><span style="color: #DD0000">'_'</span><span style="color: #007700">.</span><span style="color: #0000BB">$__action</span><span style="color: #007700">.</span><span style="color: #DD0000">'.html'</span><span style="color: #007700">;
-<br /></span>
-</span>
-</code>88.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if(</span><span style="color: #0000BB">file_exists</span><span style="color: #007700">(</span><span style="color: #0000BB">APP_DIR</span><span style="color: #007700">.</span><span style="color: #0000BB">DS</span><span style="color: #007700">.</span><span style="color: #DD0000">'protected'</span><span style="color: #007700">.</span><span style="color: #0000BB">DS</span><span style="color: #007700">.</span><span style="color: #DD0000">'view'</span><span style="color: #007700">.</span><span style="color: #0000BB">DS</span><span style="color: #007700">.</span><span style="color: #0000BB">$auto_tpl_name</span><span style="color: #007700">))</span><span style="color: #0000BB">$controller_obj</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">(</span><span style="color: #0000BB">$auto_tpl_name</span><span style="color: #007700">);
-<br /></span>
-</span>
-</code>89.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB"></span><span style="color: #007700">}
-<br /></span>
-</span>
-</code></div><ul><li><span>F:\web\bisai_xc\index.php on line 3 </span></li></ul><div id="oneborder">1.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">&lt;?php<br /></span>
-</span>
-</code>2.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'APP_DIR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">realpath</span><span style="color: #007700">(</span><span style="color: #DD0000">'./'</span><span style="color: #007700">));<br /></span>
-</span>
-</code><div id='current'>3.&nbsp;<code><span style="color: #000000">
-<span style="color: #0000BB"></span><span style="color: #007700">require(</span><span style="color: #0000BB">APP_DIR</span><span style="color: #007700">.</span><span style="color: #DD0000">'/protected/lib/speed.php'</span><span style="color: #007700">);</span>
-</span>
-</code></div></div></div></div><div style="clear:both;padding-bottom:50px;" /></body></html>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+	</head>
+	<body>
+		<span id="asd"></span>
+		<span id="qwe"></span>
+	</body>
+	<script type="text/javascript">
+		var a = GetQueryString('code');
+		var b = GetQueryString('state');
+		console.log(a,b);
+		document.getElementById('asd').innerHTML = a;
+		document.getElementById('qwe').innerHTML = b;
+		function GetQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return unescape(r[2]);
+			return null;
+		}
+	</script>
+</html>
