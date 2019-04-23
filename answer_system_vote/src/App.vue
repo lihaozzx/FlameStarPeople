@@ -120,6 +120,7 @@
 
 	.Router {
 		max-width: 1100px;
+		min-width: 375px;
 		width: 100%;
 		height: 100vh;
 		transition: all .8s ease;

@@ -41,11 +41,16 @@
 						<span class="s1">亲友关爱</span>
 						<span class="s2">已有7777名亲友加油</span>
 					</div>
+					<div class="infos">
+						<div class="info">
+							
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="btn_bottom">
-			<div class="btn">每日一卷</div>
+			<div class="btn" @click="paper">每日一卷</div>
 			<div class="btn">助他上榜</div>
 		</div>
 	</div>
@@ -67,6 +72,9 @@
 			// 组件的方法
 			showcontrols() {
 				this.showc = !this.showc
+			},
+			paper(){
+				this.$router.push({name:'answer'})
 			}
 		}
 	}
@@ -233,6 +241,33 @@
 						color: rgba(0, 0, 0, 0.3);
 					}
 				}
+				.infos{
+					width: 100%;
+					margin-top: 14px;
+					.info{
+						width: 100%;
+						height: 60px;
+						background-color: #A01C19;
+						display: flex;
+						.head_img{
+							width: 60px;
+							height: 60px;
+							border-radius: 30px;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							overflow: hidden;
+							img{
+								width: 100%;
+							}
+						}
+						.fm_info{
+							height: 100%;
+							box-sizing: border-box;
+							padding: 4px 0;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -249,16 +284,23 @@
 		padding: 0 18px;
 
 		.btn {
-			width:150px;
-height:45px;
+			width: 150px;
+			height: 45px;
 			background: rgba(249, 241, 202, 1);
 			opacity: 1;
 			border-radius: 10px;
 			font-size: 2rem;
+			font-weight: 900;
 			color: #AB1F1E;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 		}
+		.btn:hover{
+			transition: .5s ease all;
+			background: rgba(229, 221, 182, 1);
+			user-select: none;
+		}
+		
 	}
 </style>

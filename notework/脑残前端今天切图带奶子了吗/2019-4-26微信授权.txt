@@ -1,0 +1,5 @@
+﻿https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf96d1a4496199616&   公众号id
+redirect_uri=http%3a%2f%2f4.sem98.com%2findex.html&                             授权后跳转地址
+response_type=code&scope=snsapi_userinfo&
+state=123 参数
+#wechat_redirect
