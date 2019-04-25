@@ -141,7 +141,8 @@
 			}
 		}
 		.zuhe_dati{
-			width: 100%;
+			margin: 0 auto;
+			width: 80%;
 			font-size: 1.6rem;
 			border: 2px solid rgba(249,241,202,1);
 			border-radius:10px;

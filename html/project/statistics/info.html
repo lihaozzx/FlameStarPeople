@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../aaa/css/public.css" />
+		<script src="../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			body,
+			html {
+				height: 100%;
+				width: 100%;
+			}
+
+			.infos {
+				width: 100%;
+				height: 100%;
+				box-sizing: border-box;
+				padding: 24px 30px;
+				display: flex;
+				flex-wrap: wrap;
+				background-color: rgb(230, 230, 230);
+			}
+
+			.one_info {
+				margin: 0 calc(10% / 6);
+				height: 100%;
+				width: 30%;
+				background-color: white;
+				border-radius: 3px;
+			}
+			.one_info .title{
+				width: 100%;
+				height: 50px;
+				border-bottom: 2px solid #8c8c8c;
+				display: flex;
+				align-items: center;
+				box-sizing: border-box;
+				padding: 0 20px;
+				display: flex;
+				justify-content: space-between;
+			}
+			.one_info .title .s1{
+				font-size: 20px;
+				font-weight: 900;
+			}
+			.one_info .title div .s2{
+				color: #1890FF;
+				cursor: pointer;
+			}
+			.one_info .title div .s3{
+				color: #1890FF;
+				cursor: pointer;
+			}
+			.one_info .infoss{
+				width: 100%;
+				height: calc(100% - 50px);
+				box-sizing: border-box;
+				padding: 10px 50px;
+				overflow-y: auto;
+			}
+			.one_info .infoss .one{
+				width: 100%;
+				display: flex;
+				margin-bottom: 30px;
+			}
+			.one_info .infoss .one>div{
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				flex-direction: column;
+				font-size: 16px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="infos">
+			<div class="one_info">
+				<div class="title">
+					<span class="s1">人工统计</span>
+					<!-- <div>
+						<span class="s2">选择类别</span>
+						<span class="s3">筛选时间</span>
+					</div> -->
+				</div>
+				<div class="infoss rengong">
+				</div>
+			</div>
+			<div class="one_info">
+				<div class="title">
+					<span class="s1">材料统计</span>
+					<!-- <div>
+						<span class="s2">选择类别</span>
+						<span class="s3">筛选时间</span>
+					</div> -->
+				</div>
+				<div class="infoss cailiao">
+				</div>
+			</div>
+			<div class="one_info">
+				<div class="title">
+					<span class="s1">机械统计</span>
+					<!-- <div>
+						<span class="s2">选择类别</span>
+						<span class="s3">筛选时间</span>
+					</div> -->
+				</div>
+				<div class="infoss jixie">
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		var type,dt;
+		let id = getIdFromUrl();
+		$.ajax({
+			url: reqUrl + '/api/projects/CateInfoCount',
+			type: 'post',
+			data: {
+				token: tokens,
+				proid:id,
+				mod:1,
+				type,
+				dt
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					// 材料
+					let s = '';
+					res.data.forEach(m=>{
+						s += '<div class="one"><div><span>材料名称：'+m.name+'</span><span>材料单位：'+m.unit+'</span><span>材料规格：'+m.norm+'</span></div><div><span>预计用料：'+m.yuji+'</span><span>出库数量：'+m.chuku+'</span><span>单价：'+m.price+'</span></div></div>'
+					});
+					$('.cailiao').append(s);
+				} else {
+		
+				}
+			},
+			complete: function() {
+				loading('none');
+			}
+		});
+		$.ajax({
+			url: reqUrl + '/api/projects/CateInfoCount',
+			type: 'post',
+			data: {
+				token: tokens,
+				proid:id,
+				mod:2,
+				type,
+				dt
+			},
+			dataType: 'json',
+			success: function(res) {
+				console.log(res)
+				if (res.status == 0) {
+					// 人工
+					let s = '';
+					res.data.forEach(m=>{
+						s += '<div class="one"><div><span>工人名称：'+m.name+'</span><span>工人职位：'+m.number+'</span><span>部门：'+m.norm+'</span></div><div><span>预计工时：'+m.yuji+'</span><span>出工工时：'+m.chuku+'</span><span>工时单价：'+m.price+'</span></div></div>'
+					});
+					$('.rengong').append(s);
+				} else {
+		
+				}
+			},
+			complete: function() {
+				loading('none');
+			}
+		});
+		$.ajax({
+			url: reqUrl + '/api/projects/CateInfoCount',
+			type: 'post',
+			data: {
+				token: tokens,
+				proid:id,
+				mod:3,
+				type,
+				dt
+			},
+			dataType: 'json',
+			success: function(res) {
+				console.log(res)
+				if (res.status == 0) {
+					// 机械
+					let s = '';
+					res.data.forEach(m=>{
+						s += '<div class="one"><div><span>机械名称：'+m.name+'</span><span>机械单位：'+m.unit+'</span><span>机械规格：'+m.norm+'</span></div><div><span>预计用料：'+m.yuji+'</span><span>出库数量：'+m.chuku+'</span><span>单价：'+m.price+'</span></div></div>'
+					});
+					$('.jixie').append(s);
+				} else {
+		
+				}
+			},
+			complete: function() {
+				loading('none');
+			}
+		});
+		
+	})
+</script>

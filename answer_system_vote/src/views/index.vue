@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="first_div" :style="'height:'+height+'px ;'">
+		<div class="first_div">
 			<div class="zhuangyuanbang">
 				<img class="bang_img" :src="bang">
 				<img class="niao_img" :src="niao">
@@ -166,10 +166,12 @@
 <style scoped lang="scss">
 	.first_div {
 		width: 100%;
+		min-height: 100vh;
 		position: relative;
 
 		.zhuangyuanbang {
 			position: relative;
+			padding-bottom: 20px;
 
 			.bang_img {
 				width: 100%;
@@ -186,7 +188,7 @@
 				width: 28%;
 				position: absolute;
 				right: -3%;
-				bottom: 18%;
+				bottom: 22%;
 			}
 		}
 
@@ -196,9 +198,10 @@
 			background-image: url(../assets/search-input-bg.png);
 			background-repeat: no-repeat;
 			background-size: 100%;
-			position: relative;
+			position: absolute;
 			left: 12%;
-			bottom: 18%;
+			bottom: 12%;
+			z-index: 9;
 
 			form {
 				.search_input {
@@ -303,15 +306,18 @@
 					display: flex;
 
 					.stu_head_div {
-						width: 100px;
-						height: 100px;
+						width: 33%;
+						padding-top: 33%;
+						// height: 100px;
 						position: relative;
 
 						.stu_head {
-							width: 80px;
-							height: 80px;
+							width: 80%;
+							padding-top: 80%;
+							position:absolute;
+							top: 0;
 							margin: 10px 2%;
-							border-radius: 40px;
+							border-radius: 90px;
 							background-color: #F9F1CA;
 							overflow: scroll;
 							display: flex;
@@ -320,6 +326,8 @@
 
 							.img1 {
 								width: 100%;
+								position:absolute;
+								top: 0;
 							}
 
 						}
@@ -328,7 +336,7 @@
 							position: absolute;
 							left: -12%;
 							width: 110%;
-							bottom: 0;
+							bottom: 5%;
 						}
 					}
 

@@ -43,7 +43,7 @@
 
 	@media screen and (min-width:376px) and (max-width:414px) {
 		html {
-			font-size: 12px
+			font-size: 14px
 		}
 	}
 
@@ -82,9 +82,9 @@
 		margin: 0;
 		overflow-x: hidden;
 	}
-	
-	span{
-		user-select:none;
+
+	span {
+		user-select: none;
 	}
 
 	#app {
@@ -120,7 +120,7 @@
 
 	.Router {
 		max-width: 1100px;
-		min-width: 375px;
+		min-width: 300px;
 		width: 100%;
 		height: 100vh;
 		transition: all .8s ease;

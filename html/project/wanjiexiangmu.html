@@ -12,7 +12,7 @@
 			<form id="check_form">
 				<table class="y_tab y_border y_top20">
 					<tr>
-						<td class="y_textRight" ><i class="y_colorRead">*</i>作废理由：</td>
+						<td class="y_textRight" ><i class="y_colorRead">*</i>完结理由：</td>
 						<td colspan="5">
 							<textarea class="y_input" id="reson"></textarea>
 						</td>
@@ -32,12 +32,12 @@
 	var id = urls.slice(urls.indexOf('id=') + 3);
 	
 	$('.submit').on('click',function () {
-		parent.window.Confirm('确认作废此项目吗？',function (e) {
+		parent.window.Confirm('项目完结后将不能进行修改',function (e) {
 			if(e){
 				//作废
 				loading();
 				$.ajax({
-					url: reqUrl + '/api/projects/delPro',
+					url: reqUrl + '/api/projects/endPro',
 					type: 'post',
 					data: {
 						token: tokens,
@@ -47,10 +47,10 @@
 					dataType: 'json',
 					success: function(res) {
 						if (res.status == 0) {
-							parent.window.Alert('项目已经作废');
+							parent.window.Alert('项目完结');
 							parent.window.closePop('', function() {
 								parent.window.Reload();
-							})
+							});
 						} else {
 							parent.window.Alert(res.msg);
 						}

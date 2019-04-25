@@ -33,56 +33,84 @@
 				font-size: 24px;
 			}
 
+			.one_info .xiangqin {
+				font-size: 24px;
+				float: right;
+				color: rgb(96, 125, 253);
+			}
+
 			.one_info .tongji {
 				width: 100%;
 				height: 240px;
 				display: flex;
+				flex-direction: column;
 				margin-top: 10px;
 			}
 
 			.one_info .tongji .one {
-				margin-left: 3%;
-				width: 30%;
-				height: 100%;
+				margin-top: 3%;
+				width: 100%;
+				height: 30%;
 				border: 1px solid #1890FF;
 				border-radius: 10px;
 				box-sizing: border-box;
 				padding: 5px;
 				position: relative;
-			}
-
-			.one_info .tongji .now_info {
-				width: 100%;
-				height: 180px;
 				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
 			}
 
-			.one_info .tongji .now_info div {
-				height: 50%;
+			.one_info .tongji .one .left_div {
+				height: 100%;
+				width: 10%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				flex-direction: column;
-			}
-			.one_info .tongji .now_info div span:nth-of-type(2){
-				color: blue;
+				font-size: 20px;
+				font-weight: 900;
 			}
 
-			.one_info .tongji .one .toinfo {
-				left: 0;
-				width: 100%;
-				height: 50px;
-				position: absolute;
-				bottom: 0;
-				border-radius: 0 0 9px 9px;
-				background-color: #1890FF;
+			.one_info .tongji .one .center_div {
+				height: 100%;
+				width: 80%;
+				box-sizing: border-box;
+				padding: 0 4px;
+			}
+			.one_info .tongji .one .center_div_none {
+				height: 100%;
+				width: 80%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				color: #FFFFFF;
+				font-size: 24px;
+				font-weight: 900;
 			}
+
+			.one_info .tongji .one .center_div .yuji {
+				margin-top: 11px;
+				height: 14px;
+				width: 100%;
+				border-radius: 7px;
+				background-color: rgba(94, 135, 176, 0.5);
+			}
+
+			.one_info .tongji .one .center_div .shiyong {
+				margin-top: 4px;
+				height: 14px;
+				border-radius: 7px;
+				background-color: rgba(94, 135, 176, 1);
+			}
+
+			.one_info .tongji .one .right_div {
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				font-size: 12px;
+				font-weight: 900;
+				white-space: nowrap;
+			}
+
 		</style>
 	</head>
 	<body>
@@ -108,7 +136,7 @@
 					let str = addstr(res.data);
 					$('.infos').append(str)
 				} else {
-					
+
 				}
 			},
 			complete: function() {
@@ -116,15 +144,19 @@
 			}
 		});
 	});
+
 	function addstr(data) {
 		let str = ''
-		data.forEach(s=>{
-			if(s.stock.length==0){
-				str += `<div class="one_info"><span class="title">${s.name}</span><div class="tongji"><div class="one"><div class="now_info"><div><span>目前用量</span><span>暂无信息</span></div><div><span>预计用量</span><span>暂无信息</span></div></div><div class="toinfo"><span>人工统计</span></div></div><div class="one"><div class="now_info"><div><span>目前用量</span><span>暂无信息</span></div><div><span>预计用量</span><span>暂无信息</span></div></div><div class="toinfo"><span>材料统计</span></div></div><div class="one"><div class="now_info"><div><span>目前用量</span><span>暂无信息</span></div><div><span>预计用量</span><span>暂无信息</span></div></div><div class="toinfo"><span>机械统计</span></div></div></div></div>`
-			}else{
-				str += `<div class="one_info"><span class="title">${s.name}</span><div class="tongji"><div class="one"><div class="now_info"><div><span>目前用量</span><span>${s.stock[2].chuku}</span></div><div><span>预计用量</span><span>${s.stock[2].yuji}</span></div></div><div class="toinfo"><span>人工统计</span></div></div><div class="one"><div class="now_info"><div><span>目前用量</span><span>${s.stock[1].chuku}</span></div><div><span>预计用量</span><span>${s.stock[1].yuji}</span></div></div><div class="toinfo"><span>材料统计</span></div></div><div class="one"><div class="now_info"><div><span>目前用量</span><span>${s.stock[0].chuku}</span></div><div><span>预计用量</span><span>${s.stock[0].yuji}</span></div></div><div class="toinfo"><span>机械统计</span></div></div></div></div>`
+		data.forEach(s => {
+			if (s.stock.length == 0) {
+				str +='<div class="one_info"><span class="title">'+s.name+'</span><span class="xiangqin">查看详情</span><div class="tongji"><div class="one"><div class="left_div"><span>人工</span></div><div class="center_div_none"><span>暂无信息</span></div><div class="right_div"><span>预计：无</span><span>使用：无</span></div></div><div class="one"><div class="left_div"><span>材料</span></div><div class="center_div"><div class="yuji" style="width:0%"></div><div class="shiyong" style="width: '+0+'%;"></div></div><div class="right_div"><span>预计：无</span><span>使用：无</span></div></div><div class="one"><div class="left_div"><span>机械</span></div><div class="center_div"><div class="yuji" style="width:0%"></div><div class="shiyong" style="width:'+0+'%;"></div></div><div class="right_div"><span>预计：无</span><span>使用：无</span></div></div></div></div>'
+			} else {
+				str +='<div class="one_info"><span class="title">'+s.name+'</span><span class="xiangqin y_newHtml" data-class="tongjixiangqin" data-title="统计详情" data-url="./project/statistics/info.html?id='+s.id+'">查看详情</span><div class="tongji"><div class="one"><div class="left_div"><span>人工</span></div><div class="center_div"><div class="yuji"></div><div class="shiyong" style="width: '+parseInt(s.stock[2].chuku/s.stock[2].yuji*100)+'%;"></div></div><div class="right_div"><span>预计：'+s.stock[2].yuji+'</span><span>使用：'+s.stock[2].chuku+'</span></div></div><div class="one"><div class="left_div"><span>材料</span></div><div class="center_div"><div class="yuji"></div><div class="shiyong" style="width: '+parseInt(s.stock[1].chuku/s.stock[1].yuji*100)+'%;"></div></div><div class="right_div"><span>预计：'+s.stock[1].yuji+'</span><span>使用：'+s.stock[1].chuku+'</span></div></div><div class="one"><div class="left_div"><span>机械</span></div><div class="center_div"><div class="yuji"></div><div class="shiyong" style="width:'+parseInt(s.stock[0].chuku/s.stock[0].yuji*100)+'%;"></div></div><div class="right_div"><span>预计：'+s.stock[0].yuji+'</span><span>使用：'+s.stock[0].chuku+'</span></div></div></div></div>'
 			}
 		})
 		return str;
+	}
+	function toinfo(id){
+		
 	}
 </script>
