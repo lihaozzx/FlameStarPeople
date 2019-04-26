@@ -31,6 +31,7 @@
 <style>
 	body{
 		margin: 0;
+		overflow: hidden;
 	}
 	html {
 		font-size: 10px;

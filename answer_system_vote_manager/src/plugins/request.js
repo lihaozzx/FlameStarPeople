@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs'
+import store from '../store'
+import router from '../router'
 
 Vue.prototype.$qs = qs
 
-axios.defaults.baseURL = '';
+axios.defaults.baseURL = 'http://192.168.1.100:9002';
 axios.defaults.timeout = 5000;
 Vue.prototype.$http = axios;
 
@@ -13,9 +15,22 @@ axios.interceptors.request.use(function(config) {
 	let a = config.url.split('/');
 	if (a[a.length - 1] != 'login') {
 		// 不是login接口就添加token
-		config.params = {
-			...config.params,
-			token: Vue.prototype.$store.getters.token
+		if(config.method=='get'){
+			config.params = {
+				...config.params,
+				token: store.getters.tokens
+			}
+		}else{
+			if(typeof config.data === 'object'){
+				//上传才是FormData对象 其他都是qs格式化了的字符串
+				config.data.append('token',store.getters.tokens);
+			}else{
+				config.data=qs.stringify({
+					...qs.parse(config.data),
+					token: store.getters.tokens
+				})
+			}
+			
 		}
 	}
 	return config;
@@ -29,9 +44,25 @@ axios.interceptors.response.use(function(response) {
 	if (response.status == 200) {
 		if (response.data.status >= 1000) {
 			// 1000表示token失效，重新登录
-			Vue.prototype.$router.push('asd');
-		} else {
-			return response;
+			Vue.prototype.$notify({
+				title: '异常',
+				dangerouslyUseHTMLString: true,
+				iconClass: 'el-icon-warning',
+				message: '<strong>登录状态已失效</strong>',
+				showClose: false
+			});
+			router.push('asd');
+		} else if (response.data.status == 1) {
+			// 1表示无返回数据
+			Vue.prototype.$notify({
+				title: '异常',
+				dangerouslyUseHTMLString: true,
+				iconClass: 'el-icon-warning',
+				message: '<strong style="color:red">'+response.data.msg+'</strong>',
+			});
+			return false;
+		}else {
+			return response.data;
 		}
 	} else {
 		Vue.prototype.$notify({
@@ -56,7 +87,13 @@ axios.interceptors.response.use(function(response) {
 				err.message = '拒绝访问'
 				break
 			case 404:
-				err.message = `请求地址出错: ${err.response.config.url}`
+				Vue.prototype.$notify({
+					title: '异常',
+					dangerouslyUseHTMLString: true,
+					iconClass: 'el-icon-warning',
+					message: `<strong>请求地址出错: ${err.response.config.url}</strong>`,
+					showClose: false
+				});
 				break
 			case 408:
 				err.message = '请求超时'
