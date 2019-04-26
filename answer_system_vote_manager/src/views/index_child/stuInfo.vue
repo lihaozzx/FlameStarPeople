@@ -184,6 +184,7 @@
 				)).then(res => {
 					if (res) {
 						this.showChange = false;
+						this.cancelUp();
 						this.getStuInfo();
 						this.$notify({
 							title: '成功',

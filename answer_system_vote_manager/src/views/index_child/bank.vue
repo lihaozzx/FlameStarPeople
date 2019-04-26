@@ -10,7 +10,7 @@
 				<el-table-column align="right" width="240">
 					<template slot="header" slot-scope="scope">
 						<div style="display: flex;">
-							<el-input v-model="search" size="mini" placeholder="姓名搜索" />
+							<el-input v-model="search" size="mini" placeholder="题目搜索" />
 							<el-button type="success" round @click="showup=true">上传</el-button>
 						</div>
 					</template>
@@ -28,17 +28,16 @@
 
 		<el-dialog title="上传" :visible.sync="showup">
 			<div v-if="haveInfo">
-				<el-table :data="upedTable.filter(data => !search2 || data.name.toLowerCase().includes(search2.toLowerCase()))"
-				 style="width: 100%">
-					<el-table-column label="序号" prop="serial" width="50" fixed="left"></el-table-column>
-					<el-table-column label="姓名" prop="name"></el-table-column>
-					<el-table-column label="学校" prop="school"></el-table-column>
-					<el-table-column label="年级" prop="grade"></el-table-column>
-					<el-table-column label="头像地址" prop="head"></el-table-column>
-					<el-table-column label="视频地址" prop="video"></el-table-column>
+				<el-table :data="upedTable.filter(data => !search2 || data.name.toLowerCase().includes(search2.toLowerCase()))" style="width: 100%">
+					<el-table-column label="分数" prop="score"></el-table-column>
+					<el-table-column label="题目" prop="name" width="250"></el-table-column>
+					<el-table-column label="主题" prop="cate" width="100"></el-table-column>
+					<el-table-column label="类型" prop="type"></el-table-column>
+					<el-table-column label="选项" prop="xuanx"></el-table-column>
+					<el-table-column label="答案" prop="answer"></el-table-column>
 					<el-table-column align="right" fixed="right" width="100">
 						<template slot="header" slot-scope="scope">
-							<el-input v-model="search2" size="mini" placeholder="姓名" />
+							<el-input v-model="search2" size="mini" placeholder="题目" />
 						</template>
 						<template slot-scope="scope">
 							<span class="cell_span">{{scope.row.cz==0?'不存在':'已存在'}}</span>
@@ -135,7 +134,6 @@
 					sname: this.sname,
 					p: this.pageInfo.nowPage
 				})).then(res => {
-					console.log(res)
 					if (res) {
 						this.tableData = res.data;
 						this.pageInfo = {
@@ -159,9 +157,9 @@
 			upload(file) {
 				let fd = new FormData();
 				fd.append('file', file); //传文件
-				this.$http.post('/admin/selectkqList', fd).then(res => {
+				this.$http.post('/admin/selecttopicList', fd).then(res => {
 					if (res) {
-						this.upedTable = res.data.student;
+						this.upedTable = res.data.topics;
 						this.dizhi = res.data.dizhi;
 						this.haveInfo = true;
 					}
@@ -170,18 +168,27 @@
 			},
 			submitStu() {
 				this.inAdd = true;
-				this.$http.post('/admin/daoruStu', this.$qs.stringify({
+				this.$http.post('/admin/daoruTopic', this.$qs.stringify({
 					dizhi: this.dizhi
 				})).then(res => {
 					if (res) {
 						this.showup = false;
+						this.getStuInfo();
+						this.cancelUp();
+						this.$notify({
+							title: '成功',
+							dangerouslyUseHTMLString: true,
+							iconClass: 'el-icon-success',
+							message: '<strong style="color:#7FFF00">添加成功</strong>',
+							showClose: false
+						});
 					}
 					this.inAdd = false;
 				});
 			},
 			changeStu() {
 				this.inAdd = true;
-				this.$http.post('/admin/upStudent', this.$qs.stringify(
+				this.$http.post('/admin/saveTopic', this.$qs.stringify(
 					this.oco(this.showForm, this.oldForm)
 				)).then(res => {
 					if (res) {
