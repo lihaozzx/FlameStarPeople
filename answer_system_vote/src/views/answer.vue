@@ -44,7 +44,7 @@
 				</div>
 				<div class="ans_div" v-else-if="topic.type == '多选题'">
 					<span>{{duouxnadaan}}</span>
-					<img :src="del" @click="delzuhe">
+					<img :src="del" @click="delduoxuan">
 				</div>
 				<div class="onexuanx" v-for="(t,i) in topic.xuanx" :key="i" :class="ch==i?'ched':'noch'" @click="choseAns(i)">
 					<span>{{i=='0'?'A.':i=='1'?'B.':i=='2'?'C.':i=='3'?'D.':i=='4'?'E.':i=='5'?'F.':i=='6'?'G.':i=='7'?'H.':i=='8'?'I.':i=='9'?'J.':i=='10'?'K.':i=='11'?'L.':i=='12'?'M.':i=='12'?'N.':i=='13'?'O.':i=='14'?'P.':i=='15'?'Q.':i=='16'?'R.':i=='17'?'S.':i=='18'?'T.':i=='19'?'U.':i=='20'?'V.':i=='21'?'W.':i=='22'?'X.':i=='23'?'Y.':i=='24'?'Z.':''}}{{t}}</span>
@@ -131,24 +131,29 @@
 			delzuhe() {
 				this.zuhedaan = this.zuhedaan.substring(0, this.zuhedaan.length - 1)
 			},
+			delduoxuan(){
+				this.chs.pop();
+			},
 			next(){
 				if(this.now==9){
 					if(this.isright()){
-						
+						 this.$message('答对了，3秒后下一题');
 						this.score++;
 					}else{
-						
+						this.$message('回答错误，3秒后下一题');
 					}
 					//提交
-					alert(this.score)
+					this.$http.post('/vote/addVoteType',this.$qs.stringify({})).then(res=>{})
 				}else{
 					if(this.isright()){
-						
+						 this.$message('答对了，3秒后下一题');
 						this.score++;
 					}else{
-						
+						this.$message('回答错误，3秒后下一题');
 					}
-					this.now++;
+					setTimeout(()=>{
+						this.now++;
+					},3000);
 					this.ch = -1;
 					this.chs = [];
 					this.zuhedaan = '';
@@ -157,7 +162,6 @@
 			isright(){
 				let t = {...this.topic};
 				if(t.type == '问答题'){
-					console.log(t.answer,t.xuanx[this.ch])
 					return t.answer == t.xuanx[this.ch]
 				}else if(t.type == '填空题'){
 					let o = this.zuhedaan.split('');
@@ -165,13 +169,12 @@
 					o.forEach(a=>{
 						ans+=a+'@';
 					})
-					console.log(t.answer,ans.substring(0,ans.length-1))
 					return t.answer == ans.substring(0,ans.length-1);
 				}else if(t.type == '多选题'){
-					console.log(t.answer,this.duouxnadaan.replace(/、/g,"@"))
-					return t.answer == this.duouxnadaan.replace(/、/g,"@");
+					let a = t.answer.split('@');
+					let b = this.duouxnadaan.split('、');
+					return a.length==b.length&&a.sort().toString()==b.sort().toString();
 				}else if(t.type == '组合题'){
-					console.log(t.answer,this.zuhedaan)
 					return t.answer == this.zuhedaan;
 				}
 			}

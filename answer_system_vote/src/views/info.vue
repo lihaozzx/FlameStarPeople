@@ -12,17 +12,17 @@
 				</div>
 				<div class="info">
 					<div class="stu_info">
-						<span class="s1">张三</span>
-						<span class="s2">三年级|成都市青羊区第七中学</span>
+						<span class="s1">{{stuInfo.name}}</span>
+						<span class="s2">{{stuInfo.grade}}|{{stuInfo.school}}</span>
 					</div>
 					<div class="rank_info">
 						<span class="s1">赛区状元榜结束倒计时</span>
-						<span class="s2">8天5小时42分18秒</span>
+						<span class="s2">{{showtime}}</span>
 					</div>
 					<div class="num_info">
 						<div class="num">
 							<span class="s1">上榜值</span>
-							<span class="s2">230000</span>
+							<span class="s2">{{stuInfo.face}}</span>
 						</div>
 						<div class="num">
 							<span class="s1">当前排名</span>
@@ -39,11 +39,11 @@
 				<div class="relative">
 					<div class="title">
 						<span class="s1">亲友关爱</span>
-						<span class="s2">已有7777名亲友加油</span>
+						<span class="s2">已有{{toupiao.length}}名亲友加油</span>
 					</div>
 					<div class="infos">
 						<div class="info">
-							
+
 						</div>
 					</div>
 				</div>
@@ -61,14 +61,52 @@
 
 	import shipin from '@/assets/WeChat_20190422144635.mp4'
 	export default {
-		created(){
-			this.$http.post('/vote/votes',this.$qs.stringify({pid:this.$route.query.userId})).then(res=>{console.log(res)})
+		computed:{
+			showtime(){
+				let o = '';
+				let mm = this.end.getTime()-this.now.getTime();
+				o = '天'+'时'+'分'+'秒'
+				return o;
+			}
+		},
+		created() {
+			this.$http.post('/vote/basisInfo', this.$qs.stringify({
+				id: 5
+			})).then(res => {
+				if(res){
+					this.end = new Date(res.data.content);
+					setInterval(()=>{
+						this.now = new Date();
+					},1000)
+				}
+			})
+			this.$http.post('/vote/allplayers', this.$qs.stringify({
+				name: this.$route.query.userId
+			})).then(res => {
+				this.stuInfo = res.data[0]
+			})
+			this.$http.post('/vote/votes', this.$qs.stringify({
+				pid: this.$route.query.userId
+			})).then(res => {
+				if (res) {
+					this.toupiao = res.data
+				}
+			})
 		},
 		data() {
 			return {
 				back,
 				shipin,
-				showc: false
+				showc: false,
+				stuInfo: {
+					name: '',
+					grade: '',
+					school: '',
+					face: '',
+				},
+				toupiao: [],
+				end:new Date(),
+				now:new Date()
 			};
 		},
 		methods: {
@@ -76,8 +114,13 @@
 			showcontrols() {
 				this.showc = !this.showc
 			},
-			paper(){
-				this.$router.push({path:'answer',query:{userId:this.$route.query.userId}})
+			paper() {
+				this.$router.push({
+					path: 'answer',
+					query: {
+						userId: this.$route.query.userId
+					}
+				})
 			}
 		}
 	}
@@ -244,15 +287,18 @@
 						color: rgba(0, 0, 0, 0.3);
 					}
 				}
-				.infos{
+
+				.infos {
 					width: 100%;
 					margin-top: 14px;
-					.info{
+
+					.info {
 						width: 100%;
 						height: 60px;
 						background-color: #A01C19;
 						display: flex;
-						.head_img{
+
+						.head_img {
 							width: 60px;
 							height: 60px;
 							border-radius: 30px;
@@ -260,11 +306,13 @@
 							align-items: center;
 							justify-content: center;
 							overflow: hidden;
-							img{
+
+							img {
 								width: 100%;
 							}
 						}
-						.fm_info{
+
+						.fm_info {
 							height: 100%;
 							box-sizing: border-box;
 							padding: 4px 0;
@@ -299,11 +347,12 @@
 			justify-content: center;
 			align-items: center;
 		}
-		.btn:hover{
+
+		.btn:hover {
 			transition: .5s ease all;
 			background: rgba(229, 221, 182, 1);
 			user-select: none;
 		}
-		
+
 	}
 </style>
