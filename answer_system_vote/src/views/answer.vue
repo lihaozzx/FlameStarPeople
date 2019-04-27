@@ -1,31 +1,16 @@
 <template>
 	<div>
-		<div v-if="topic.type=='选择题'" class="content">
+		<div v-if="topic.type=='组合题'" class="content">
 			<div class="head">
 				<span class="for">您正在为 {{forName}} 答题加上榜值</span><br>
-				<span class="title">{{topic.title}}</span>
-			</div>
-			<div class="dati">
-				<div class="onexuanx" v-for="(t,i) in topic.xuanx" :key="t" :class="ch==i?'ched':'noch'" @click="choseAns(i)">
-					<span>{{i=='0'?'A.':i=='1'?'B.':i=='2'?'C.':i=='3'?'D.':i=='4'?'E.':i=='5'?'F.':i=='6'?'G.':i=='7'?'H.':i=='8'?'I.':i=='9'?'J.':i=='10'?'K.':i=='11'?'L.':i=='12'?'M.':i=='12'?'N.':i=='13'?'O.':i=='14'?'P.':i=='15'?'Q.':i=='16'?'R.':i=='17'?'S.':i=='18'?'T.':i=='19'?'U.':i=='20'?'V.':i=='21'?'W.':i=='22'?'X.':i=='23'?'Y.':i=='24'?'Z.':''}}
-					{{t}}</span>
-				</div>
-			</div>
-			<div class="sub">
-				下一题
-			</div>
-		</div>
-		<div v-else class="content">
-			<div class="head">
-				<span class="for">您正在为 {{forName}} 答题加上榜值</span><br>
-				<span class="title">{{topic.title}}</span>
+				<span class="title">{{topic.name}}</span>
 			</div>
 			<div class="ans_div">
 				<span>{{zuhedaan}}</span>
 				<img :src="del" @click="delzuhe">
 			</div>
-			<div class="zuhe_dati">
-				<div class="onexuanx" v-for="(t,i) in topic.xuanx" :key="t" :class="ch==i?'ched':'noch'" @click="choseAns(t)">
+			<div class="zuhe_dati" v-if="topic.xuanx.length<10">
+				<div class="onexuanx" v-for="(t,i) in topic.xuanx" :key="i" @click="choseAns(t)">
 					<span>{{t}}</span>
 				</div>
 				<div class="xian1"></div>
@@ -33,8 +18,40 @@
 				<div class="xian3"></div>
 				<div class="xian4"></div>
 			</div>
-			<div class="sub_zuhe">
+			<div class="zuhe_dati2" v-else>
+				<div class="onexuanx" v-for="(t,i) in topic.xuanx" :key="i" @click="choseAns(t)">
+					<span>{{t}}</span>
+				</div>
+				<div class="xian1"></div>
+				<div class="xian2"></div>
+				<div class="xian5"></div>
+				<div class="xian3"></div>
+				<div class="xian4"></div>
+			</div>
+			<div class="sub_zuhe" @click="next">
 				下一题
+			</div>
+		</div>
+		<div v-else class="content">
+			<div class="head">
+				<span class="for">您正在为 {{forName}} 答题加上榜值</span><br>
+				<span class="title">{{topic.name}}</span>
+			</div>
+			<div class="dati">
+				<div class="ans_div" v-if="topic.type == '填空题'">
+					<span>{{zuhedaan}}</span>
+					<img :src="del" @click="delzuhe">
+				</div>
+				<div class="ans_div" v-else-if="topic.type == '多选题'">
+					<span>{{duouxnadaan}}</span>
+					<img :src="del" @click="delzuhe">
+				</div>
+				<div class="onexuanx" v-for="(t,i) in topic.xuanx" :key="i" :class="ch==i?'ched':'noch'" @click="choseAns(i)">
+					<span>{{i=='0'?'A.':i=='1'?'B.':i=='2'?'C.':i=='3'?'D.':i=='4'?'E.':i=='5'?'F.':i=='6'?'G.':i=='7'?'H.':i=='8'?'I.':i=='9'?'J.':i=='10'?'K.':i=='11'?'L.':i=='12'?'M.':i=='12'?'N.':i=='13'?'O.':i=='14'?'P.':i=='15'?'Q.':i=='16'?'R.':i=='17'?'S.':i=='18'?'T.':i=='19'?'U.':i=='20'?'V.':i=='21'?'W.':i=='22'?'X.':i=='23'?'Y.':i=='24'?'Z.':''}}{{t}}</span>
+				</div>
+			</div>
+			<div class="sub" @click="next">
+				{{this.now==9?'完成':'下一题'}}
 			</div>
 		</div>
 	</div>
@@ -43,30 +60,120 @@
 <script>
 	import del from '@/assets/del.png'
 	export default {
+		computed: {
+			topic() {
+				return this.tiku[this.now]
+			},
+			duouxnadaan(){
+				let o="";
+				this.chs.forEach(e=>{
+					o+=this.topic.xuanx[e]+'、'
+				})
+				o = o.substring(0,o.length-1)
+				return o
+			}
+		},
+		created() {
+			this.$http.post('/vote/topics', this.$qs.stringify({
+				pid: this.$route.query.userId,
+				openid: '1'
+			})).then(res => {
+				if (res) {
+					res.data.forEach(t=>{
+						while (t.name.indexOf('#') != -1) {
+							t.name = t.name.substring(0, t.name.indexOf('#')) + ' __ ' + t.name.substring(t.name.indexOf('#') + 1, t.name.length);
+						}
+						let o = [];
+						while (t.xuanx.length > 0) {
+							o.push(t.xuanx.splice(Math.floor(Math.random() * t.xuanx.length), 1)[0])
+						}
+						t.xuanx = o;
+					})
+					this.tiku = res.data;
+				}
+			})
+		},
 		data() {
 			return {
 				del,
 				forName: '王麻子',
-				topic: {
-					title: '满汉全席兴起于满汉全席兴起于满汉全席兴起于满汉全席兴起于满汉全席兴起于满汉全席兴起于？',
-					xuanx: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-					type:'组合题'
-				},
+				tiku: [{
+					type: ''
+				}],
+				now: 0,
 				ch: -1,
-				zuhedaan:''
+				chs:[],
+				zuhedaan: '',
+				score:0
 			};
 		},
 		methods: {
 			// 组件的方法
 			choseAns(k) {
-				if(this.topic == '选择题'){
-					this.ch == k ? this.ch = -1 : this.ch = k
-				}else{
-					this.zuhedaan +=k;
+				if (this.topic.type == '组合题') {
+					this.zuhedaan += k;
+				}else if(this.topic.type == '填空题'){
+					this.zuhedaan += this.topic.xuanx[k];
+				}else if(this.topic.type == '多选题'){
+					let a = true;
+					this.chs.forEach(c=>{
+						if(c == k){
+							a=false;
+						}
+					})
+					if(a){
+						this.chs.push(k)
+					}
+				} else {
+					this.ch == k ? this.ch = -1 : this.ch = k;
 				}
 			},
-			delzuhe(){
-				this.zuhedaan = this.zuhedaan.substring(0,this.zuhedaan.length-1)
+			delzuhe() {
+				this.zuhedaan = this.zuhedaan.substring(0, this.zuhedaan.length - 1)
+			},
+			next(){
+				if(this.now==9){
+					if(this.isright()){
+						
+						this.score++;
+					}else{
+						
+					}
+					//提交
+					alert(this.score)
+				}else{
+					if(this.isright()){
+						
+						this.score++;
+					}else{
+						
+					}
+					this.now++;
+					this.ch = -1;
+					this.chs = [];
+					this.zuhedaan = '';
+				}
+			},
+			isright(){
+				let t = {...this.topic};
+				if(t.type == '问答题'){
+					console.log(t.answer,t.xuanx[this.ch])
+					return t.answer == t.xuanx[this.ch]
+				}else if(t.type == '填空题'){
+					let o = this.zuhedaan.split('');
+					let ans = '';
+					o.forEach(a=>{
+						ans+=a+'@';
+					})
+					console.log(t.answer,ans.substring(0,ans.length-1))
+					return t.answer == ans.substring(0,ans.length-1);
+				}else if(t.type == '多选题'){
+					console.log(t.answer,this.duouxnadaan.replace(/、/g,"@"))
+					return t.answer == this.duouxnadaan.replace(/、/g,"@");
+				}else if(t.type == '组合题'){
+					console.log(t.answer,this.zuhedaan)
+					return t.answer == this.zuhedaan;
+				}
 			}
 		}
 	}
@@ -93,7 +200,8 @@
 				width: 90%;
 			}
 		}
-		.ans_div{
+
+		.ans_div {
 			width: 50%;
 			height: 54px;
 			border-bottom: solid 1px white;
@@ -104,12 +212,14 @@
 			align-items: center;
 			justify-content: center;
 			color: white;
-			span{
+
+			span {
 				width: 100%;
 				font-size: 2rem;
 				text-align: center;
 			}
-			img{
+
+			img {
 				position: absolute;
 				top: 14px;
 				right: -100px;
@@ -140,20 +250,23 @@
 				border: 2px solid rgba(249, 241, 202, 0);
 			}
 		}
-		.zuhe_dati{
+
+		.zuhe_dati {
 			margin: 0 auto;
 			width: 80%;
 			font-size: 1.6rem;
-			border: 2px solid rgba(249,241,202,1);
-			border-radius:10px;
+			border: 2px solid rgba(249, 241, 202, 1);
+			border-radius: 10px;
 			display: flex;
 			flex-wrap: wrap;
 			position: relative;
+
 			.onexuanx {
 				width: calc(100% / 3);
 				padding-top: calc(100% / 3);
 				position: relative;
-				span{
+
+				span {
 					position: absolute;
 					top: calc(50% - 1.5rem);
 					left: calc(50% - 1.5rem);
@@ -161,28 +274,97 @@
 					font-size: 3rem;
 				}
 			}
-			.xian1{
+
+			.xian1 {
 				height: 100%;
 				width: 3px;
 				background-color: #F5E6C1;
 				position: absolute;
 				left: calc(100% / 3);
 			}
-			.xian2{
+
+			.xian2 {
 				height: 100%;
 				width: 3px;
 				background-color: #F5E6C1;
 				position: absolute;
 				left: calc(100% / 3 *2);
 			}
-			.xian3{
+
+			.xian3 {
 				height: 3px;
 				width: 100%;
 				background-color: #F5E6C1;
 				position: absolute;
 				top: calc(100% / 3);
 			}
-			.xian4{
+
+			.xian4 {
+				height: 3px;
+				width: 100%;
+				background-color: #F5E6C1;
+				position: absolute;
+				top: calc(100% / 3 * 2);
+			}
+		}
+
+		.zuhe_dati2 {
+			margin: 0 auto;
+			width: 80%;
+			font-size: 1.6rem;
+			border: 2px solid rgba(249, 241, 202, 1);
+			border-radius: 10px;
+			display: flex;
+			flex-wrap: wrap;
+			position: relative;
+
+			.onexuanx {
+				width: calc(100% / 4);
+				padding-top: calc(100% / 3);
+				position: relative;
+
+				span {
+					position: absolute;
+					top: calc(50% - 1.5rem);
+					left: calc(50% - 1.5rem);
+					color: #FFFFFF;
+					font-size: 3rem;
+				}
+			}
+
+			.xian1 {
+				height: 100%;
+				width: 3px;
+				background-color: #F5E6C1;
+				position: absolute;
+				left: calc(100% / 4);
+			}
+
+			.xian2 {
+				height: 100%;
+				width: 3px;
+				background-color: #F5E6C1;
+				position: absolute;
+				left: calc(100% / 4 *2);
+			}
+
+			.xian5 {
+				height: 100%;
+				width: 3px;
+				background-color: #F5E6C1;
+				position: absolute;
+				left: calc(100% / 4 *3);
+			}
+
+			.xian3 {
+				height: 3px;
+				width: 100%;
+				background-color: #F5E6C1;
+				position: absolute;
+				top: calc(100% / 3);
+			}
+
+			.xian4 {
 				height: 3px;
 				width: 100%;
 				background-color: #F5E6C1;
@@ -206,7 +388,8 @@
 			color: #A01C19;
 			font-weight: 900;
 		}
-		.sub_zuhe{
+
+		.sub_zuhe {
 			margin-top: 20px;
 			width: 80%;
 			height: 45px;

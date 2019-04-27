@@ -11,7 +11,7 @@
 							<span>{{k}}</span>
 						</div>
 					</div>
-					<div class="stuInfo" v-for="(k,i) in stuInfo" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''">
+					<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
 						<div class="stu_head_div">
 							<div class="stu_head"><img :src="k.img" class="img1"></div>
 						</div>
@@ -30,6 +30,9 @@
 					</div>
 				</div>
 				<img class="foot" src="../assets/pub-bg-3.png">
+				<div class="seeAll">
+					<span @click="toAll">更多……</span>
+				</div>
 			</div>
 		</div>
 		<div class="filter_div" @click="searchFilter"><span>按条件筛选></span></div>
@@ -62,8 +65,14 @@
 	import close from '@/assets/close.png'
 
 	export default {
+		computed: {
+			show() {
+				return this.stuInfo.filter(e => this.ch == -1 || e.grade == this.nianjibas[this.ch])
+			}
+		},
 		created(){
-			
+			this.initInfo();
+			this.getStudent();
 		},
 		data() {
 			return {
@@ -79,51 +88,23 @@
 				guize,
 				fenmian,
 				close,
-				nianjibas: ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
-				ch: 0,
+				nowPage:1,
+				nianjibas: [],
+				ch: -1,
 				flter: false,
 				name:'',
 				sname:'',
-				stuInfo: [{
-					id: 0,
-					name: '张三',
-					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555921915934&di=95135c035f04b12d5a86cc79bee7116b&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201206%2F12%2F20120612161649_PiiPx.thumb.700_0.jpeg',
-					school: '成都七中'
-				}, {
-					id: 1,
-					name: '张三',
-					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555921915934&di=23250b43b8be84e7a5a57411c35622f6&imgtype=0&src=http%3A%2F%2Fi3.sinaimg.cn%2Fent%2Fm%2Ff%2F2011-05-12%2FU3987P28T3D3305912F326DT20110512100709.jpg',
-					school: '成都七中'
-				}, {
-					id: 2,
-					name: '张三',
-					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555921915933&di=f54ae7343b5be305055a7634d435a65e&imgtype=0&src=http%3A%2F%2Fwww.people.com.cn%2Fmediafile%2Fpic%2F20150427%2F24%2F15504386549463392428.jpg',
-					school: '成都七中'
-				}, {
-					id: 3,
-					name: '张三',
-					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555921915991&di=117b0c3086be20bfb52265df5c3af688&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fitbbs%2F1411%2F18%2Fc14%2F41049739_1416307146946_mthumb.jpg',
-					school: '成都七中'
-				}, {
-					id: 4,
-					name: '张三',
-					img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555921915991&di=117b0c3086be20bfb52265df5c3af688&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fitbbs%2F1411%2F18%2Fc14%2F41049739_1416307146946_mthumb.jpg',
-					school: '成都七中'
-				}, {
-					id: 5,
-					name: '张三',
-					school: '成都七中'
-				}, {
-					id: 6,
-					name: '张三',
-					school: '成都七中'
-				}]
+				stuInfo: []
 			};
 		},
 		methods: {
 			// 组件的方法
 			changeShownianji(k) {
-				this.ch = k
+				if(this.ch == k){
+					this.ch = -1
+				}else{
+					this.ch = k
+				}
 			},
 			searchFilter() {
 				this.flter = true;
@@ -133,13 +114,35 @@
 			},
 			searchNow(){
 				this.flter = false;
+				this.nowPage = 1;
+				this.stuInfo = [];
 				this.getStudent();
+			},
+			initInfo(){
+				this.$http.post('/vote/basisInfo',this.$qs.stringify({id:4})).then(res => {
+					if(res){
+						this.nianjibas=res.data.content;
+					}
+				})
 			},
 			getStudent(){
 				this.$http.post('/vote/allplayers',this.$qs.stringify({
 					name:this.name,
-					sname:this.sname
-				}))
+					sname:this.sname,
+					grade:this.ch!==-1?this.nianjibas[this.ch]:'',
+					p:this.nowPage
+				})).then(res=>{
+					if(res){
+						this.stuInfo.push(...res.data);
+					}
+				})
+			},
+			toAll(){
+				this.nowPage++;
+				this.getStudent();
+			},
+			toInfo(id){
+				this.$router.push({name:'info',params:{userId:id}})
 			}
 		}
 	}
@@ -210,6 +213,9 @@
 			color: #8c8c8c;
 			padding: 5px;
 		}
+	}
+	.seeAll{
+		font-weight: 900;
 	}
 	.fade-enter-active,
 	.fade-leave-active {

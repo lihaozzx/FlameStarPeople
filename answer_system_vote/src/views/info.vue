@@ -61,6 +61,9 @@
 
 	import shipin from '@/assets/WeChat_20190422144635.mp4'
 	export default {
+		created(){
+			this.$http.post('/vote/votes',this.$qs.stringify({pid:this.$route.query.userId})).then(res=>{console.log(res)})
+		},
 		data() {
 			return {
 				back,
@@ -74,7 +77,7 @@
 				this.showc = !this.showc
 			},
 			paper(){
-				this.$router.push({name:'answer'})
+				this.$router.push({path:'answer',query:{userId:this.$route.query.userId}})
 			}
 		}
 	}
