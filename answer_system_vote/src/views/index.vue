@@ -27,9 +27,9 @@
 							<span>{{k}}</span>
 						</div>
 					</div>
-					<div class="stuInfo" v-for="(k,i) in stuInfo" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''">
+					<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''">
 						<div class="stu_head_div">
-							<div class="stu_head"><img :src="k.img" class="img1"></div>
+							<div class="stu_head"><img :src="k.headUrl" class="img1"></div>
 							<img :src="i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
 						</div>
 						<div class="stu_info">
@@ -37,14 +37,17 @@
 							<span class="s2">{{k.school}}</span>
 							<div class="info">
 								<div>
-									<span>上榜值：{{k.num}}</span>
+									<span>上榜值：{{k.face}}</span>
 								</div>
 								<div>
-									<span>赛区排名：{{k.rank}}</span>
+									<span>赛区排名：{{i+1}}</span>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
+				<div class="seeAll">
+					<span @click="toAll">查看全部参赛人员 ></span>
 				</div>
 				<img class="foot" src="../assets/pub-bg-3.png">
 			</div>
@@ -82,6 +85,11 @@
 
 	import shipin from '@/assets/WeChat_20190422144635.mp4'
 	export default {
+		computed: {
+			show() {
+				return this.stuInfo.filter(e => this.ch == 0 || e.grade == this.nianjibas[this.ch])
+			}
+		},
 		created() {
 			setInterval(() => {
 				if (this.yunwenscroll > 300000) {
@@ -89,7 +97,9 @@
 				} else {
 					this.yunwenscroll++;
 				}
-			}, 50)
+			}, 50);
+			this.initInfo();
+			this.getStudent();
 		},
 		data() {
 			return {
@@ -108,7 +118,7 @@
 				yunwenscroll: 0,
 				search: '',
 				height: innerHeight,
-				nianjibas: ['三年级', '四年级', '五年级', '六年级'],
+				nianjibas: ['全部'],
 				ch: 0,
 				stuInfo: [{
 					id: 0,
@@ -158,12 +168,31 @@
 			},
 			changeShownianji(k) {
 				this.ch = k
+			},
+			toAll() {
+				this.$router.push({
+					name: 'allstu'
+				})
+			},
+			initInfo(){
+				this.$http.post('/vote/basisInfo',this.$qs.stringify({id:4})).then(res => {
+					if(res){
+						this.nianjibas.push(...res.data.content);
+					}
+				})
+			},
+			getStudent() {
+				this.$http.post('/vote/players').then(res => {
+					if(res){
+						this.stuInfo = res.data
+					}
+				})
 			}
 		}
 	}
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 	.first_div {
 		width: 100%;
 		min-height: 100vh;
@@ -278,13 +307,18 @@
 					position: relative;
 					top: -20px;
 					font-size: 1.4rem;
+					flex-wrap: wrap;
 
 					.nian {
-						width: 20%;
-						margin: 0 5%;
+						width: 14%;
+						margin: 0 3%;
+						height: 30px;
 						display: flex;
 						justify-content: center;
 						align-items: center;
+						box-sizing: border-box;
+						white-space: nowrap;
+						margin-bottom: 3px;
 					}
 
 					.nochose {
@@ -314,7 +348,7 @@
 						.stu_head {
 							width: 80%;
 							padding-top: 80%;
-							position:absolute;
+							position: absolute;
 							top: 0;
 							margin: 10px 2%;
 							border-radius: 90px;
@@ -326,7 +360,7 @@
 
 							.img1 {
 								width: 100%;
-								position:absolute;
+								position: absolute;
 								top: 0;
 							}
 
@@ -366,9 +400,8 @@
 
 							div {
 								width: 50%;
-								height: 18px;
 								box-sizing: border-box;
-								padding-left: 5px;
+								padding: 2px 5px;
 								align-items: center;
 								display: flex;
 								border: 1px solid rgba(171, 31, 30, 1);
@@ -389,6 +422,21 @@
 				width: 100%;
 				position: absolute;
 				bottom: 0;
+			}
+
+			.seeAll {
+				width: 100%;
+				text-align: center;
+				font-size: 18px;
+				position: absolute;
+				z-index: 999;
+				left: 0;
+				bottom: 10px;
+				color: #AB1F1E;
+
+				span {
+					cursor: pointer;
+				}
 			}
 		}
 	}
@@ -438,7 +486,8 @@
 				background-size: 100%;
 				padding-bottom: 180px;
 				height: 500px;
-				.rule_div{
+
+				.rule_div {
 					width: 100%;
 					display: flex;
 					justify-content: center;
@@ -448,7 +497,7 @@
 					color: #B22D2C;
 					top: -30px;
 				}
-				
+
 			}
 
 			.foot {

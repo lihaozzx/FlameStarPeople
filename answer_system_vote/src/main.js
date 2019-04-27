@@ -5,7 +5,6 @@ import store from './store'
 
 // import './plugins/element.js'
 import './plugins/request.js'
-
 import './plugins/element.js'
 
 Vue.config.productionTip = false;

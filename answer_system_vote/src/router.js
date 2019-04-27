@@ -28,6 +28,14 @@ export default new Router({
 			meta: {
 				title: '选手信息'
 			}
+		},
+		{
+			path: '/allStu',
+			name: 'allstu',
+			component: resolve => require(['@/views/allstu.vue'], resolve),
+			meta: {
+				title: '所有选手'
+			}
 		}
 	]
 })
