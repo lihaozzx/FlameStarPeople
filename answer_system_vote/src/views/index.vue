@@ -12,7 +12,7 @@
 				</form>
 				<!-- <input type="text" class="search_input" placeholder="搜索孩子姓名或编号" @> -->
 			</div>
-			<div class="scroll_yunwen" :style="'background-position-x: '+ yunwenscroll/3 +'%;'"></div>
+			<div class="scroll_yunwen" :style="'background-position-x: '+ yunwenscroll/20 +'%;'"></div>
 		</div>
 		<div class="two_div">
 			<div class="paibian_div">
@@ -29,12 +29,12 @@
 					</div>
 					<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
 						<div class="stu_head_div">
-							<div class="stu_head"><img :src="k.headUrl" class="img1"></div>
+							<div class="stu_head" :style="'background-image: url('+k.headUrl+');'"></div>
 							<img :src="i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
 						</div>
 						<div class="stu_info">
 							<span class="s1">{{k.name}}</span>
-							<span class="s2">{{k.school}}</span>
+							<span class="s2">{{k.grade}} | {{k.school}}</span>
 							<div class="info">
 								<div>
 									<span>上榜值：{{k.face}}</span>
@@ -60,11 +60,13 @@
 				<video :src="shipin" controls="controls" :poster="fenmian">您的浏览器不支持 video 标签。</video>
 			</div>
 			<div class="guize">
-				<img class="head" src="../assets/pub-bg-1.png">
 				<div class="body">
-					<div class="rule_div"><span class="rule">活动规则</span></div>
+					<div class="rule_div" >
+						<img src="../assets/rule.jpg" class="img1">
+						<img src="../assets/logo-red.png" class="img2">
+						<img src="../assets/banner-bg-bird.png" class="img3">
+					</div>
 				</div>
-				<img class="foot" src="../assets/pub-bg-3.png">
 			</div>
 		</div>
 	</div>
@@ -74,7 +76,7 @@
 	import bang from '@/assets/zhuangyuanbang.png'
 	import niao from '@/assets/banner-bg-big-bird.png'
 	import yun from '@/assets/cloud.png'
-	import paibian from '@/assets/timg.png'
+	import paibian from '@/assets/zhuangyuanbang2.png'
 	import paimin from '@/assets/rank.png'
 	import zhuangyuan from '@/assets/zhuangyuan.png'
 	import bangyan from '@/assets/bangyan.png'
@@ -87,7 +89,7 @@
 	export default {
 		computed: {
 			show() {
-				return this.stuInfo.filter(e => this.ch == 0 || e.grade == this.nianjibas[this.ch])
+				return this.stuInfo.filter(e => this.ch == -1 || e.grade == this.nianjibas[this.ch])
 			}
 		},
 		created() {
@@ -97,7 +99,19 @@
 				} else {
 					this.yunwenscroll++;
 				}
-			}, 50);
+			}, 1);
+			this.niaodong = setInterval(() => {
+				if(this.niaodongqilai>30){
+					clearInterval(this.niaodong);
+					this.niaodong = setInterval(() => {
+						if(this.niaodongqilai<-30){
+							clearInterval(this.niaodong);
+						}
+						this.niaodongqilai--;
+					}, 1);
+				}
+				this.niaodongqilai++;
+			}, 1);
 			this.initInfo();
 			this.getStudent();
 		},
@@ -115,11 +129,13 @@
 				guize,
 				fenmian,
 				shipin,
+				niaodong:null,
+				niaodongqilai:0,
 				yunwenscroll: 0,
 				search: '',
 				height: innerHeight,
-				nianjibas: ['全部'],
-				ch: 0,
+				nianjibas: [],
+				ch: -1,
 				stuInfo: []
 			};
 		},
@@ -156,7 +172,10 @@
 				})
 			},
 			toInfo(id){
-				this.$router.push({path:'info',query:{userId:id}})
+				let urls = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state='+id+'#wechat_redirect';
+				location.href = urls;
+				// 跳转详情 上线后需要切换到跳转授权
+				// this.$router.push({path:'info',query:{userId:id}});
 			}
 		}
 	}
@@ -232,14 +251,16 @@
 	}
 
 	.two_div {
+		min-height: 100vh;
 		width: 100%;
 
 		.paibian_div {
 			width: 100%;
 
 			img {
-				width: 84%;
-				margin-left: 8%;
+				width: 100%;
+				position: relative;
+				top: -30px;
 			}
 		}
 
@@ -280,7 +301,7 @@
 					flex-wrap: wrap;
 
 					.nian {
-						width: 14%;
+						width: 18%;
 						margin: 0 3%;
 						height: 30px;
 						display: flex;
@@ -327,6 +348,9 @@
 							display: flex;
 							justify-content: center;
 							align-items: center;
+							background-position: center;
+							background-size: cover;
+							border: solid 2px #ab1f1e;
 
 							.img1 {
 								width: 100%;
@@ -354,14 +378,16 @@
 						flex-direction: column;
 						justify-content: space-between;
 						margin: 10px 2%;
-						font-size: 1.6rem;
-						font-weight: 900;
 
 						.s1 {
 							color: #AB1F1E;
+							font-weight: 900;
+							font-size: 1.8rem;
 						}
 
-						.s2 {}
+						.s2 {
+							font-size: 1.2rem;
+						}
 
 						.info {
 							width: 100%;
@@ -373,8 +399,12 @@
 								box-sizing: border-box;
 								padding: 2px 5px;
 								align-items: center;
+								justify-content: center;
 								display: flex;
 								border: 1px solid rgba(171, 31, 30, 1);
+							}
+							div:nth-of-type(2){
+								border-left: none;
 							}
 						}
 					}
@@ -440,40 +470,41 @@
 			margin-top: 44px;
 			width: 94%;
 			margin-left: 3%;
+			background-image: url(../assets/pub-bg-1.png),url(../assets/pub-bg-3.png);
+			background-position: top,bottom;
+			background-repeat: no-repeat,no-repeat; 
 			background-size: 100%;
-			background-repeat: repeat-y;
 			position: relative;
-
-			.head {
-				width: 100%;
-				position: absolute;
-				top: 0;
-			}
+			padding: 8px 0 160px 0 ;
 
 			.body {
-				padding: 60px 10px;
+				padding: 0px 10px;
 				background-image: url(../assets/pub-bg-2.png);
 				background-size: 100%;
-				padding-bottom: 180px;
-				height: 500px;
-
 				.rule_div {
 					width: 100%;
-					display: flex;
-					justify-content: center;
 					font-size: 2rem;
 					font-weight: 900;
 					position: relative;
+					top: 10px;
 					color: #B22D2C;
-					top: -30px;
+					.img1{
+						width: 100%;
+					}
+					.img2{
+						width: 50%;
+						position: absolute;
+						bottom: -160px;
+						left: 25%;
+					}
+					.img3{
+						width: 50%;
+						position: absolute;
+						bottom: -120px;
+						left: -2%;
+					}
 				}
 
-			}
-
-			.foot {
-				width: 100%;
-				position: absolute;
-				bottom: 0;
 			}
 		}
 	}

@@ -6,6 +6,9 @@ import store from './store'
 // import './plugins/element.js'
 import './plugins/request.js'
 import './plugins/element.js'
+import common from './plugins/common'
+
+Vue.prototype.$utils = common;
 
 Vue.config.productionTip = false;
 
