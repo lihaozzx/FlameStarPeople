@@ -82,7 +82,7 @@
 			if (this.$store.getters.userInfo != null) {
 				this.$http.post('/vote/topics', this.$qs.stringify({
 					pid: this.$route.query.userId,
-					openid:this.$store.getters.userInfo.openid
+					openid: this.$store.getters.userInfo.openid
 				})).then(res => {
 					if (res) {
 						res.data.forEach(t => {
@@ -115,7 +115,7 @@
 			return {
 				del,
 				stuInfo: {
-					name: '王麻子'
+					name: ''
 				},
 				tiku: [{
 					type: ''
@@ -124,7 +124,8 @@
 				ch: -1,
 				chs: [],
 				zuhedaan: '',
-				score: 0
+				score: 0,
+				cannext: true
 			};
 		},
 		methods: {
@@ -157,34 +158,46 @@
 			next() {
 				if (this.now == 9) {
 					if (this.isright()) {
-						this.$message('答对了，3秒后下一题');
+						this.$message('答对了');
 						this.score++;
 					} else {
-						this.$message('回答错误，3秒后下一题');
+						this.$message('回答错误');
 					}
 					//提交
 					this.$http.post('/vote/addVoteType', this.$qs.stringify({
-						pid:this.stuInfo.id,
-						openid:this.$store.getters.userInfo.openid,
-						head:this.$store.getters.userInfo.openid,
-						tname:this.$store.getters.userInfo.openid,
-						num:this.score*10
+						pid: this.stuInfo.id,
+						openid: this.$store.getters.userInfo.openid,
+						head: this.$store.getters.userInfo.headimgurl,
+						tname: this.$store.getters.userInfo.nickname,
+						num: this.score * 10
 					})).then(res => {
-						
+						if(res){
+							this.$router.go(-1);
+							// this.$alert('您已经为' + this.stuInfo.name + '助力' + this.score * 10 + '上榜值', '成功', {
+							// 	confirmButtonText: '确定',
+							// 	callback: action => {
+							// 		this.$router.go(-1)
+							// 	}
+							// });
+						}
 					})
 				} else {
-					if (this.isright()) {
-						this.$message('答对了，3秒后下一题');
-						this.score++;
-					} else {
-						this.$message('回答错误，3秒后下一题');
+					if (this.cannext) {
+						this.cannext = false;
+						if (this.isright()) {
+							this.$message('答对了，3秒后下一题');
+							this.score++;
+						} else {
+							this.$message('回答错误，3秒后下一题');
+						}
+						setTimeout(() => {
+							this.now++;
+							this.cannext = true;
+						}, 3000);
+						this.ch = -1;
+						this.chs = [];
+						this.zuhedaan = '';
 					}
-					setTimeout(() => {
-						this.now++;
-					}, 3000);
-					this.ch = -1;
-					this.chs = [];
-					this.zuhedaan = '';
 				}
 			},
 			isright() {

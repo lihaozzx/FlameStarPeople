@@ -1,38 +1,35 @@
 <template>
 	<div>
 		<div class="two_div">
-			<div class="paibian_div">
-			</div>
 			<div class="bangdan">
 				<img class="head" src="../assets/pub-bg-1.png">
 				<div class="body">
-					<div class="ninaji" style="margin-bottom: 20px;">
+					<img :src="paimin" class="paimin">
+					<div class="ninaji">
 						<div class="nian" v-for="(k,i) in nianjibas" :key="i" :class="ch==i?'active':'nochose'" @click="changeShownianji(i)">
 							<span>{{k}}</span>
 						</div>
 					</div>
 					<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
 						<div class="stu_head_div">
-							<div class="stu_head"><img :src="k.img" class="img1"></div>
+							<div class="stu_head" :style="'background-image: url('+k.headUrl+');'"></div>
+							<img :src="i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
 						</div>
 						<div class="stu_info">
 							<span class="s1">{{k.name}}</span>
-							<span class="s2">{{k.school}}</span>
+							<span class="s2">{{k.grade}} | {{k.school}}</span>
 							<div class="info">
 								<div>
-									<span>上榜值：{{k.num}}</span>
-								</div>
-								<div>
-									<span>赛区排名：{{k.rank}}</span>
+									<span>上榜值：{{k.face}}</span>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<img class="foot" src="../assets/pub-bg-3.png">
-				<div class="seeAll">
-					<span @click="toAll">更多……</span>
+				<div class="seeAll" @click="toAll">
+					<span>查看更多 >></span>
 				</div>
+				<img class="foot" src="../assets/pub-bg-3.png">
 			</div>
 		</div>
 		<div class="filter_div" @click="searchFilter"><span>按条件筛选></span></div>
@@ -71,6 +68,7 @@
 			}
 		},
 		created(){
+			this.name = this.$route.query.key==undefined?'':this.$route.query.key;
 			this.initInfo();
 			this.getStudent();
 		},
@@ -142,7 +140,9 @@
 				this.getStudent();
 			},
 			toInfo(id){
-				this.$router.push({name:'info',params:{userId:id}})
+				let urls = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state='+id+'#wechat_redirect';
+				location.href = urls;
+				// this.$router.push({name:'info',params:{userId:id}})
 			}
 		}
 	}

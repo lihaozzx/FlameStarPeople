@@ -1,22 +1,25 @@
 <template>
 	<div>
+		<div style="position: absolute;top: 0;right: 0;color: white;cursor: pointer;z-index: 99999999999999999999999999;" @click="toindex"><span>回到首页</span></div>
+		<div style="position: absolute;top: 0;left: 0;color: white;cursor: pointer;z-index: 99999999999999999999999999;" @click="asdasd"><span>清楚缓存</span></div>
 		<div class="center">
 			<div class="head_back">
 				<img :src="back" alt="">
 			</div>
 			<div class="centent">
-				<span class="tongzhi">重要通知：字段字段字段字段字段字段字段字段字段字段字段字段字</span>
+				<span class="tongzhi" v-if="gonggao.length!=0">重要通知：</span>
+				<scroll scrollType="scroll-left-linear"></scroll>
 				<div class="video_div" @click="showcontrols">
-					<video v-if="!showc" :src="stuInfo.videoUrl"></video>
+					<video v-if="!showc" :src="stuInfo.videoUrl" autoplay></video>
 					<video v-else :src="stuInfo.videoUrl" controls></video>
 				</div>
 				<div class="info">
 					<div class="stu_info">
 						<span class="s1">{{stuInfo.name}}</span>
-						<span class="s2">{{stuInfo.grade}}|{{stuInfo.school}}</span>
+						<span class="s2">{{stuInfo.grade}} | {{stuInfo.school}}</span>
 					</div>
 					<div class="rank_info">
-						<span class="s1">赛区状元榜结束倒计时</span>
+						<span class="s1">活动结束倒计时</span>
 						<span class="s2">{{showtime}}</span>
 					</div>
 					<div class="num_info">
@@ -42,20 +45,27 @@
 						<div v-else class="none">
 							<img :src="juanzhou">
 							<span>【 请给孩子写一份家书 】</span>
-							<p>优秀家书将有机会在复决赛现场展示并在电视节目中播出，同时将有机会获得知名书法家《国学家书》真迹。</p>
+							<p>优秀家书将会为选手增加1000上榜值，有机会在复赛、决赛现场展示并在电视节目中播出</p>
 						</div>
 					</div>
 				</div>
 				<div class="relative">
 					<div class="title">
 						<span class="s1">亲友关爱</span>
-						<span class="s2">已有{{toupiao.length}}名亲友加油</span>
+						<span class="s2">已有{{all}}次亲友加油</span>
 					</div>
 					<div class="infos">
-						<div class="info">
-
+						<div class="info" v-for="u in toupiao" :key="u.id">
+							<div class="head_div" :style="'background-image: url('+ u.head +')'"></div>
+							<div class="xiangqin">
+								<div><span>{{u.tname}}</span><span>{{u.date}}</span></div>
+								<span>支持了 {{u.num}} 票</span>
+							</div>
 						</div>
 					</div>
+					<!-- <div class="loadmore">
+						<span @click="loadMore">更多……</span>
+					</div> -->
 				</div>
 			</div>
 		</div>
@@ -93,6 +103,7 @@
 	import close from '@/assets/close.png'
 
 	import shipin from '@/assets/WeChat_20190422144635.mp4'
+	import scroll from '../components/scrollText.vue'
 	export default {
 		computed: {
 			showtime() {
@@ -111,29 +122,16 @@
 			let userid = this.getUrlParam('state');
 			this.userId = userid;
 			let code = this.getUrlParam('code');
-
-			if (this.$store.getters.userInfo == null) {
-				let o = this.$utils.getcookie('weixinInfo');
-				if (o != '') {
-					this.$store.commit('userInfo', this.$qs.parse(o));
-					return
-				}
-				this.$http.post('/vote/get_usertoken', this.$qs.stringify({
-					code: code
-				})).then(res => {
-					if (res) {
-						this.$store.commit('userInfo', res.data);
-						this.$utils.setCookie('weixinInfo', this.$qs.stringify(res.data))
-					}
-				});
-			}
-
+			let that = this;
+			// 选手信息
+			this.getuser();
+			// 充值方式
 			this.$http.post('/vote/goods').then(res => {
 				if (res) {
 					this.chongzhifangshi = res.data;
 				}
 			});
-
+			// 结束时间
 			this.$http.post('/vote/basisInfo', this.$qs.stringify({
 				id: 5
 			})).then(res => {
@@ -144,21 +142,134 @@
 					}, 1000)
 				}
 			});
+			// 选手关系
 			this.$http.post('/vote/basisInfo', this.$qs.stringify({
 				id: 3
 			})).then(res => {
 				if (res) {
 					this.guanxi = res.data.content;
+					this.guanxi.unshift(this.$store.getters.userInfo.nickname);
 				}
-			})
-			this.getuser();
+			});
+			// 投票记录
 			this.$http.post('/vote/votes', this.$qs.stringify({
 				pid: userid
 			})).then(res => {
 				if (res) {
-					this.toupiao = res.data
+					this.toupiao = res.data;
+					this.all = res.pager.total_count;
 				}
 			});
+			// openid那一堆
+			(function() {
+				that.$notify({
+					title: '提示',
+					dangerouslyUseHTMLString: true,
+					iconClass: 'el-icon-warning',
+					message: '<strong style="color:red">自走函数启动</strong>',
+				});
+				if (that.$store.getters.userInfo == null) {
+					let o = that.$utils.getcookie('weixinInfo');
+					if (o != '') {
+						that.$store.commit('userInfo', that.$qs.parse(o));
+						return
+					}
+					if (code == null) {
+						let urls =
+							'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
+							userid + '#wechat_redirect';
+						location.href = urls;
+					} else {
+						that.$http.post('/vote/get_usertoken', that.$qs.stringify({
+							code: code
+						})).then(res => {
+							if (res) {
+								that.$store.commit('userInfo', res.data);
+								that.$utils.setCookie('weixinInfo', that.$qs.stringify(res.data))
+							}
+						});
+					}
+				}
+				that.$http.post('/vote/getJsapiTicket').then(res => {
+					if (res) {
+						that.$http.post('/vote/getSignpackage', that.$qs.stringify({
+							url: window.location.href.split('#')[0]
+						})).then(res => {
+							if (res) {
+								that.$notify({
+									title: '提示',
+									dangerouslyUseHTMLString: true,
+									iconClass: 'el-icon-warning',
+									message: '<strong style="color:red">初始化参数获取成功</strong>',
+								});
+								wx.config({
+									debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+									jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'], // 必填，需要使用的JS接口列表
+									...res.data
+								});
+							}else{
+								that.$notify({
+									title: '提示',
+									dangerouslyUseHTMLString: true,
+									iconClass: 'el-icon-warning',
+									message: '<strong style="color:red">初始化参数获取失败</strong>',
+								});
+							}
+						});
+					}else{
+						that.$notify({
+							title: '提示',
+							dangerouslyUseHTMLString: true,
+							iconClass: 'el-icon-warning',
+							message: '<strong style="color:red">初始化getJsapiTicket失败</strong>',
+						});
+					}
+				})
+				wx.ready(function() {
+					that.$notify({
+						title: '提示',
+						dangerouslyUseHTMLString: true,
+						iconClass: 'el-icon-warning',
+						message: '<strong style="color:red">初始化成功</strong>',
+					});
+					if (wx.updateAppMessageShareData) {
+						that.$notify({
+							title: '提示',
+							dangerouslyUseHTMLString: true,
+							iconClass: 'el-icon-warning',
+							message: '<strong style="color:red">有up</strong>',
+						});
+						wx.updateAppMessageShareData({
+							title: '国学文化交流大使', // 分享标题
+							desc: '国学大会选手【' + that.stuInfo.name + '】，正在践行国学精神，落实国学行动，请帮TA加油', // 分享描述
+							link: 'http://tp.nzjykj.com/index?state=' + that.stuInfo.id + '/#/info',
+							imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
+						});
+					} else {
+						that.$notify({
+							title: '提示',
+							dangerouslyUseHTMLString: true,
+							iconClass: 'el-icon-warning',
+							message: '<strong style="color:red">没有up</strong>',
+						});
+						wx.onMenuShareAppMessage({
+							title: '国学文化交流大使', // 分享标题
+							desc: '国学大会选手【' + that.stuInfo.name + '】，正在践行国学精神，落实国学行动，请帮TA加油', // 分享描述
+							link: 'http://tp.nzjykj.com/index?state=' + that.stuInfo.id + '/#/info',
+							imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
+						});
+					}
+				});
+				wx.error(function(res) {
+					// config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+					that.$notify({
+						title: '提示',
+						dangerouslyUseHTMLString: true,
+						iconClass: 'el-icon-warning',
+						message: '<strong style="color:red">'+res+'</strong>',
+					});
+				});
+			})()
 		},
 		data() {
 			return {
@@ -166,6 +277,7 @@
 				juanzhou,
 				close,
 				shipin,
+				all: 0,
 				showc: false,
 				stuInfo: {
 					name: '',
@@ -174,15 +286,16 @@
 					face: '',
 					videoUrl: ''
 				},
+				gonggao: '',
 				guanxi: [],
 				chongzhifangshi: [],
-				chguanxi: -1,
+				chguanxi: 0,
 				chchongzhi: -1,
 				userId: '',
 				toupiao: [],
 				end: new Date(),
 				now: new Date(),
-				jiashu: '啊啊啊滴滴滴滴滴滴滴多多多多多多多',
+				jiashu: null,
 				chongzhi: false
 			};
 		},
@@ -213,21 +326,31 @@
 			},
 			getuser() {
 				let loadingInstance = this.$loading({
-						lock: true,
-						text: 'Loading',
-						spinner: 'el-icon-loading',
-						background: 'rgba(0, 0, 0, 0.7)'
-					});
+					lock: true,
+					text: 'Loading',
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				});
 				this.$http.post('/vote/playerinfo', this.$qs.stringify({
 					id: this.userId
 				})).then(res => {
 					if (res) {
-						this.stuInfo = res.data
+						this.stuInfo = res.data;
 					}
 					loadingInstance.close();
 				});
 			},
 			recharge() {
+				if (this.chguanxi == -1 || this.chchongzhi == -1) {
+					this.$notify({
+						title: '提示',
+						dangerouslyUseHTMLString: true,
+						iconClass: 'el-icon-warning',
+						message: '<strong>请选择与选手关系或助力方式</strong>',
+						showClose: false
+					});
+					return;
+				}
 				this.$http.post('/vote/wxPay', this.$qs.stringify({
 					pid: this.userId,
 					gid: this.chongzhifangshi[this.chchongzhi].id,
@@ -241,11 +364,6 @@
 							'getBrandWCPayRequest', res,
 							function(ress) {
 								if (res.err_msg == "get_brand_wcpay_request:ok") {
-									this.$http.post('/vote/ceshi', this.$qs.stringify(ress)).then(resss => {
-										if (resss) {
-											console.log(resss);
-										}
-									});
 									this.chongzhi = false;
 									this.getuser();
 									// 使用以上方式判断前端返回,微信团队郑重提示：
@@ -254,8 +372,17 @@
 							});
 					}
 				});
+			},
+			toindex() {
+				location.href = 'http://tp.nzjykj.com/index';
+			},
+			asdasd(){
+				this.$utils.delCookie('weixinInfo');
 			}
-		}
+		},
+		components: {
+			scroll
+		},
 	}
 </script>
 
@@ -263,7 +390,6 @@
 	.center {
 		height: calc(100% - 90px);
 		background-color: white;
-		margin-bottom: 90px;
 		overflow-y: auto;
 
 		.head_back {
@@ -285,6 +411,7 @@
 			width: 85%;
 			margin: 0 calc(15% / 2);
 			position: relative;
+			overflow-x: hidden;
 			top: -150px;
 			z-index: 2;
 			padding-top: 24px;
@@ -292,6 +419,8 @@
 			.tongzhi {
 				color: #FCD363;
 				font-size: 1.6rem;
+				width: 100%;
+				overflow: hidden;
 			}
 
 			.video_div {
@@ -326,6 +455,8 @@
 				}
 
 				.rank_info {
+					width: 80%;
+					margin-left: 10%;
 					margin-top: 18px;
 					height: 80px;
 					display: flex;
@@ -346,7 +477,8 @@
 				}
 
 				.num_info {
-					width: 100%;
+					width: 80%;
+					margin-left: 10%;
 					box-sizing: border-box;
 					padding: 0 4px;
 					margin-top: 20px;
@@ -354,9 +486,9 @@
 					justify-content: space-between;
 
 					.num {
-						width: 120px;
-						height: 120px;
-						border-radius: 63px;
+						width: 80px;
+						height: 80px;
+						border-radius: 45px;
 						border: 5px solid rgba(249, 241, 202, 1);
 						background-color: #FEFAE9;
 						display: flex;
@@ -439,7 +571,6 @@
 			.relative {
 				width: 100%;
 				border-bottom: 2px solid #dfdfdf;
-				padding-bottom: 32px;
 
 				.title {
 					display: flex;
@@ -465,29 +596,39 @@
 					.info {
 						width: 100%;
 						height: 60px;
-						background-color: #A01C19;
 						display: flex;
+						border: none;
 
-						.head_img {
+						.head_div {
 							width: 60px;
-							height: 60px;
 							border-radius: 30px;
-							display: flex;
-							align-items: center;
-							justify-content: center;
-							overflow: hidden;
+							background-position: auto;
+							background-size: 100%
+						}
 
-							img {
+						.xiangqin {
+							width: calc(100% - 60px);
+							height: 100%;
+							display: flex;
+							flex-direction: column;
+							justify-content: space-between;
+
+							div {
 								width: 100%;
+								display: flex;
+								justify-content: space-between;
 							}
 						}
-
-						.fm_info {
-							height: 100%;
-							box-sizing: border-box;
-							padding: 4px 0;
-						}
 					}
+				}
+
+				.loadmore {
+					width: 100%;
+					display: flex;
+					justify-content: center;
+					font-size: 16px;
+					color: #A01C19;
+					font-weight: 900;
 				}
 			}
 		}
@@ -551,13 +692,19 @@
 				div {
 					width: 20%;
 					margin: 4px 2.5%;
-					height: 60px;
+					height: 40px;
 					display: flex;
 					align-items: center;
 					justify-content: center;
 					box-sizing: border-box;
-					font-size: 1.8rem;
+					font-size: 1.6rem;
 					border-radius: 5px;
+
+					span {
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap
+					}
 				}
 
 				.notch {
@@ -584,12 +731,12 @@
 				div {
 					width: 48%;
 					margin: 4px 1%;
-					height: 60px;
+					height: 40px;
 					display: flex;
 					align-items: center;
 					justify-content: center;
 					box-sizing: border-box;
-					font-size: 1.8rem;
+					font-size: 1.6rem;
 					border-radius: 5px;
 				}
 

@@ -47,7 +47,7 @@
 					</div>
 				</div>
 				<div class="seeAll">
-					<span @click="toAll">查看全部参赛人员 ></span>
+					<span @click="toAll">查看全部参赛人员 >></span>
 				</div>
 				<img class="foot" src="../assets/pub-bg-3.png">
 			</div>
@@ -62,7 +62,7 @@
 			<div class="guize">
 				<div class="body">
 					<div class="rule_div" >
-						<img src="../assets/rule.jpg" class="img1">
+						<img src="../assets/rule.png" class="img1">
 						<img src="../assets/logo-red.png" class="img2">
 						<img src="../assets/banner-bg-bird.png" class="img3">
 					</div>
@@ -143,7 +143,7 @@
 			// 组件的方法
 			searchFun(e) {
 				if (e.keyCode == 13) {
-					alert('搜索' + this.search);
+					this.$router.push({path:'allStu',query:{key:this.search}});
 				}
 			},
 			choseSearch() {
@@ -315,6 +315,7 @@
 					.nochose {
 						background-color: #F9F1CA;
 						color: #AB1F1E;
+						border: 2px solid #ab1f1e;
 					}
 
 					.active {
@@ -427,7 +428,7 @@
 			.seeAll {
 				width: 100%;
 				text-align: center;
-				font-size: 18px;
+				font-size: 1.4rem;
 				position: absolute;
 				z-index: 999;
 				left: 0;
@@ -459,8 +460,7 @@
 			width: 90%;
 			margin-left: 5%;
 			border: #AB1F1E solid 5px;
-			background-color: #F9F1CA;
-
+			padding: 0;
 			video {
 				width: 100%;
 			}

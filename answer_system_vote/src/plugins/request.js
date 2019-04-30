@@ -6,6 +6,7 @@ import router from '../router'
 
 Vue.prototype.$qs = qs
 
+Vue.prototype.$url = 'http://tp.nzjykj.com'
 axios.defaults.baseURL = 'http://tp.nzjykj.com';
 axios.defaults.timeout = 50000;
 Vue.prototype.$http = axios;
@@ -54,7 +55,7 @@ axios.interceptors.response.use(function(response) {
 		} else if (response.data.status == 1) {
 			// 1表示无返回数据
 			Vue.prototype.$notify({
-				title: '异常',
+				title: '提示',
 				dangerouslyUseHTMLString: true,
 				iconClass: 'el-icon-warning',
 				message: '<strong style="color:red">'+response.data.msg+'</strong>',
