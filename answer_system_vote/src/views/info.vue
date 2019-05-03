@@ -1,7 +1,6 @@
 <template>
 	<div>
 		<div style="position: absolute;top: 0;right: 0;color: white;cursor: pointer;z-index: 99999999999999999999999999;" @click="toindex"><span>回到首页</span></div>
-		<div style="position: absolute;top: 0;left: 0;color: white;cursor: pointer;z-index: 99999999999999999999999999;" @click="asdasd"><span>清楚缓存</span></div>
 		<div class="center">
 			<div class="head_back">
 				<img :src="back" alt="">
@@ -121,8 +120,7 @@
 		created() {
 			let userid = this.getUrlParam('state');
 			this.userId = userid;
-			let code = this.getUrlParam('code');
-			let that = this;
+			
 			// 选手信息
 			this.getuser();
 			// 充值方式
@@ -161,115 +159,64 @@
 				}
 			});
 			// openid那一堆
+			let that = this;
 			(function() {
-				that.$notify({
-					title: '提示',
-					dangerouslyUseHTMLString: true,
-					iconClass: 'el-icon-warning',
-					message: '<strong style="color:red">自走函数启动</strong>',
-				});
+				let code = that.getUrlParam('code');
 				if (that.$store.getters.userInfo == null) {
 					let o = that.$utils.getcookie('weixinInfo');
 					if (o != '') {
 						that.$store.commit('userInfo', that.$qs.parse(o));
-						return
-					}
-					if (code == null) {
-						let urls =
-							'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
-							userid + '#wechat_redirect';
-						location.href = urls;
-					} else {
-						that.$http.post('/vote/get_usertoken', that.$qs.stringify({
-							code: code
-						})).then(res => {
-							if (res) {
-								that.$store.commit('userInfo', res.data);
-								that.$utils.setCookie('weixinInfo', that.$qs.stringify(res.data))
-							}
-						});
+					}else{
+						if (code == null) {
+							let urls =
+								'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
+								userid + '#wechat_redirect';
+							location.href = urls;
+						} else {
+							that.$http.post('/vote/get_usertoken', that.$qs.stringify({
+								code: code
+							})).then(res => {
+								if (res) {
+									that.$store.commit('userInfo', res.data);
+									that.$utils.setCookie('weixinInfo', that.$qs.stringify(res.data))
+								}
+							});
+						}
 					}
 				}
-				that.$http.post('/vote/getJsapiTicket').then(res => {
-					if (res) {
-						that.$http.post('/vote/getSignpackage', that.$qs.stringify({
-							url: window.location.href.split('#')[0]
-						})).then(res => {
-							if (res) {
-								that.$notify({
-									title: '提示',
-									dangerouslyUseHTMLString: true,
-									iconClass: 'el-icon-warning',
-									message: '<strong style="color:red">初始化参数获取成功</strong>',
-								});
-								wx.config({
-									debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-									jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'], // 必填，需要使用的JS接口列表
-									...res.data
-								});
-							}else{
-								that.$notify({
-									title: '提示',
-									dangerouslyUseHTMLString: true,
-									iconClass: 'el-icon-warning',
-									message: '<strong style="color:red">初始化参数获取失败</strong>',
-								});
-							}
-						});
-					}else{
-						that.$notify({
-							title: '提示',
-							dangerouslyUseHTMLString: true,
-							iconClass: 'el-icon-warning',
-							message: '<strong style="color:red">初始化getJsapiTicket失败</strong>',
-						});
-					}
-				})
-				wx.ready(function() {
-					that.$notify({
-						title: '提示',
-						dangerouslyUseHTMLString: true,
-						iconClass: 'el-icon-warning',
-						message: '<strong style="color:red">初始化成功</strong>',
+			})();
+			that.$http.post('/vote/getJsapiTicket').then(res => {
+				if (res) {
+					that.$http.post('/vote/getSignpackage', that.$qs.stringify({
+						url: window.location.href.split('#')[0]
+					})).then(res => {
+						if (res) {
+							wx.config({
+								debug: false, 
+								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'], 
+								...res.data
+							});
+						}
 					});
-					if (wx.updateAppMessageShareData) {
-						that.$notify({
-							title: '提示',
-							dangerouslyUseHTMLString: true,
-							iconClass: 'el-icon-warning',
-							message: '<strong style="color:red">有up</strong>',
-						});
-						wx.updateAppMessageShareData({
-							title: '国学文化交流大使', // 分享标题
-							desc: '国学大会选手【' + that.stuInfo.name + '】，正在践行国学精神，落实国学行动，请帮TA加油', // 分享描述
-							link: 'http://tp.nzjykj.com/index?state=' + that.stuInfo.id + '/#/info',
-							imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
-						});
-					} else {
-						that.$notify({
-							title: '提示',
-							dangerouslyUseHTMLString: true,
-							iconClass: 'el-icon-warning',
-							message: '<strong style="color:red">没有up</strong>',
-						});
-						wx.onMenuShareAppMessage({
-							title: '国学文化交流大使', // 分享标题
-							desc: '国学大会选手【' + that.stuInfo.name + '】，正在践行国学精神，落实国学行动，请帮TA加油', // 分享描述
-							link: 'http://tp.nzjykj.com/index?state=' + that.stuInfo.id + '/#/info',
-							imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
-						});
-					}
-				});
-				wx.error(function(res) {
-					// config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-					that.$notify({
-						title: '提示',
-						dangerouslyUseHTMLString: true,
-						iconClass: 'el-icon-warning',
-						message: '<strong style="color:red">'+res+'</strong>',
+				}
+			})
+			wx.ready(function() {
+				if (wx.updateAppMessageShareData) {
+					wx.updateAppMessageShareData({
+						title: '国学文化交流大使', // 分享标题
+						desc: '国学大会选手【' + that.stuInfo.name + '】，正在践行国学精神，落实国学行动，请帮TA加油', // 分享描述
+						link: 'http://tp.nzjykj.com/index?state=' + that.stuInfo.id + '/#/info',
+						imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
 					});
-				});
-			})()
+				} else {
+					wx.onMenuShareAppMessage({
+						title: '国学文化交流大使', // 分享标题
+						desc: '国学大会选手【' + that.stuInfo.name + '】，正在践行国学精神，落实国学行动，请帮TA加油', // 分享描述
+						link: 'http://tp.nzjykj.com/index?state=' + that.stuInfo.id + '/#/info',
+						imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
+					});
+				}
+			});
 		},
 		data() {
 			return {
@@ -376,9 +323,6 @@
 			toindex() {
 				location.href = 'http://tp.nzjykj.com/index';
 			},
-			asdasd(){
-				this.$utils.delCookie('weixinInfo');
-			}
 		},
 		components: {
 			scroll
