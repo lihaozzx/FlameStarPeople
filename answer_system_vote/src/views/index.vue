@@ -92,6 +92,9 @@
 				return this.stuInfo.filter(e => this.ch == -1 || e.grade == this.nianjibas[this.ch])
 			}
 		},
+		beforeMount(){
+			this.ch = 0;
+		},
 		created() {
 			setInterval(() => {
 				if (this.yunwenscroll > 300000) {

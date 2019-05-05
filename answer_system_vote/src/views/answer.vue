@@ -54,6 +54,13 @@
 				{{this.now==9?'完成':'下一题'}}
 			</div>
 		</div>
+		<el-dialog :title="dialogText==0?'请登录':'成功'" :visible.sync="showdialog" width="30%" :before-close="handleClose">
+			<span>{{dialogText==0?'答题之前请登录':'您已经为' + this.stuInfo.name + '增加' + this.score * 10 + '上榜值'}}</span>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="showdialog = false">取 消</el-button>
+				<el-button type="primary" @click="goback">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 
@@ -100,14 +107,8 @@
 					}
 				});
 			} else {
-				this.$alert('答题之前请登录', '请登录', {
-					confirmButtonText: '确定',
-					callback: action => {
-						this.$router.push({
-							name: 'index'
-						})
-					}
-				});
+				this.showdialog = true;
+				this.dialogText = 0;
 			}
 
 		},
@@ -125,11 +126,22 @@
 				chs: [],
 				zuhedaan: '',
 				score: 0,
-				cannext: true
+				cannext: true,
+				showdialog: false,
+				dialogText: 0
 			};
 		},
 		methods: {
 			// 组件的方法
+			goback() {
+				if(this.dialogText==0){
+					this.$router.push({
+						name: 'index'
+					});
+				}else{
+					this.$router.go(-1);
+				}
+			},
 			choseAns(k) {
 				if (this.topic.type == '组合题') {
 					this.zuhedaan += k;
@@ -156,53 +168,52 @@
 				this.chs.pop();
 			},
 			next() {
-				if (this.now == 9) {
-					if (this.isright()) {
-						this.$message('答对了');
-						this.score++;
-					} else {
-						this.$message('回答错误');
-					}
-					//提交
-					this.$http.post('/vote/addVoteType', this.$qs.stringify({
-						pid: this.stuInfo.id,
-						openid: this.$store.getters.userInfo.openid,
-						head: this.$store.getters.userInfo.headimgurl,
-						tname: this.$store.getters.userInfo.nickname,
-						num: this.score * 10
-					})).then(res => {
-						if(res){
-							this.$router.go(-1);
-							// this.$alert('您已经为' + this.stuInfo.name + '助力' + this.score * 10 + '上榜值', '成功', {
-							// 	confirmButtonText: '确定',
-							// 	callback: action => {
-							// 		this.$router.go(-1)
-							// 	}
-							// });
-						}
-					})
+				if (this.ch == -1 && this.chs.length == 0 && this.zuhedaan == '') {
+					this.$message('请选择答案');
 				} else {
-					if (this.cannext) {
-						this.cannext = false;
+					if (this.now == 9) {
 						if (this.isright()) {
-							this.$message('答对了，3秒后下一题');
+							this.$message('答对了');
 							this.score++;
 						} else {
-							this.$message('回答错误，3秒后下一题');
+							this.$message('回答错误');
 						}
-						setTimeout(() => {
-							this.now++;
-							this.cannext = true;
-						}, 3000);
-						this.ch = -1;
-						this.chs = [];
-						this.zuhedaan = '';
+						//提交
+						this.$http.post('/vote/addVoteType', this.$qs.stringify({
+							pid: this.stuInfo.id,
+							openid: this.$store.getters.userInfo.openid,
+							head: this.$store.getters.userInfo.headimgurl,
+							tname: this.$store.getters.userInfo.nickname,
+							num: this.score * 10
+						})).then(res => {
+							if (res) {
+								this.showdialog = true;
+								this.dialogText = 1;
+							}
+						})
+					} else {
+						if (this.cannext) {
+							this.cannext = false;
+							if (this.isright()) {
+								this.$message('回答正确，3秒后下一题');
+								this.score++;
+							} else {
+								this.$message('回答错误，正确答案：' + this.topic.answer + '，3秒后下一题');
+							}
+							setTimeout(() => {
+								this.now++;
+								this.cannext = true;
+							}, 3000);
+							this.ch = -1;
+							this.chs = [];
+							this.zuhedaan = '';
+						}
 					}
 				}
 			},
 			isright() {
 				let t = { ...this.topic
-				};
+				}
 				if (t.type == '问答题') {
 					return t.answer == t.xuanx[this.ch]
 				} else if (t.type == '填空题') {

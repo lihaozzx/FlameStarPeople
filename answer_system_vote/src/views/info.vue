@@ -14,8 +14,11 @@
 				</div>
 				<div class="info">
 					<div class="stu_info">
-						<span class="s1">{{stuInfo.name}}</span>
-						<span class="s2">{{stuInfo.grade}} | {{stuInfo.school}}</span>
+						<div class="head" :style="'background-image: url('+stuInfo.headUrl+');'"></div>
+						<div class="info">
+							<span class="s1"><span style="color: #FCD363;">{{stuInfo.name}}</span> | <span style="font-size:1.4rem ;color: #A01C19;">选手编号:{{stuInfo.id}}</span></span>
+							<span class="s2">{{stuInfo.grade}} | {{stuInfo.school}}</span>
+						</div>
 					</div>
 					<div class="rank_info">
 						<span class="s1">活动结束倒计时</span>
@@ -50,15 +53,16 @@
 				</div>
 				<div class="relative">
 					<div class="title">
-						<span class="s1">亲友关爱</span>
-						<span class="s2">已有{{all}}次亲友加油</span>
+						<span class="s1">亲友助力</span>
+						<span class="s2">已有{{all}}次亲友助力</span>
 					</div>
+					{{test}}
 					<div class="infos">
 						<div class="info" v-for="u in toupiao" :key="u.id">
 							<div class="head_div" :style="'background-image: url('+ u.head +')'"></div>
 							<div class="xiangqin">
-								<div><span>{{u.tname}}</span><span>{{u.date}}</span></div>
-								<span>支持了 {{u.num}} 票</span>
+								<div><span>{{u.shenf}}</span><span>{{u.date}}</span></div>
+								<span>支持了 {{stuInfo.name}} {{u.num}} 票</span>
 							</div>
 						</div>
 					</div>
@@ -120,7 +124,7 @@
 		created() {
 			let userid = this.getUrlParam('state');
 			this.userId = userid;
-			
+
 			// 选手信息
 			this.getuser();
 			// 充值方式
@@ -140,15 +144,6 @@
 					}, 1000)
 				}
 			});
-			// 选手关系
-			this.$http.post('/vote/basisInfo', this.$qs.stringify({
-				id: 3
-			})).then(res => {
-				if (res) {
-					this.guanxi = res.data.content;
-					this.guanxi.unshift(this.$store.getters.userInfo.nickname);
-				}
-			});
 			// 投票记录
 			this.$http.post('/vote/votes', this.$qs.stringify({
 				pid: userid
@@ -166,7 +161,7 @@
 					let o = that.$utils.getcookie('weixinInfo');
 					if (o != '') {
 						that.$store.commit('userInfo', that.$qs.parse(o));
-					}else{
+					} else {
 						if (code == null) {
 							let urls =
 								'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
@@ -184,6 +179,15 @@
 						}
 					}
 				}
+				// 选手关系
+				that.$http.post('/vote/basisInfo', that.$qs.stringify({
+					id: 3
+				})).then(res => {
+					if (res) {
+						that.guanxi = res.data.content;
+						that.guanxi.unshift(that.$store.getters.userInfo.nickname);
+					}
+				});
 			})();
 			that.$http.post('/vote/getJsapiTicket').then(res => {
 				if (res) {
@@ -192,8 +196,8 @@
 					})).then(res => {
 						if (res) {
 							wx.config({
-								debug: false, 
-								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'], 
+								debug: false,
+								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
 								...res.data
 							});
 						}
@@ -243,7 +247,8 @@
 				end: new Date(),
 				now: new Date(),
 				jiashu: null,
-				chongzhi: false
+				chongzhi: false,
+				test:null
 			};
 		},
 		methods: {
@@ -310,18 +315,20 @@
 						WeixinJSBridge.invoke(
 							'getBrandWCPayRequest', res,
 							function(ress) {
-								if (res.err_msg == "get_brand_wcpay_request:ok") {
-									this.chongzhi = false;
-									this.getuser();
+								this.test=ress;
+								
+								if (ress.err_msg == "get_brand_wcpay_request:ok") {
 									// 使用以上方式判断前端返回,微信团队郑重提示：
 									//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+									this.chongzhi = false;
+									this.getuser();
 								}
 							});
 					}
 				});
 			},
 			toindex() {
-				location.href = 'http://tp.nzjykj.com/index';
+				location.href = this.$url+'/index';
 			},
 		},
 		components: {
@@ -378,23 +385,39 @@
 
 			.info {
 				width: 100%;
-				border-bottom: 2px solid #dfdfdf;
 				padding-bottom: 32px;
 
 				.stu_info {
+					height: 5rem;
 					display: flex;
-					flex-direction: column;
 					margin-top: 26px;
 
-					.s1 {
-						font-size: 1.6rem;
-						font-weight: 900;
+					.head {
+						width: 6rem;
+						height: 5rem;
+						border-radius: 9990px;
+						background-size: 250%;
+						background-position: center 10%;
+						margin-left: 5px;
+						margin-right: 10px;
+						border: 1px solid #A01C19;
 					}
 
-					.s2 {
-						margin-top: 6px;
-						font-size: 1.4rem;
-						color: rgba(0, 0, 0, 0.3);
+					.info {
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+
+						.s1 {
+							font-size: 1.6rem;
+							font-weight: 900;
+						}
+
+						.s2 {
+							margin-top: 6px;
+							font-size: 1.4rem;
+							color: rgba(0, 0, 0, 0.3);
+						}
 					}
 				}
 
