@@ -326,12 +326,13 @@
 									this.authorization();
 								}
 							})
+						}else{
+							wx.config({
+								debug: false,
+								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
+								...res.data
+							});
 						}
-						wx.config({
-							debug: false,
-							jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
-							...res.data
-						});
 					}
 				});
 			},

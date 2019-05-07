@@ -1,21 +1,25 @@
 <template>
 	<div>
 		<el-table v-loading="inAdd" :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" height="94%" style="width: 100%;">
+			<el-table-column label="选手id" prop="pid"></el-table-column>
 			<el-table-column label="助力人" prop="tname"></el-table-column>
 			<el-table-column label="身份" prop="shenf"></el-table-column>
 			<el-table-column label="票数" prop="num"></el-table-column>
 			<el-table-column label="投票时间" prop="date"></el-table-column>
-			<el-table-column>
-				<template slot="header">
-					<el-switch active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-					<el-switch active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-				</template>
+			<el-table-column label="方式">
 				<template slot-scope="scope">
 					<span>{{scope.row.type==1?'答题':'充值'}}</span>
 				</template>
 			</el-table-column>
 		</el-table>
 
+		<div>
+			<span class="mr">答题</span>
+			<el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="chdt"></el-switch>
+			<div style="width: 50px; height: 1px;"></div>
+			<span class="mr">支付</span>
+			<el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="chzf"></el-switch>
+		</div>
 		<div class="infoFooter">
 			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selCpm"></el-pagination>
 		</div>
@@ -30,7 +34,7 @@
 					<el-table-column label="选项" prop="xuanx"></el-table-column>
 					<el-table-column label="答案" prop="answer"></el-table-column>
 					<el-table-column align="right" fixed="right" width="100">
-						<template slot="header" slot-scope="scope">
+						<template slot="header">
 							<el-input v-model="search2" size="mini" placeholder="题目" />
 						</template>
 						<template slot-scope="scope">
@@ -107,7 +111,9 @@
 					totalCount: 0,
 					size: 0,
 					nowPage: 1,
-				}
+				},
+				chdt:true,
+				chzf:true
 			}
 		},
 		methods: {
@@ -246,5 +252,8 @@
 		position: absolute;
 		right: 5px;
 		bottom: 1%;
+	}
+	.mr{
+		margin-right: 2px;
 	}
 </style>

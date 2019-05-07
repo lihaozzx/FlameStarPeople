@@ -6,10 +6,11 @@
 			<div class="one_tap" @click="addTab('学生信息','stuInfo')"><span>学生信息</span></div>
 			<div class="one_tap" @click="addTab('投票题库','bank')"><span>投票题库</span></div>
 			<div class="one_tap" @click="addTab('投票记录','logs')"><span>投票记录</span></div>
+			<div class="one_tap" @click="addTab('家书审核','letter')"><span>家书审核</span></div>
 		</div>
 		<div class="show_div">
 			<el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
-				<el-tab-pane v-for="(item, index) in editableTabs" :key="item.name" :label="item.title" :name="item.name">
+				<el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name">
 					<router-view class="center" :name="item.content"></router-view>
 				</el-tab-pane>
 			</el-tabs>

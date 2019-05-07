@@ -54,7 +54,7 @@
 				{{this.now==9?'完成':'下一题'}}
 			</div>
 		</div>
-		<el-dialog :title="dialogText==0?'请登录':'成功'" :visible.sync="showdialog" width="30%">
+		<el-dialog :title="dialogText==0?'请登录':'成功'" :visible.sync="showdialog" width="80%">
 			<span>{{dialogText==0?'答题之前请登录':'您已经为' + this.stuInfo.name + '增加' + this.score * 10 + '上榜值'}}</span>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showdialog = false">取 消</el-button>

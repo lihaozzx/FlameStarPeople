@@ -23,7 +23,7 @@
 				<span class="back">返回选手页面</span>
 			</div>
 		</div>
-		<el-dialog :title="suc?'成功':'失败'" :visible.sync="showdialog" width="30%">
+		<el-dialog :title="suc?'成功':'失败'" :visible.sync="showdialog" width="80%">
 			<span>{{suc?'家书上传成功':'家书上传失败'}}</span>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showdialog = false">取 消</el-button>
@@ -51,7 +51,11 @@
 		methods: {
 			// 组件的方法
 			goback(){
-				this.$router.go(-1);
+				if(this.suc){
+					this.$router.go(-1);
+				}else{
+					this.showdialog = false;
+				}
 			},
 			subLetter(){
 				this.$http.post('/vote/addletter',this.$qs.stringify({

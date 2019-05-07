@@ -6,7 +6,8 @@ import router from '../router'
 
 Vue.prototype.$qs = qs
 
-axios.defaults.baseURL = 'http://192.168.1.100:9002';
+Vue.prototype.$url = 'http://tp.nzjykj.com'
+axios.defaults.baseURL = 'http://tp.nzjykj.com';
 axios.defaults.timeout = 5000;
 Vue.prototype.$http = axios;
 

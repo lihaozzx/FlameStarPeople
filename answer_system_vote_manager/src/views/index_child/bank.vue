@@ -8,7 +8,7 @@
 				<el-table-column label="选项" prop="xuanx"></el-table-column>
 				<el-table-column label="答案" prop="answer"></el-table-column>
 				<el-table-column align="right" width="240">
-					<template slot="header" slot-scope="scope">
+					<template slot="header">
 						<div style="display: flex;">
 							<el-input v-model="search" size="mini" placeholder="题目搜索" />
 							<el-button type="success" round @click="showup=true">上传</el-button>
@@ -35,7 +35,7 @@
 					<el-table-column label="选项" prop="xuanx"></el-table-column>
 					<el-table-column label="答案" prop="answer"></el-table-column>
 					<el-table-column align="right" fixed="right" width="100">
-						<template slot="header" slot-scope="scope">
+						<template slot="header">
 							<el-input v-model="search2" size="mini" placeholder="题目" />
 						</template>
 						<template slot-scope="scope">
