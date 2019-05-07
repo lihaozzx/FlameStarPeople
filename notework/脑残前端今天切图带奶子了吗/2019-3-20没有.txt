@@ -1,3 +1,0 @@
-vue router:$router.push({name: 'user', params: { userId: '123' }}
-	   $route.params.userId
-NMD就少了个r

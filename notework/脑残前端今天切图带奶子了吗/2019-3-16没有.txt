@@ -1,3 +1,0 @@
-﻿安装vue-cli3 然后创建项目
-npm i @vue/cli -g
-vuecli牛逼！

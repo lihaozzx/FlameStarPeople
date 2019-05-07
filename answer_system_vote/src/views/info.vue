@@ -46,7 +46,7 @@
 						</div>
 						<div v-else class="none">
 							<img :src="juanzhou">
-							<span>【 请给孩子写一份家书 】</span>
+							<span @click="towl">【 请给孩子写一份家书 】</span>
 							<p>优秀家书将会为选手增加1000上榜值，有机会在复赛、决赛现场展示并在电视节目中播出</p>
 						</div>
 					</div>
@@ -149,8 +149,10 @@
 				pid: userid
 			})).then(res => {
 				if (res) {
-					this.toupiao = res.data;
-					this.all = res.pager.total_count;
+					if(res.status == 0){
+						this.toupiao = res.data;
+						this.all = res.pager.total_count;
+					}
 				}
 			});
 			// openid那一堆
@@ -189,21 +191,7 @@
 					}
 				});
 			})();
-			that.$http.post('/vote/getJsapiTicket').then(res => {
-				if (res) {
-					that.$http.post('/vote/getSignpackage', that.$qs.stringify({
-						url: window.location.href.split('#')[0]
-					})).then(res => {
-						if (res) {
-							wx.config({
-								debug: false,
-								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
-								...res.data
-							});
-						}
-					});
-				}
-			})
+			that.authorization();//授权
 			wx.ready(function() {
 				if (wx.updateAppMessageShareData) {
 					wx.updateAppMessageShareData({
@@ -327,9 +315,32 @@
 					}
 				});
 			},
+			authorization(){
+				that.$http.post('/vote/getSignpackage', that.$qs.stringify({
+					url: window.location.href.split('#')[0]
+				})).then(res => {
+					if (res) {
+						if(res.status == 800){
+							that.$http.post('/vote/getJsapiTicket').then(res => {
+								if (res) {
+									this.authorization();
+								}
+							})
+						}
+						wx.config({
+							debug: false,
+							jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
+							...res.data
+						});
+					}
+				});
+			},
 			toindex() {
 				location.href = this.$url+'/index';
 			},
+			towl(){
+				this.$router.push({name:'writeLetter'});
+			}
 		},
 		components: {
 			scroll

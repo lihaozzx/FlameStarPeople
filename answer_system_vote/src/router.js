@@ -36,6 +36,14 @@ export default new Router({
 			meta: {
 				title: '所有选手'
 			}
+		},
+		{
+			path: '/writeLetter',
+			name: 'writeLetter',
+			component: resolve => require(['@/views/writeLetter.vue'], resolve),
+			meta: {
+				title: '书写家书'
+			}
 		}
 	]
 })
