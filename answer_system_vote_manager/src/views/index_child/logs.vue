@@ -1,7 +1,6 @@
 <template>
 	<div>
-		<el-table v-loading="inAdd" :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-		 height="94%" style="width: 100%;">
+		<el-table v-loading="inAdd" :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" height="94%" style="width: 100%;">
 			<el-table-column label="助力人" prop="tname"></el-table-column>
 			<el-table-column label="身份" prop="shenf"></el-table-column>
 			<el-table-column label="票数" prop="num"></el-table-column>
@@ -18,14 +17,12 @@
 		</el-table>
 
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage"
-			 @current-change="selCpm"></el-pagination>
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selCpm"></el-pagination>
 		</div>
 
 		<el-dialog title="上传" :visible.sync="showup">
 			<div v-if="haveInfo">
-				<el-table :data="upedTable.filter(data => !search2 || data.name.toLowerCase().includes(search2.toLowerCase()))"
-				 style="width: 100%">
+				<el-table :data="upedTable.filter(data => !search2 || data.name.toLowerCase().includes(search2.toLowerCase()))" style="width: 100%">
 					<el-table-column label="分数" prop="score"></el-table-column>
 					<el-table-column label="题目" prop="name" width="250"></el-table-column>
 					<el-table-column label="主题" prop="cate" width="100"></el-table-column>

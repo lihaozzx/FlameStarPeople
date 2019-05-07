@@ -22,8 +22,7 @@
 		</el-table>
 
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage"
-			 @current-change="selCpm"></el-pagination>
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selCpm"></el-pagination>
 		</div>
 
 		<el-dialog title="上传" :visible.sync="showup">

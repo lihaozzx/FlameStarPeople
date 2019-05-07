@@ -339,7 +339,7 @@
 				location.href = this.$url+'/index';
 			},
 			towl(){
-				this.$router.push({name:'writeLetter'});
+				this.$router.push({name:'writeLetter',params:this.stuInfo});
 			}
 		},
 		components: {

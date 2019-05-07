@@ -61,7 +61,7 @@
 			</div>
 			<div class="guize">
 				<div class="body">
-					<div class="rule_div" >
+					<div class="rule_div">
 						<img src="../assets/rule.png" class="img1">
 						<img src="../assets/logo-red.png" class="img2">
 						<img src="../assets/banner-bg-bird.png" class="img3">
@@ -92,7 +92,7 @@
 				return this.stuInfo.filter(e => this.ch == -1 || e.grade == this.nianjibas[this.ch])
 			}
 		},
-		beforeMount(){
+		beforeMount() {
 			this.ch = 0;
 		},
 		created() {
@@ -104,10 +104,10 @@
 				}
 			}, 1);
 			this.niaodong = setInterval(() => {
-				if(this.niaodongqilai>30){
+				if (this.niaodongqilai > 30) {
 					clearInterval(this.niaodong);
 					this.niaodong = setInterval(() => {
-						if(this.niaodongqilai<-30){
+						if (this.niaodongqilai < -30) {
 							clearInterval(this.niaodong);
 						}
 						this.niaodongqilai--;
@@ -132,8 +132,8 @@
 				guize,
 				fenmian,
 				shipin,
-				niaodong:null,
-				niaodongqilai:0,
+				niaodong: null,
+				niaodongqilai: 0,
 				yunwenscroll: 0,
 				search: '',
 				height: innerHeight,
@@ -146,7 +146,12 @@
 			// 组件的方法
 			searchFun(e) {
 				if (e.keyCode == 13) {
-					this.$router.push({path:'allStu',query:{key:this.search}});
+					this.$router.push({
+						path: 'allStu',
+						query: {
+							key: this.search
+						}
+					});
 				}
 			},
 			choseSearch() {
@@ -160,22 +165,26 @@
 					name: 'allstu'
 				})
 			},
-			initInfo(){
-				this.$http.post('/vote/basisInfo',this.$qs.stringify({id:4})).then(res => {
-					if(res){
+			initInfo() {
+				this.$http.post('/vote/basisInfo', this.$qs.stringify({
+					id: 4
+				})).then(res => {
+					if (res) {
 						this.nianjibas.push(...res.data.content);
 					}
 				})
 			},
 			getStudent() {
 				this.$http.post('/vote/players').then(res => {
-					if(res){
+					if (res) {
 						this.stuInfo = res.data
 					}
 				})
 			},
-			toInfo(id){
-				let urls = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state='+id+'#wechat_redirect';
+			toInfo(id) {
+				let urls =
+					'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
+					id + '#wechat_redirect';
 				location.href = urls;
 				// 跳转详情 上线后需要切换到跳转授权
 				// this.$router.push({path:'info',query:{userId:id}});
@@ -406,12 +415,15 @@
 								justify-content: center;
 								display: flex;
 								border: 1px solid rgba(171, 31, 30, 1);
-								span{
+
+								span {
 									overflow: hidden;
 									text-overflow: ellipsis;
+									white-space: nowrap;
 								}
 							}
-							div:nth-of-type(2){
+
+							div:nth-of-type(2) {
 								border-left: none;
 							}
 						}
@@ -468,6 +480,7 @@
 			margin-left: 5%;
 			border: #AB1F1E solid 5px;
 			padding: 0;
+
 			video {
 				width: 100%;
 			}
@@ -477,17 +490,18 @@
 			margin-top: 44px;
 			width: 94%;
 			margin-left: 3%;
-			background-image: url(../assets/pub-bg-1.png),url(../assets/pub-bg-3.png);
-			background-position: top,bottom;
-			background-repeat: no-repeat,no-repeat; 
+			background-image: url(../assets/pub-bg-1.png), url(../assets/pub-bg-3.png);
+			background-position: top, bottom;
+			background-repeat: no-repeat, no-repeat;
 			background-size: 100%;
 			position: relative;
-			padding: 8px 0 160px 0 ;
+			padding: 8px 0 160px 0;
 
 			.body {
 				padding: 0px 10px;
 				background-image: url(../assets/pub-bg-2.png);
 				background-size: 100%;
+
 				.rule_div {
 					width: 100%;
 					font-size: 2rem;
@@ -495,16 +509,19 @@
 					position: relative;
 					top: 10px;
 					color: #B22D2C;
-					.img1{
+
+					.img1 {
 						width: 100%;
 					}
-					.img2{
+
+					.img2 {
 						width: 50%;
 						position: absolute;
 						bottom: -160px;
 						left: 25%;
 					}
-					.img3{
+
+					.img3 {
 						width: 50%;
 						position: absolute;
 						bottom: -120px;
