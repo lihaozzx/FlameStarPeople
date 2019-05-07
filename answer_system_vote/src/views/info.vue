@@ -316,12 +316,12 @@
 				});
 			},
 			authorization(){
-				that.$http.post('/vote/getSignpackage', that.$qs.stringify({
+				this.$http.post('/vote/getSignpackage', this.$qs.stringify({
 					url: window.location.href.split('#')[0]
 				})).then(res => {
 					if (res) {
 						if(res.status == 800){
-							that.$http.post('/vote/getJsapiTicket').then(res => {
+							this.$http.post('/vote/getJsapiTicket').then(res => {
 								if (res) {
 									this.authorization();
 								}

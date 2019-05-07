@@ -406,8 +406,10 @@
 								justify-content: center;
 								display: flex;
 								border: 1px solid rgba(171, 31, 30, 1);
-								overflow: hidden;
-								text-overflow: ellipsis;
+								span{
+									overflow: hidden;
+									text-overflow: ellipsis;
+								}
 							}
 							div:nth-of-type(2){
 								border-left: none;
