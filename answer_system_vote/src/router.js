@@ -44,6 +44,14 @@ export default new Router({
 			meta: {
 				title: '书写家书'
 			}
+		},
+		{
+			path: '/goodLetter',
+			name: 'goodLetter',
+			component: resolve => require(['@/views/goodLetter.vue'], resolve),
+			meta: {
+				title: '优秀家书'
+			}
 		}
 	]
 })

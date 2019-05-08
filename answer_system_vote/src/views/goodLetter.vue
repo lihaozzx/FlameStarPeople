@@ -3,38 +3,12 @@
 		<img :src="jiashu" class="himg">
 		<div class="writeLetter">
 			<div class="body">
-				<div>
-					<p>选手编号</p>
-					<input type="text" placeholder="请输入选手编号" disabled v-model="stuInfo.id">
-				</div>
-				<div>
-					<p>选手姓名</p>
-					<input type="text" placeholder="请输入选手姓名" disabled v-model="stuInfo.name">
-				</div>
-				<div>
-					<p>家书内容</p>
-					<textarea type="text" placeholder="请输入家书内容例:亲爱的孩子:爸爸/妈妈希望您记住:“纸上得来终觉浅，绝知此事要躬行”，做一个“知行合一” 的君子。学有所成，实现你的人生价值!" v-model="jiashuc" ></textarea>
-				</div>
+				<span v-html="showInfo.content"></span>
 			</div>
 			<div class="bottom_div">
-				<div class="subLtr" @click="subLetter">
-					<span>提交</span>
-				</div>
 				<span class="back" @click="goback">返回选手页面</span>
 			</div>
 		</div>
-		<el-dialog :title="suc?'成功':'失败'" :visible.sync="showdialog" width="80%" :modal-append-to-body='false'>
-			<span>{{suc?'家书上传成功,请等待审核':'家书上传失败'}}</span>
-			<span slot="footer" class="dialog-footer">
-				<el-button type="primary" @click="goback">确 定</el-button>
-			</span>
-		</el-dialog>
-		<el-dialog title="提示" :visible.sync="showerr" width="80%" :modal-append-to-body='false'>
-			<span>请给孩子的家书多写一点内容</span>
-			<span slot="footer" class="dialog-footer">
-				<el-button type="primary" @click="showerr = false">确 定</el-button>
-			</span>
-		</el-dialog>
 	</div>
 </template>
 
@@ -42,48 +16,25 @@
 	import jiashu from '@/assets/jiashu.png'
 	export default {
 		created(){
-			this.stuInfo = this.$route.params
+			// 优秀家书
+			this.$http.post('/vote/letter').then(res => {
+				if (res) {
+					if (res.status == 0) {
+						this.showInfo = res.data
+					}
+				}
+			});
 		},
 		data() {
 			return {
 				jiashu,
-				stuInfo:null,
-				jiashuc:'',
-				showdialog:false,
-				showerr:false,
-				suc:true
+				showInfo:{content:'‘'},
 			};
 		},
 		methods: {
 			// 组件的方法
 			goback(){
-				if(this.suc){
 					this.$router.go(-1);
-				}else{
-					this.showdialog = false;
-				}
-			},
-			subLetter(){
-				if(this.jiashuc.length<60){
-					this.showerr = true;
-					return;
-				}
-				this.$http.post('/vote/addletter',this.$qs.stringify({
-					pid:this.stuInfo.id,
-					openid: this.$store.getters.userInfo.openid,
-					head: this.$store.getters.userInfo.headimgurl,
-					tname: this.$store.getters.userInfo.nickname,
-					content:this.jiashuc,
-					// shenf: this.guanxi[this.chguanxi],
-				})).then(res=>{
-					if(res){
-						this.showdialog = true;
-						this.suc = true;
-					}else{
-						this.showdialog = true;
-						this.suc = false;
-					}
-				})
 			}
 		}
 	}
@@ -111,6 +62,7 @@
 			padding: 0px 10px;
 			background-image: url(../assets/pub-bg-2.png);
 			background-size: 100%;
+			font-size: 1.4rem;
 
 			div {
 				width: 100%;
@@ -184,6 +136,7 @@
 			}
 
 			.back {
+				font-size: 1.5rem;
 				color: #A11F1D;
 			}
 		}

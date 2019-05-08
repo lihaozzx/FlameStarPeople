@@ -36,11 +36,11 @@
 							<span class="s1">{{k.name}}</span>
 							<span class="s2">{{k.grade}} | {{k.school}}</span>
 							<div class="info">
-								<div>
+								<div style="width: 75%;">
 									<span>上榜值：{{k.face}}</span>
 								</div>
 								<div>
-									<span>赛区排名：{{i+1}}</span>
+									<span>排名：{{i+1}}</span>
 								</div>
 							</div>
 						</div>

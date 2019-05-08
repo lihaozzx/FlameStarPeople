@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<div style="position: absolute;top: 0;right: 0;color: white;cursor: pointer;z-index: 99999999999999999999999999;" @click="toindex"><span>回到首页</span></div>
+		<div style="position: absolute;top: 0;right: 0;color: white;cursor: pointer;z-index: 99999999999999999999999999;"
+		 @click="toindex"><span>回到首页</span></div>
 		<div class="center">
 			<div class="head_back">
 				<img :src="back" alt="">
@@ -38,11 +39,22 @@
 				<div class="book">
 					<div class="title">
 						<span class="s1">国学家书</span>
-						<span class="s2">已有7777名选手书写家书</span>
+						<span class="s2">已有{{jssl}}名选手书写家书</span>
+					</div>
+					<div v-if="goodletter!=null" class="good">
+						<p>今日优秀家书</p>
+						<div class="good_cl" @click="togood">
+							<div class="head" :style="'background-image: url('+goodletter.head+');'"></div>
+							<div class="infos">
+								<span>{{goodletter.stuName}}的家书</span>
+								<span style="color: #E30000;">+1000上榜值</span>
+							</div>
+							<div class="r"></div>
+						</div>
 					</div>
 					<div class="content">
 						<div v-if="jiashu!=null" class="have">
-							<p>{{jiashu}}</p>
+							<p><span v-html="jiashu"></span></p>
 						</div>
 						<div v-else class="none">
 							<img :src="juanzhou">
@@ -149,9 +161,35 @@
 				pid: userid
 			})).then(res => {
 				if (res) {
-					if(res.status == 0){
+					if (res.status == 0) {
 						this.toupiao = res.data;
 						this.all = res.pager.total_count;
+					}
+				}
+			});
+			// 家书
+			this.$http.post('/vote/letter', this.$qs.stringify({
+				id: userid
+			})).then(res => {
+				if (res) {
+					if (res.status == 0) {
+						this.jiashu = res.data.content
+					}
+				}
+			});
+			// 家书数量
+			this.$http.post('vote/countLet').then(res => {
+				if (res) {
+					if (res.status == 0) {
+						this.jssl = res.data
+					}
+				}
+			});
+			// 优秀家书
+			this.$http.post('/vote/letter').then(res => {
+				if (res) {
+					if (res.status == 0) {
+						this.goodletter = res.data
 					}
 				}
 			});
@@ -190,8 +228,8 @@
 						that.guanxi.unshift(that.$store.getters.userInfo.nickname);
 					}
 				});
-			})();
-			that.authorization();//授权
+			})()
+			this.authorization(); //授权
 			wx.ready(function() {
 				if (wx.updateAppMessageShareData) {
 					wx.updateAppMessageShareData({
@@ -236,7 +274,9 @@
 				now: new Date(),
 				jiashu: null,
 				chongzhi: false,
-				test:null
+				test: null,
+				jssl: 0,
+				goodletter: null
 			};
 		},
 		methods: {
@@ -303,8 +343,8 @@
 						WeixinJSBridge.invoke(
 							'getBrandWCPayRequest', res,
 							function(ress) {
-								this.test=ress;
-								
+								this.test = ress;
+
 								if (ress.err_msg == "get_brand_wcpay_request:ok") {
 									// 使用以上方式判断前端返回,微信团队郑重提示：
 									//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
@@ -315,18 +355,18 @@
 					}
 				});
 			},
-			authorization(){
+			authorization() {
 				this.$http.post('/vote/getSignpackage', this.$qs.stringify({
 					url: window.location.href.split('#')[0]
 				})).then(res => {
 					if (res) {
-						if(res.status == 800){
+						if (res.status == 800) {
 							this.$http.post('/vote/getJsapiTicket').then(res => {
 								if (res) {
 									this.authorization();
 								}
 							})
-						}else{
+						} else {
 							wx.config({
 								debug: false,
 								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
@@ -337,10 +377,18 @@
 				});
 			},
 			toindex() {
-				location.href = this.$url+'/index';
+				location.href = this.$url + '/index';
 			},
-			towl(){
-				this.$router.push({name:'writeLetter',params:this.stuInfo});
+			towl() {
+				this.$router.push({
+					name: 'writeLetter',
+					params: this.stuInfo
+				});
+			},
+			togood(){
+				this.$router.push({
+					name: 'goodLetter',
+				});
 			}
 		},
 		components: {
@@ -508,6 +556,43 @@
 						color: rgba(0, 0, 0, 0.3);
 					}
 				}
+				.good{
+					width: 100%;
+					p{
+						color: #E2087C;
+						font-size: 1.2rem;
+						font-weight: 900;
+					}
+					.good_cl{
+						width: 100%;
+						height: 60px;
+						margin-top: 5px;
+						box-sizing: border-box;
+						border: 2px solid #C6C6C6;
+						display: flex;
+						border-radius: 5px;
+						.head{
+							width: 45px;
+							height: 45px;
+							margin: 6px 10px;
+							border-radius: 25px;
+							background-position: center;
+							background-size: cover;
+						}
+						.infos{
+							margin-left: 10px;
+							display: flex;
+							flex-direction: column;
+							justify-content: space-between;
+							box-sizing: border-box;
+							padding: 5px 0;
+							font-size: 1.2rem;
+						}
+						.r{
+							
+						}
+					}
+				}
 
 				.content {
 					width: 100%;
@@ -517,7 +602,13 @@
 					border-radius: 10px;
 					padding: 10px;
 
-					.have {}
+					.have {
+						width: 100%;
+						height: 100%;
+						background-color: #ffffff;
+						border-radius: 5px;
+						font-size: 1.4rem;
+					}
 
 					.none {
 						width: 100%;

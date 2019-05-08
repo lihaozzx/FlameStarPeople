@@ -19,8 +19,11 @@
 							<span class="s1">{{k.name}}</span>
 							<span class="s2">{{k.grade}} | {{k.school}}</span>
 							<div class="info">
-								<div>
+								<div style="width: 75%;">
 									<span>上榜值：{{k.face}}</span>
+								</div>
+								<div v-if="name == ''">
+									<span>排名：{{i+1}}</span>
 								</div>
 							</div>
 						</div>
@@ -32,7 +35,7 @@
 				<img class="foot" src="../assets/pub-bg-3.png">
 			</div>
 		</div>
-		<div class="filter_div" @click="searchFilter"><span>按条件筛选></span></div>
+		<!-- <div class="filter_div" @click="searchFilter"><span>按条件筛选></span></div>
 		<div style="height: 20px;"></div>
 		<transition name="fade">
 			<div v-show="flter" class="filter_rel_div">
@@ -43,7 +46,7 @@
 					<span>立即筛选</span>
 				</div>
 			</div>
-		</transition>
+		</transition> -->
 	</div>
 </template>
 

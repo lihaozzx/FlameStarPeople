@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>峰源智能办公系统</title>
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<script src="aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+		.title{
+			font-size: 20px;
+			border-bottom: solid 1px #8C8C8C;
+			padding-bottom: 5px;
+		}
+	</style>
+
+	<body style="overflow: hidden;">
+		<div><h1 class="title"></h1><span>发布时间：</span><span class="time"></span></div>
+		<div class="info"></div>
+	</body>
+
+</html>
+<script type="text/javascript">
+	$(function() {
+		var a = window.location.href;
+		var id = decodeURI(a.slice(a.indexOf("id=") + 3));
+		$.ajax({
+			url:'http://192.168.1.100:8989/api/infor/infors?id='+id,
+			type: 'get',
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 0) {
+					$('.info').append(res.data.content);
+					$('.title').html(res.data.title);
+					$('.time').html(res.data.date);
+				}
+			}
+		})
+	});
+</script>

@@ -20,8 +20,8 @@
 			return {
 				count: 0, // 当前索引
 				intervalId: null, // 定时器ID
-				playTime: 2000, // 定时器执行间隔
-				datalist:['','']
+				playTime: 4000, // 定时器执行间隔
+				datalist:['']
 			}
 		},
 		methods: {
@@ -85,11 +85,10 @@
 		position: relative;
 		width: 100%;
 		height: 2rem;
-		/* overflow: hidden; */
+		overflow: hidden;
 	}
 
 	.TextScroll li {
-		width: 100%;
 		height: 2rem;
 		list-style:none;
 		/* overflow: hidden; */

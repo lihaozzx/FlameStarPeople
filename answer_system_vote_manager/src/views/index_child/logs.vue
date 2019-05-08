@@ -89,6 +89,14 @@
 
 <script>
 	export default {
+		watch: {
+			chdt(newValue) {
+				this.getStuInfo()
+			},
+			chzf(newValue) {
+				this.getStuInfo()
+			}
+		},
 		created() {
 			this.getStuInfo()
 		},
@@ -105,7 +113,6 @@
 				dizhi: '',
 				showForm: {},
 				oldForm: {},
-				type: '',
 				pid: '',
 				pageInfo: {
 					totalCount: 0,
@@ -128,9 +135,18 @@
 				console.log(index, row);
 			},
 			getStuInfo() {
+				let t = '';
+				if(!(this.chdt&&this.chzf)){
+					if(this.chdt){
+						t='1'
+					}
+					if(this.chzf){
+						t='2'
+					}
+				}
 				this.inAdd = true;
 				this.$http.post('/admin/votes', this.$qs.stringify({
-					type: this.type,
+					type: t,
 					pid: this.pid,
 					p: this.pageInfo.nowPage
 				})).then(res => {
