@@ -2,10 +2,10 @@
 	<view class="root">
 		<view class="bg">
 			<view class="view_navigation"></view>
-			<image class="logo" :src="iszuhe?'/static/01fe5b5a6bd773a8012134663c2fee.png':'/static/018af65a6bd774a8012134669fe1c6.png'"></image>
+			<image class="logo" :src="iszuhe==0?'/static/01fe5b5a6bd773a8012134663c2fee.png':iszuhe==1?'/static/018af65a6bd774a8012134669fe1c6.png':'/static/01b5ad5a6bd773a801213466708f77@2x.png'"></image>
 		</view>
-
-		<view v-if="start&&iszuhe" class="content">
+		<!-- 组合 -->
+		<view v-if="start&&iszuhe==0" class="content">
 			<text class="fs28 c8c" space="emsp">{{nowTopicNumstr}} {{topicType}}</text>
 			<text class="ts36 c8c">{{topicName}}</text>
 			<view class="ans">
@@ -36,7 +36,8 @@
 				<text>倒计时：{{timeCost}} 秒</text>
 			</view>
 		</view>
-		<view v-else-if="start&&iszuhe==false" class="content">
+		<!-- 选择 -->
+		<view v-else-if="start&&iszuhe==1" class="content">
 			<text class="fs28 c8c" space="emsp">{{nowTopicNumstr}} {{topicType}}</text>
 			<text class="ts36 c8c">{{topicName}}</text>
 
@@ -55,6 +56,16 @@
 				<text>倒计时：{{timeCost}} 秒</text>
 			</view>
 		</view>
+		<!-- 抢答 -->
+		<view v-else-if="start&&iszuhe==2" class="content">
+			<text class="fs28 c8c" space="emsp">{{nowTopicNumstr}} {{topicType}}</text>
+			<text class="ts36 c8c">{{topicName}}</text>
+			<view v-if="canQiang"><span>抢答</span></view>
+			<view v-else v-for="(t,k) in timuxinxi.xuanx" :key="k">
+				<span v-if="k<=xiansuonum">{{t}}</span>
+			</view>
+		</view>
+
 		<view v-else class="content">
 			<view style="height: 30%;"></view>
 			<text>比赛即将开始，请注意屏幕信息</text>
@@ -76,15 +87,21 @@
 					case 'nextTopic':
 						// 题目信息
 						this.timuxinxi = n.data.topic;
-						this.nowTopicNum= n.data.num+1;
+						this.nowTopicNum = n.data.num + 1;
 						this.start = true;
 						this.setTopic(this.timuxinxi);
 						break;
-// 					case 'start!!!!!!':
-// 						// 开始
-// 						this.start = true;
-// 						this.setTopic(this.timuxinxi);
-// 						break;
+					case 'showClue':
+						this.xiansuonum++;
+						break;
+					case 'startGrabAnswer':
+						this.canQiang = true;
+						break;
+						// 					case 'start!!!!!!':
+						// 						// 开始
+						// 						this.start = true;
+						// 						this.setTopic(this.timuxinxi);
+						// 						break;
 					case 'gameover':
 						// 题目信息
 						uni.redirectTo({
@@ -98,7 +115,7 @@
 			timeCost(n) {
 				if (n <= 0) {
 					clearInterval(this.timeCostIn);
-					if (this.iszuhe) {
+					if (this.iszuhe == 0) {
 						this.subZuhe()
 					} else {
 						this.subQita()
@@ -108,9 +125,9 @@
 		},
 		data() {
 			return {
-				timuxinxi:null,
+				timuxinxi: null,
 				start: false,
-				iszuhe: true,
+				iszuhe: 0,
 				isqiyan: false,
 				isduoxuan: false,
 				nowCh: -1,
@@ -163,13 +180,15 @@
 				anss: ['asdsad', 'asdqwdwd', '按时吃是阿深V阿SaaS大V阿飞大VAV发傻撒大声地', 's发噶大V嘎都是阿斯蒂芬打怪打怪阿飞不上辅导班伤风败俗辅导班是是否报商务部伤风败俗发表是'],
 				nowTopicNumstr: '',
 				nowTopicNum: 0,
-				topicType:'',
+				topicType: '',
 				topicName: '',
 				topicId: '',
 				sub: false,
 				timeCost: 25,
 				timeCostIn: null,
-				thisTopicstart:null
+				thisTopicstart: null,
+				xiansuonum: 0,
+				canQiang: false
 			};
 		},
 		methods: {
@@ -309,8 +328,8 @@
 							if (res.data.status == 0) {
 								out(res.data)
 								uni.showToast
-							}else{
-								
+							} else {
+
 							}
 						}
 					})
@@ -322,13 +341,13 @@
 					let out = '';
 					if (this.isduoxuan) {
 						this.chs.forEach(a => {
-							out += this.anss[a]+"@";
+							out += this.anss[a] + "@";
 						});
 					} else {
 						out += this.anss[this.ch]
 					}
-					if(this.isduoxuan){
-						out = out.substring(0,out.length-1);
+					if (this.isduoxuan) {
+						out = out.substring(0, out.length - 1);
 					}
 					console.log(out);
 					uni.request({
@@ -352,7 +371,7 @@
 							}
 							if (res.data.status == 0) {
 								out(res.data)
-							}else{
+							} else {
 								out(res.data)
 							}
 						}
@@ -363,15 +382,15 @@
 			setTopic(topic) {
 				this.sub = false;
 				this.nowTopicNumstr = this.numToStr(this.nowTopicNum)
-				while(topic.name.indexOf('#')!= -1){
-					topic.name = topic.name.substring(0,topic.name.indexOf('#'))+' __ ' + topic.name.substring(topic.name.indexOf('#')+1,topic.name.length)
+				while (topic.name.indexOf('#') != -1) {
+					topic.name = topic.name.substring(0, topic.name.indexOf('#')) + ' __ ' + topic.name.substring(topic.name.indexOf('#') + 1, topic.name.length)
 				}
 				this.topicName = topic.name;
 				this.topicId = topic.id;
 				this.topicType = topic.type;
-				this.thisTopicstart=new Date();
+				this.thisTopicstart = new Date();
 				this.timeCost = 25;
-				if(this.timeCostIn!=null){
+				if (this.timeCostIn != null) {
 					clearInterval(this.timeCostIn);
 				}
 				this.timeCostIn = setInterval(() => {
@@ -380,7 +399,7 @@
 				let newone = [...topic.xuanx];
 				let o = []
 				if (topic.type == '组合题') {
-					this.iszuhe = true;
+					this.iszuhe = 0;
 					if (topic.xuanx.length == 12) {
 						this.isqiyan = true;
 						this.ans = [{
@@ -435,16 +454,19 @@
 					this.daans = o;
 				} else if (topic.type == '多选题' || topic.type == '填空题') {
 					this.isduoxuan = true;
-					this.iszuhe = false;
+					this.iszuhe = 1;
 					this.chs = [];
 					this.anss = [];
 					while (newone.length > 0) {
 						o.push(newone.splice(Math.floor(Math.random() * newone.length), 1)[0])
 					}
 					this.anss = o;
+				} else if (topic.type == '抢答题') {
+					this.iszuhe = 2;
+
 				} else {
 					this.isduoxuan = false;
-					this.iszuhe = false;
+					this.iszuhe = 1;
 					this.ch = -1;
 					this.anss = [];
 					while (newone.length > 0) {

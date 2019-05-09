@@ -75,6 +75,23 @@
 						</div>
 					</div>
 				</div>
+				<div class="btn_box">
+					<span>抢答按钮</span>
+					<div class="btn_box_r">
+						<div class="btn" @click="sendShowClue">
+							<span>显示线索</span>
+						</div>
+						<div class="btn" @click="sendStartGrabAnswer">
+							<span>开始抢答</span>
+						</div>
+						<div class="btn" @click="grabAnswerRight">
+							<span>正确</span>
+						</div>
+						<div class="btn" @click="grabAnswerWrong">
+							<span>全错</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -273,6 +290,25 @@
 					}
 				}
 			},
+			grabAnswerRight(){
+				this.$http.posst('/stock/subAnswer',this.$qs.stringify({
+					pid:this.paper[nowTopic-1].id,
+					gid:this.gameInfo.id,
+					tid:this.grabAnswerStu.id,
+					score:5-this.xiansuoNum
+				})).then(res=>{
+					
+				})
+			},
+			grabAnswerWrong(){
+				this.$http.posst('/stock/subAnswer',this.$qs.stringify({
+					pid:-1,
+					gid:this.gameInfo.id,
+					tid:this.grabAnswerStu.id,
+				})).then(res=>{
+					
+				})
+			},
 			/* wssendmessage */
 			sendStartGame() {
 				/* 开始比赛 */
@@ -383,6 +419,16 @@
 			sendRule(){
 				this.websock.send(this.$mso({
 					type: 'seeRule',
+				}));
+			},
+			sendShowClue(){
+				this.websock.send(this.$mso({
+					type: 'showClue',
+				}));
+			},
+			sendStartGrabAnswer(){
+				this.websock.send(this.$mso({
+					type: 'startGrabAnswer',
 				}));
 			},
 			/* websocket */

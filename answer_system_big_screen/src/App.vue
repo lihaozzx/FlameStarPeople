@@ -132,6 +132,10 @@
 							name: 'rule',
 						})
 						break;
+					case 'showClue':
+						// 下一个线索
+						this.$store.commit('addxsn')
+						break
 				}
 			}
 		},

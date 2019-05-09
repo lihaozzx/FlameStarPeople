@@ -13,7 +13,7 @@
 </template>
 
 <script>
-	import jiashu from '@/assets/jiashu.png'
+	import jiashu from '@/assets/goodLetter.png'
 	export default {
 		created(){
 			// 优秀家书

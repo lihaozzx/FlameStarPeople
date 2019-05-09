@@ -106,7 +106,7 @@
 				})
 			},
 			subEndTime() {
-				let d = this.time.getFullYear()+'-'+(this.time.getMonth()+1)+'-'+this.time.getDate()+' '+this.time.getHours()+':'+this.time.getMinutes()+':00'
+				let d = this.time.getFullYear()+'/'+(this.time.getMonth()+1)+'/'+this.time.getDate()+' '+this.time.getHours()+':'+this.time.getMinutes()+':00'
 				this.$http.post('/admin/upBasis', this.$qs.stringify({
 					id: 5,
 					content: [d]

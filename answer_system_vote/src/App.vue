@@ -125,6 +125,7 @@
 		height: 100vh;
 		transition: all .8s ease;
 		overflow-y: scroll;
+		-webkit-overflow-scrolling:touch;
 		z-index: 1;
 		overflow-x: hidden;
 	}

@@ -50,7 +50,7 @@
 					this.playTime = 2000
 					break;
 				case 'scroll-left-linear':
-					this.playTime = 4000
+					this.playTime = 8000
 					break;
 				default:
 					this.playTime = 2000
@@ -151,7 +151,7 @@
 	/* 向左匀速滚动动画 */
 	.scroll-left-linear-enter-active,
 	.scroll-left-linear-leave-active {
-		transition: all 4s linear;
+		transition: all 8s linear;
 		/*此时间必须和 playTime 保持一致*/
 	}
 
@@ -159,7 +159,7 @@
 		transform: translate3d(100%, 0, 0);
 	}
 
-	.scroll-left-linear-leave-to {
+	.scroll-left-linear-leave-to{
 		transform: translate3d(-100%, 0, 0);
 	}
 </style>

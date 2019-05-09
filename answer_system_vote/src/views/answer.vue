@@ -104,6 +104,8 @@
 							t.xuanx = o;
 						})
 						this.tiku = res.data;
+					}else{
+						this.$router.go(-1)
 					}
 				});
 			} else {

@@ -234,12 +234,15 @@
 			z-index: 9;
 
 			form {
+				height: 100%;
+				display: flex;
+				align-items: center;
 				.search_input {
+					position: relative;
+					top: -1px;
+					left: 22%;
 					font-size: 1.6rem;
 					color: #FCD363;
-					position: relative;
-					top: 12px;
-					left: 20%;
 					border: none;
 					background-color: rgba($color: #000000, $alpha: 0);
 					outline: none;

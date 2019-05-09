@@ -16,7 +16,8 @@ export default new Vuex.Store({
 			xuanx: []
 		},
 		time:0,
-		timeIn:null
+		timeIn:null,
+		xiansuoNum:0
 	},
 	mutations: {
 		changeTitle(state, k) {
@@ -74,6 +75,12 @@ export default new Vuex.Store({
 					state.time--;
 				}
 			},1000)
+		},
+		addxsn(state){
+			state.xiansuoNum++;
+		},
+		initxsn(state){
+			state.xiansuoNum=0;
 		}
 	},
 	actions: {
@@ -105,6 +112,9 @@ export default new Vuex.Store({
 		},
 		daojishi(state){
 			return state.time;
+		},
+		xiansuoNum(state){
+			return state.xiansuoNum
 		}
 	}
 })

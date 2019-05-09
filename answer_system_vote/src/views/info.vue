@@ -866,6 +866,5 @@
 	.fade-enter,
 	.fade-leave-to {
 		transform: translateY(100%);
-		;
 	}
 </style>

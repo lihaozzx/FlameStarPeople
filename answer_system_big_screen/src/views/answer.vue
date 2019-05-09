@@ -1,7 +1,26 @@
 <template>
 	<div>
 		<jz>
-			<div class="infoans">
+			<div class="infoans" v-if="topic.type=='抢答题'">
+				<div class="topicInfo">
+					<span class="anstitle">{{topic.name}}</span>
+					
+					<div class="xiansuo">
+						<p v-for="(t,i) in topic.xuanx" :key="i">{{i<xiansuoNum?t:''}}</p>
+					</div>
+				</div>
+				<div class="man">
+					<div class="show_stu_info">
+						<div class="head_div"></div>
+						<div class="stu_num">{{nowQiangdaStu.num}}</div>
+						<div class="stu_name">{{nowQiangdaStu.name}}</div>
+					</div>
+				</div>
+				<div class="typess">
+					<span>{{topic.type}}</span>
+				</div>
+			</div>
+			<div class="infoans" v-else>
 				<div class="cont">
 					<span class="anstitle">{{topic.name}}</span>
 					<div class="ans" v-if="!showanss">
@@ -31,6 +50,10 @@
 				topic: {
 					name: '无',
 					xuanx: []
+				},
+				nowQiangdaStu:{
+					num:'001',
+					name:'张三'
 				}
 			};
 		},
@@ -54,6 +77,9 @@
 			},
 			daojishi(){
 				return this.$store.getters.daojishi;
+			},
+			xiansuoNum(){
+				return this.$store.getters.xiansuoNum;
 			}
 		},
 		watch: {
@@ -204,6 +230,33 @@
 		font-size: 64px;
 		color: #F0B74A;
 		position: relative;
+	}
+	.topicInfo{
+		width: 60%;
+		height: 100%;
+		box-sizing: border-box;
+		padding: 50px;
+	}
+	.man{
+		width: 40%;
+		height: 100%;
+		box-sizing: border-box;
+		padding: 50px;
+	}
+	.show_stu_info{
+		width: 60%;
+		margin-left: 10%;
+		height: 100%;
+		box-sizing: border-box;
+		border: 2px solid #F0B74A;
+		border-radius: 30px;
+		display: flex;
+		flex-direction: column;
+		
+	}
+	.xiansuo{
+		font-size: 40px;
+		padding-left:40px ;
 	}
 
 	.cont {
