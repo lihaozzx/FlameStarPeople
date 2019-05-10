@@ -84,6 +84,9 @@
 						<div class="btn" @click="sendStartGrabAnswer">
 							<span>开始抢答</span>
 						</div>
+						<div class="btn" v-if="grabAnswerStu!=null">
+							<span>{{grabAnswerStu.name}} 正在抢答</span>
+						</div>
 						<div class="btn" @click="grabAnswerRight">
 							<span>正确</span>
 						</div>
@@ -139,6 +142,10 @@
 						});
 						this.sendPlayers()
 						break;
+					case 'clickQiangda':
+						// 学生点击抢答
+						this.grabAnswerStu = n.data
+						break;
 					default:
 						break;
 				}
@@ -167,7 +174,9 @@
 				players: [],
 				endGames: false,
 				daojishi: 0,
-				daojishiIn: null
+				daojishiIn: null,
+				grabAnswerStu:null,
+				xiansuoNum:0
 			}
 		},
 		methods: {
@@ -291,22 +300,22 @@
 				}
 			},
 			grabAnswerRight(){
-				this.$http.posst('/stock/subAnswer',this.$qs.stringify({
-					pid:this.paper[nowTopic-1].id,
+				this.$http.post('/stock/subAnswer2',this.$qs.stringify({
+					pid:this.grabAnswerStu.id,
 					gid:this.gameInfo.id,
-					tid:this.grabAnswerStu.id,
-					score:5-this.xiansuoNum
+					tid:this.paper[this.nowTopic-1].id,
+					score:(5-parseInt(this.xiansuoNum))
 				})).then(res=>{
-					
+					alert('上报完成')
 				})
 			},
 			grabAnswerWrong(){
-				this.$http.posst('/stock/subAnswer',this.$qs.stringify({
+				this.$http.post('/stock/subAnswer2',this.$qs.stringify({
 					pid:-1,
 					gid:this.gameInfo.id,
-					tid:this.grabAnswerStu.id,
+					tid:this.paper[this.nowTopic-1].id,
 				})).then(res=>{
-					
+					alert('上报完成')
 				})
 			},
 			/* wssendmessage */
@@ -422,6 +431,7 @@
 				}));
 			},
 			sendShowClue(){
+				this.xiansuoNum++;
 				this.websock.send(this.$mso({
 					type: 'showClue',
 				}));

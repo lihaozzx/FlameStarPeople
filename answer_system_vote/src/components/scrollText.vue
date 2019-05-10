@@ -1,7 +1,7 @@
 <template>
 	<div class="TextScroll">
 		<transition-group tag="ul" :name="scrollType">
-			<li v-for="(item,index) in datalist" :key='index' v-show="index == count">
+			<li v-for="(item,index) in datalist" :key='index' v-if="index == count">
 				<span>{{item}}</span>
 			</li>
 		</transition-group>
@@ -21,7 +21,7 @@
 				count: 0, // 当前索引
 				intervalId: null, // 定时器ID
 				playTime: 4000, // 定时器执行间隔
-				datalist:['']
+				datalist:[]
 			}
 		},
 		methods: {
@@ -64,6 +64,7 @@
 				id: 6
 			})).then(res => {
 				if (res) {
+					this.datalist.unshift(...res.data.content);
 					this.datalist.unshift(...res.data.content);
 				}
 			});
@@ -156,10 +157,10 @@
 	}
 
 	.scroll-left-linear-enter {
-		transform: translate3d(100%, 0, 0);
+		transform: translate3d(120%, 0, 0);
 	}
 
 	.scroll-left-linear-leave-to{
-		transform: translate3d(-100%, 0, 0);
+		transform: translate3d(-120%, 0, 0);
 	}
 </style>

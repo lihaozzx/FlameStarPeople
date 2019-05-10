@@ -135,7 +135,11 @@
 					case 'showClue':
 						// 下一个线索
 						this.$store.commit('addxsn')
-						break
+						break;
+					case 'clickQiangda':
+						// 点击抢答按钮
+						this.$store.commit('setqdstu',n.data)
+						break;
 				}
 			}
 		},

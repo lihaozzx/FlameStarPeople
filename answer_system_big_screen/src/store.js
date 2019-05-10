@@ -17,7 +17,8 @@ export default new Vuex.Store({
 		},
 		time:0,
 		timeIn:null,
-		xiansuoNum:0
+		xiansuoNum:0,
+		qdStu:null
 	},
 	mutations: {
 		changeTitle(state, k) {
@@ -81,6 +82,9 @@ export default new Vuex.Store({
 		},
 		initxsn(state){
 			state.xiansuoNum=0;
+		},
+		setqdstu(state,k){
+			state.qdStu = k
 		}
 	},
 	actions: {
@@ -115,6 +119,9 @@ export default new Vuex.Store({
 		},
 		xiansuoNum(state){
 			return state.xiansuoNum
+		},
+		qdStu(state){
+			return state.qdStu
 		}
 	}
 })

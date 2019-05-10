@@ -6,11 +6,11 @@
 					<span class="anstitle">{{topic.name}}</span>
 					
 					<div class="xiansuo">
-						<p v-for="(t,i) in topic.xuanx" :key="i">{{i<xiansuoNum?t:''}}</p>
+						<p v-for="(t,i) in topic.xuanx" :key="i"><span v-if="i<xiansuoNum">{{t}}</span></p>
 					</div>
 				</div>
 				<div class="man">
-					<div class="show_stu_info">
+					<div class="show_stu_info" v-if="nowQiangdaStu != null">
 						<div class="head_div"></div>
 						<div class="stu_num">{{nowQiangdaStu.num}}</div>
 						<div class="stu_name">{{nowQiangdaStu.name}}</div>
@@ -50,10 +50,6 @@
 				topic: {
 					name: '无',
 					xuanx: []
-				},
-				nowQiangdaStu:{
-					num:'001',
-					name:'张三'
 				}
 			};
 		},
@@ -80,6 +76,9 @@
 			},
 			xiansuoNum(){
 				return this.$store.getters.xiansuoNum;
+			},
+			nowQiangdaStu(){
+				return this.$store.getters.qdStu;
 			}
 		},
 		watch: {
@@ -252,6 +251,16 @@
 		border-radius: 30px;
 		display: flex;
 		flex-direction: column;
+		align-items: center;
+	}
+	.head_div{
+		width: 50%;
+		padding-top: 50%;
+	}
+	.stu_num{
+		
+	}
+	.stu_name{
 		
 	}
 	.xiansuo{

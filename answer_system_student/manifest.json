@@ -45,12 +45,12 @@
             },
             "splashscreen" : {
                 "android" : {
-                    "xxhdpi" : "C:/Users/MR-Crystal/Desktop/新建文件夹/图片2.png"
+                    "xxhdpi" : "C:/Users/MR-Crystal/Desktop/素材/新建文件夹/background_juanzhou.png"
                 }
             },
             "icons" : {
                 "ios" : {
-                    "appstore" : "C:/Users/MR-Crystal/Desktop/AppIcon.png",
+                    "appstore" : "C:/Users/MR-Crystal/Desktop/素材/AppIcon.png",
                     "ipad" : {
                         "app" : "unpackage/res/icons/76x76.png",
                         "app@2x" : "unpackage/res/icons/152x152.png",
