@@ -479,7 +479,7 @@
 				this.canQiang = false;
 				let stu = {
 					name:uni.getStorageSync('stuName'),
-					id:uni.getStorageSync('stuId'),
+					id:uni.getStorageSync('id'),
 					num:uni.getStorageSync('zuoweihao')
 				}
 				

@@ -304,7 +304,7 @@
 					pid:this.grabAnswerStu.id,
 					gid:this.gameInfo.id,
 					tid:this.paper[this.nowTopic-1].id,
-					score:(5-parseInt(this.xiansuoNum))
+					score:(6-parseInt(this.xiansuoNum))
 				})).then(res=>{
 					alert('上报完成')
 				})
