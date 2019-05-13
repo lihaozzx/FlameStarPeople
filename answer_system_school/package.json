@@ -1,26 +1,24 @@
 {
-  "name": "big_screen",
+  "name": "school",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-		"analyz": "set NODE_ENV=production && set npm_config_report=true && npm run dist"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "element-ui": "^2.4.5",
+    "element-ui": "^2.6.1",
     "vue": "^2.6.6",
-    "vue-router": "^3.0.1",
-    "vue-socket.io": "^3.0.7",
-    "vuex": "^3.0.1"
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
     "@vue/cli-plugin-eslint": "^3.5.0",
     "@vue/cli-service": "^3.5.0",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-component": "^1.1.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
     "vue-cli-plugin-element": "^1.0.1",

@@ -55,7 +55,7 @@
 							<span>工作台</span><i class="y_nav_icon"></i>
 						</a>
 					</li>
-					<li class="y_nav_item not active">
+				<!-- 	<li class="y_nav_item not active">
 						<i class="y_nav_item_bg"></i>
 						<a class="y_nav_name a_2 y_newHtml" data-class="a_2" data-title="通知公告" data-url="./info/notice.html">
 							<span>通知公告</span><i class="y_nav_icon"></i>
@@ -252,7 +252,7 @@
 						<a class="y_nav_name a_35 y_newHtml" data-class="a_35" data-title="考勤设置" data-url="./atten/setting.html">
 							<span>考勤设置</span><i class="y_nav_icon"></i>
 						</a>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 		</div>
@@ -537,42 +537,42 @@
 
 	/*获取导航菜单*/
 	loading('', '.y_nav');
-	navInt();
-// 	$.ajax({
-// 		url: reqUrl + '/api/main/meun',
-// 		type: 'post',
-// 		data: {token: tokens},
-// 		dataType: 'json',
-// 		success: function(res){
-// 			if(res.status == 0){
-// 				var arr = res.data;
-// 				var str = ''
-// 				$.each(arr, function(k, v) {
-// 					if(v.children[0]){
-// 						str += '<li class="y_nav_item has"><i class="y_nav_item_bg"></i><div class="y_nav_name"><span>'+v.name+'</span><i class="y_nav_has"></i></div>'+'<ul class="y_nav_item_box">'
-// 						$.each(v.children, function(k1, v1) {
-// 							if(v1.children[0]){
-// 								str += '<li class="y_nav_item end"><div class="y_nav_names"><span class="y_nav_tex">'+v1.name+'</span><i class="y_nav_hass"></i></div>'+'<ul class="y_nav_items_box">'
-// 								$.each(v1.children, function(k2, v2) {
-// 									str += '<li class="y_nav_item"><a class="y_nav_name a_'+v2.id+' y_newHtml" data-class="a_'+v2.id+'" data-title="'+v2.name+'" data-url="'+v2.url+'">'+'<span class="y_nav_names_tx a_'+v2.id+'">'+v2.name+'</span><i class="y_nav_icon"></i></a></li>'
-// 								});
-// 								str += '</ul>'
-// 							}else{
-// 								str += '<li class="y_nav_item"><a class="y_nav_name a_'+v1.id+' y_newHtml" data-class="a_'+v1.id+'" data-title="'+v1.name+'" data-url="'+v1.url+'">'+'<span class="y_nav_tex a_'+v1.id+'">'+v1.name+'</span><i class="y_nav_icon"></i></a></li>'
-// 							}
-// 						});
-// 						str += '</ul>'
-// 					}else{
-// 						str += '<li class="y_nav_item not"><i class="y_nav_item_bg"></i><a class="y_nav_name a_'+v.id+' y_newHtml" data-class="a_'+v.id+'" data-title="'+v.name+'" data-url="'+v.url+'">'+'<span>'+v.name+'</span><i class="y_nav_icon"></i></a></li>'
-// 					}
-// 				});
-// 				$('.y_nav_box').empty();
-// 				$('.y_nav_box').append(str);
-// 				navInt();
-// 			}
-// 		},
-// 		complete: function(){
-// 			loading('none', '.y_nav');
-// 		}
-// 	});
+	// navInt();
+	$.ajax({
+		url: reqUrl + '/api/main/meun',
+		type: 'post',
+		data: {token: tokens},
+		dataType: 'json',
+		success: function(res){
+			if(res.status == 0){
+				var arr = res.data;
+				var str = ''
+				$.each(arr, function(k, v) {
+					if(v.children[0]){
+						str += '<li class="y_nav_item has"><i class="y_nav_item_bg"></i><div class="y_nav_name"><span>'+v.name+'</span><i class="y_nav_has"></i></div>'+'<ul class="y_nav_item_box">'
+						$.each(v.children, function(k1, v1) {
+							if(v1.children[0]){
+								str += '<li class="y_nav_item end"><div class="y_nav_names"><span class="y_nav_tex">'+v1.name+'</span><i class="y_nav_hass"></i></div>'+'<ul class="y_nav_items_box">'
+								$.each(v1.children, function(k2, v2) {
+									str += '<li class="y_nav_item"><a class="y_nav_name a_'+v2.id+' y_newHtml" data-class="a_'+v2.id+'" data-title="'+v2.name+'" data-url="'+v2.url+'">'+'<span class="y_nav_names_tx a_'+v2.id+'">'+v2.name+'</span><i class="y_nav_icon"></i></a></li>'
+								});
+								str += '</ul>'
+							}else{
+								str += '<li class="y_nav_item"><a class="y_nav_name a_'+v1.id+' y_newHtml" data-class="a_'+v1.id+'" data-title="'+v1.name+'" data-url="'+v1.url+'">'+'<span class="y_nav_tex a_'+v1.id+'">'+v1.name+'</span><i class="y_nav_icon"></i></a></li>'
+							}
+						});
+						str += '</ul>'
+					}else{
+						str += '<li class="y_nav_item not"><i class="y_nav_item_bg"></i><a class="y_nav_name a_'+v.id+' y_newHtml" data-class="a_'+v.id+'" data-title="'+v.name+'" data-url="'+v.url+'">'+'<span>'+v.name+'</span><i class="y_nav_icon"></i></a></li>'
+					}
+				});
+				$('.y_nav_box').empty();
+				$('.y_nav_box').append(str);
+				navInt();
+			}
+		},
+		complete: function(){
+			loading('none', '.y_nav');
+		}
+	});
 </script>

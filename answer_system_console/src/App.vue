@@ -76,7 +76,7 @@
 					</div>
 				</div>
 				<div class="btn_box">
-					<span>抢答按钮</span>
+					<span>抢答功能</span>
 					<div class="btn_box_r">
 						<div class="btn" @click="sendShowClue">
 							<span>显示线索</span>

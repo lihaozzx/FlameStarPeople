@@ -73,7 +73,7 @@
 						<el-form v-loading="bankLoading" :label-width="formLabelWidth">
 							<el-form-item label="类型">
 								<el-radio-group v-model="addTopic.form.type">
-									<el-radio-button v-for="(s,k) in addTopic.type" :label="k" :key="s">{{s}}</el-radio-button>
+									<el-radio-button v-for="s in addTopic.type" :label="s" :key="s">{{s}}</el-radio-button>
 								</el-radio-group>
 							</el-form-item>
 							<el-form-item label="主题">
