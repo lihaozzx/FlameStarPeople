@@ -57,7 +57,7 @@
 				<img :src="guize">
 			</div>
 			<div class="video_div">
-				<video :src="shipin" controls="controls" :poster="fenmian">您的浏览器不支持 video 标签。</video>
+				<video controls="controls" preload="auto" x5-video-player-fullscreen="true" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-playsinline :src="shipin" :poster="fenmian">您的浏览器不支持 video 标签。</video>
 			</div>
 			<div class="guize">
 				<div class="body">
@@ -117,6 +117,25 @@
 			}, 1);
 			this.initInfo();
 			this.getStudent();
+			this.authorization();
+			let that = this;
+			wx.ready(function() {
+				if (wx.updateAppMessageShareData) {
+					wx.updateAppMessageShareData({
+						title: '立德树人工程青少年国学大会', // 分享标题
+						desc: '国学文化交流大使评选活动', // 分享描述
+						link: 'http://tp.nzjykj.com/index',
+						imgUrl: that.$url + '/uploads/stu/logo.png', // 分享图标
+					});
+				} else {
+					wx.onMenuShareAppMessage({
+						title: '立德树人工程青少年国学大会', // 分享标题
+						desc: '国学文化交流大使评选活动', // 分享描述
+						link: 'http://tp.nzjykj.com/index',
+						imgUrl: that.$url + '/uploads/stu/logo.png', // 分享图标
+					});
+				}
+			});
 		},
 		data() {
 			return {
@@ -188,7 +207,28 @@
 				location.href = urls;
 				// 跳转详情 上线后需要切换到跳转授权
 				// this.$router.push({path:'info',query:{userId:id}});
-			}
+			},
+			authorization() {
+				this.$http.post('/vote/getSignpackage', this.$qs.stringify({
+					url: window.location.href.split('#')[0]
+				})).then(res => {
+					if (res) {
+						if (res.status == 800) {
+							this.$http.post('/vote/getJsapiTicket').then(res => {
+								if (res) {
+									this.authorization();
+								}
+							})
+						} else {
+							wx.config({
+								debug: false,
+								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
+								...res.data
+							});
+						}
+					}
+				});
+			},
 		}
 	}
 </script>
@@ -409,6 +449,7 @@
 							width: 100%;
 							font-size: 1.2rem;
 							display: flex;
+							border-radius: 5px;
 
 							div {
 								width: 50%;
@@ -418,6 +459,7 @@
 								justify-content: center;
 								display: flex;
 								border: 1px solid rgba(171, 31, 30, 1);
+								border-radius: 3px 0 0 3px;
 
 								span {
 									overflow: hidden;
@@ -427,6 +469,7 @@
 							}
 
 							div:nth-of-type(2) {
+								border-radius: 0 3px 3px 0;
 								border-left: none;
 							}
 						}

@@ -70,8 +70,8 @@
 				return this.stuInfo.filter(e => this.ch == -1 || e.grade == this.nianjibas[this.ch])
 			}
 		},
-		created(){
-			this.name = this.$route.query.key==undefined?'':this.$route.query.key;
+		created() {
+			this.name = this.$route.query.key == undefined ? '' : this.$route.query.key;
 			this.initInfo();
 			this.getStudent();
 		},
@@ -89,61 +89,75 @@
 				guize,
 				fenmian,
 				close,
-				nowPage:1,
+				nowPage: 1,
 				nianjibas: [],
 				ch: -1,
 				flter: false,
-				name:'',
-				sname:'',
+				name: '',
+				sname: '',
 				stuInfo: []
 			};
 		},
 		methods: {
 			// 组件的方法
 			changeShownianji(k) {
-				if(this.ch == k){
+				if (this.ch == k) {
 					this.ch = -1
-				}else{
+				} else {
 					this.ch = k
 				}
 			},
 			searchFilter() {
 				this.flter = true;
 			},
-			closeFliter(){
+			closeFliter() {
 				this.flter = false;
 			},
-			searchNow(){
+			searchNow() {
 				this.flter = false;
 				this.nowPage = 1;
 				this.stuInfo = [];
 				this.getStudent();
 			},
-			initInfo(){
-				this.$http.post('/vote/basisInfo',this.$qs.stringify({id:4})).then(res => {
-					if(res){
-						this.nianjibas=res.data.content;
+			initInfo() {
+				this.$http.post('/vote/basisInfo', this.$qs.stringify({
+					id: 4
+				})).then(res => {
+					if (res) {
+						this.nianjibas = res.data.content;
 					}
 				})
 			},
-			getStudent(){
-				this.$http.post('/vote/allplayers',this.$qs.stringify({
-					name:this.name,
-					sname:this.sname,
-					grade:this.ch!==-1?this.nianjibas[this.ch]:'',
-					p:this.nowPage
-				})).then(res=>{
-					if(res){
-						this.stuInfo.push(...res.data);
+			getStudent() {
+				this.$http.post('/vote/allplayers', this.$qs.stringify({
+					name: this.name,
+					sname: this.sname,
+					grade: this.ch !== -1 ? this.nianjibas[this.ch] : '',
+					p: this.nowPage
+				})).then(res => {
+					if (res) {
+						if (res.status == 100) {
+							this.$notify({
+								title: '异常',
+								dangerouslyUseHTMLString: true,
+								iconClass: 'el-icon-warning',
+								message: '<strong>已全部加载</strong>',
+								showClose: false
+							});
+						} else {
+							this.stuInfo.push(...res.data);
+						}
 					}
 				})
 			},
-			toAll(){
+			toAll() {
 				this.nowPage++;
 				this.getStudent();
 			},
-			toInfo(id){
-				let urls = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state='+id+'#wechat_redirect';
+			toInfo(id) {
+				let urls =
+					'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
+					id + '#wechat_redirect';
 				location.href = urls;
 				// this.$router.push({name:'info',params:{userId:id}})
 			}
@@ -168,7 +182,8 @@
 		justify-content: center;
 		align-items: center;
 	}
-	.filter_rel_div{
+
+	.filter_rel_div {
 		width: 100%;
 		height: 350px;
 		background-color: white;
@@ -181,45 +196,47 @@
 		justify-content: space-between;
 		box-sizing: border-box;
 		padding: 100px 50px;
-		
-		.close{
+
+		.close {
 			width: 20px;
 			height: 20px;
 			position: absolute;
 			right: 20px;
 			top: 20px;
 		}
-		
-		.search_btn{
+
+		.search_btn {
 			width: 86%;
-			height:50px;
+			height: 50px;
 			background-color: #F9F1CA;
-			box-shadow:0px 3px 6px rgba(0,0,0,0.16);
-			border-radius:10px;
+			box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+			border-radius: 10px;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			font-size: 20px;
 			font-weight: 900;
-			color:#A01C19;
+			color: #A01C19;
 			position: absolute;
 			bottom: 10px;
 			left: 7%;
 			cursor: pointer;
 		}
-		
-		.sein{
+
+		.sein {
 			font-size: 30px;
 			border: none;
-			outline: none; 
+			outline: none;
 			border-bottom: 1px solid #8c8c8c;
 			color: #8c8c8c;
 			padding: 5px;
 		}
 	}
-	.seeAll{
+
+	.seeAll {
 		font-weight: 900;
 	}
+
 	.fade-enter-active,
 	.fade-leave-active {
 		transition: all .5s;

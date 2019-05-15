@@ -4,6 +4,7 @@
 			<el-button @click="stz = true;">修改通告</el-button>
 			<el-button @click="ssb = true;">修改充值方式</el-button>
 			<el-button @click="sendt = true;">修改结束时间</el-button>
+			<el-button @click="savt = true;">添加票数</el-button>
 		</div>
 		<el-dialog title="公告" :visible.sync="stz" width="50%" :modal-append-to-body='false'>
 			<el-input v-model="gongao" placeholder="请输入公告"></el-input>
@@ -58,6 +59,20 @@
 				<el-button type="primary" @click="subEndTime">确 定</el-button>
 			</span>
 		</el-dialog>
+		<el-dialog title="添加助力值" :visible.sync="savt" width="25%">
+			<el-form label-width="80px">
+				<el-form-item label="选手id">
+					<el-input v-model="addvote.id" placeholder="请输入选手id"></el-input>
+				</el-form-item>
+				<el-form-item label="票数">
+					<el-input-number v-model="addvote.num" :precision="0" :step="1"></el-input-number>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="savt = false">取 消</el-button>
+				<el-button type="primary" @click="subAddVote">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 
@@ -75,6 +90,7 @@
 				stz: false,
 				ssb: false,
 				sendt: false,
+				savt:false,
 				addsb: false,
 				gongao: '',
 				sbtype: [],
@@ -84,7 +100,11 @@
 					price: '',
 				},
 				chsbid: '',
-				time:''
+				time:'',
+				addvote:{
+					id:'',
+					num:0
+				}
 			};
 		},
 		methods: {
@@ -154,13 +174,32 @@
 			},
 			addzhuli() {
 				this.inAdd = true;
+				this.$http.post('', this.$qs.stringify({
+					...this.addvote,
+				})).then(res => {
+					if (res) {
+						this.addsb = false;
+						this.addvote = {
+							id:'',
+							num:0
+						}
+						this.$notify({
+							title: '成功',
+							dangerouslyUseHTMLString: true,
+							iconClass: 'el-icon-success',
+							message: '<strong style="color:green">助力方式' + this.chsbid == '' ? '添加' : '修改' + '成功</strong>',
+						});
+						this.inAdd = fasle;
+					}
+				});
+			},
+			subAddVote(){
+				this.inAdd = true;
 				this.$http.post('/admin/saveGood', this.$qs.stringify({
 					...this.zhuli,
 					id: this.chsbid
 				})).then(res => {
 					if (res) {
-						this.addsb = false;
-						this.getzhuliInfo();
 						this.zhuli = {
 							name: '',
 							num: '',
@@ -170,9 +209,8 @@
 							title: '成功',
 							dangerouslyUseHTMLString: true,
 							iconClass: 'el-icon-success',
-							message: '<strong style="color:green">助力方式' + this.chsbid == '' ? '添加' : '修改' + '成功</strong>',
+							message: '<strong style="color:green">添加成功</strong>',
 						});
-						this.chsbid = '';
 						this.inAdd = fasle;
 					}
 				});

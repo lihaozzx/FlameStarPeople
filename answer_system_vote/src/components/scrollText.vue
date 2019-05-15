@@ -50,15 +50,12 @@
 					this.playTime = 2000
 					break;
 				case 'scroll-left-linear':
-					this.playTime = 8000
+					this.playTime = 16000
 					break;
 				default:
 					this.playTime = 2000
 					break;
 			}
-			this.intervalId = setInterval(() => { // 定义定时器
-				this.getText();
-			}, this.playTime)
 			// 通知公告
 			this.$http.post('/vote/basisInfo', this.$qs.stringify({
 				id: 6
@@ -66,6 +63,10 @@
 				if (res) {
 					this.datalist.unshift(...res.data.content);
 					this.datalist.unshift(...res.data.content);
+					this.getText();
+					this.intervalId = setInterval(() => { // 定义定时器
+						this.getText();
+					}, this.playTime)
 				}
 			});
 		},
@@ -97,7 +98,7 @@
 	}
 
 	.TextScroll li span {
-		font-size: 1.6rem;
+		font-size: 1.2rem;
 		/*px*/
 		margin: 0;
 		overflow: hidden;
@@ -152,12 +153,12 @@
 	/* 向左匀速滚动动画 */
 	.scroll-left-linear-enter-active,
 	.scroll-left-linear-leave-active {
-		transition: all 8s linear;
+		transition: all 16s linear;
 		/*此时间必须和 playTime 保持一致*/
 	}
 
 	.scroll-left-linear-enter {
-		transform: translate3d(120%, 0, 0);
+		transform: translate3d(100%, 0, 0);
 	}
 
 	.scroll-left-linear-leave-to{

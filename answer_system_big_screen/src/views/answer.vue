@@ -256,6 +256,10 @@
 	.head_div{
 		width: 50%;
 		padding-top: 50%;
+		border-radius: 200px;
+		margin-top: 50px;
+		background-position: center;
+		background-size: cover;
 	}
 	.stu_num{
 		

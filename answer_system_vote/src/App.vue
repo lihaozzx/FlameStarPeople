@@ -2,9 +2,7 @@
 	<div id="app">
 		<div id="back_yunwen"></div>
 		<div id="back_red"></div>
-		<transition :name="transitionName">
-			<router-view class="Router"></router-view>
-		</transition>
+		<router-view class="Router"></router-view>
 	</div>
 </template>
 

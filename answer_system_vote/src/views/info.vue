@@ -10,8 +10,10 @@
 				<span class="tongzhi" v-if="gonggao.length!=0">重要通知：</span>
 				<scroll scrollType="scroll-left-linear"></scroll>
 				<div class="video_div" @click="showcontrols">
-					<video v-if="!showc" :src="stuInfo.videoUrl" autoplay></video>
-					<video v-else :src="stuInfo.videoUrl" controls></video>
+					<!-- webkit-playsinline="true" playsinline="true" -->
+					<video controls :poster="stuInfo.headUrl" preload="auto" x5-video-player-fullscreen="true" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-playsinline  :src="stuInfo.videoUrl">您的浏览器不支持 video 标签。</video>
+					<!-- <video v-if="!showc" :src="" ></video>
+					<video v-else :src="stuInfo.videoUrl" controls autoplay></video> -->
 				</div>
 				<div class="info">
 					<div class="stu_info">
@@ -74,7 +76,7 @@
 							<div class="head_div" :style="'background-image: url('+ u.head +')'"></div>
 							<div class="xiangqin">
 								<div><span>{{u.shenf}}</span><span>{{u.date}}</span></div>
-								<span>支持了 {{stuInfo.name}} {{u.num}} 票</span>
+								<span>为 {{stuInfo.name}} 增加了 {{u.num}} 上榜值</span>
 							</div>
 						</div>
 					</div>
@@ -104,6 +106,8 @@
 					</div>
 				</div>
 				<div class="needpay">需支付{{chchongzhi==-1?0:chongzhifangshi[chchongzhi].price}}元</div>
+				<div class="note"><span>感谢您为中华少年儿童慈善救助基金会助力！</span></div>
+				
 				<div class="search_btn" @click="recharge">
 					<span>助TA上榜</span>
 				</div>
@@ -261,7 +265,8 @@
 					grade: '',
 					school: '',
 					face: '',
-					videoUrl: ''
+					videoUrl: '',
+					headUrl:''
 				},
 				gonggao: '',
 				guanxi: [],
@@ -385,7 +390,7 @@
 					params: this.stuInfo
 				});
 			},
-			togood(){
+			togood() {
 				this.$router.push({
 					name: 'goodLetter',
 				});
@@ -556,14 +561,17 @@
 						color: rgba(0, 0, 0, 0.3);
 					}
 				}
-				.good{
+
+				.good {
 					width: 100%;
-					p{
+
+					p {
 						color: #E2087C;
 						font-size: 1.2rem;
 						font-weight: 900;
 					}
-					.good_cl{
+
+					.good_cl {
 						width: 100%;
 						height: 60px;
 						margin-top: 5px;
@@ -571,7 +579,8 @@
 						border: 2px solid #C6C6C6;
 						display: flex;
 						border-radius: 5px;
-						.head{
+
+						.head {
 							width: 45px;
 							height: 45px;
 							margin: 6px 10px;
@@ -579,7 +588,8 @@
 							background-position: center;
 							background-size: cover;
 						}
-						.infos{
+
+						.infos {
 							margin-left: 10px;
 							display: flex;
 							flex-direction: column;
@@ -588,9 +598,8 @@
 							padding: 5px 0;
 							font-size: 1.2rem;
 						}
-						.r{
-							
-						}
+
+						.r {}
 					}
 				}
 
@@ -826,6 +835,11 @@
 		.needpay {
 			font-size: 14px;
 			color: #AB1F1E;
+			width: 100%;
+			text-align: center;
+		}
+		.note{
+			color: #008000;
 			width: 100%;
 			text-align: center;
 		}

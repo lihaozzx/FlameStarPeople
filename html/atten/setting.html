@@ -12,12 +12,31 @@
 	</head>
 	<body>
 		<div>
-			
+			<div></div>
 		</div>
 	</body>
 </html>
 <script type="text/javascript">
 	$(function() {
-		
-	}
+		loading();
+		$.ajax({
+			url: reqUrl + '/api/atten/xkqInfo',
+			type: 'post',
+			data: {token: tokens, dt: dt, p: pages},
+			dataType: 'json',
+			success: function(res){
+				if(res.status == 0){
+					setList(res.data.kqjl);
+					setPage('.page', res.pager);
+				}else{
+					$('.y_tab').hide();
+					noData('.y_body');
+					setPage('.page', false);
+				}
+			},
+			complete: function(){
+				loading('none');
+			}
+		});
+	})
 </script>
