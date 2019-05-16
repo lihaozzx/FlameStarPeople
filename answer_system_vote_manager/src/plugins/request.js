@@ -8,7 +8,7 @@ Vue.prototype.$qs = qs
 
 Vue.prototype.$url = 'http://tp.nzjykj.com'
 axios.defaults.baseURL = 'http://tp.nzjykj.com';
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 50000;
 Vue.prototype.$http = axios;
 
 axios.interceptors.request.use(function(config) {

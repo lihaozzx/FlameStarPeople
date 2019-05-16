@@ -62,7 +62,7 @@
 			<div class="guize">
 				<div class="body">
 					<div class="rule_div">
-						<img src="../assets/rule.png" class="img1">
+						<img :src="guizetupian" class="img1">
 						<img src="../assets/logo-red.png" class="img2">
 						<img src="../assets/banner-bg-bird.png" class="img3">
 					</div>
@@ -96,6 +96,7 @@
 			this.ch = 0;
 		},
 		created() {
+			this.getStudent();
 			setInterval(() => {
 				if (this.yunwenscroll > 300000) {
 					this.yunwenscroll = 0;
@@ -116,7 +117,6 @@
 				this.niaodongqilai++;
 			}, 1);
 			this.initInfo();
-			this.getStudent();
 			this.authorization();
 			let that = this;
 			wx.ready(function() {
@@ -151,6 +151,7 @@
 				guize,
 				fenmian,
 				shipin,
+				guizetupian:'',
 				niaodong: null,
 				niaodongqilai: 0,
 				yunwenscroll: 0,
@@ -190,6 +191,13 @@
 				})).then(res => {
 					if (res) {
 						this.nianjibas.push(...res.data.content);
+					}
+				})
+				this.$http.post('/vote/basisInfo', this.$qs.stringify({
+					id: 7
+				})).then(res => {
+					if (res) {
+						this.guizetupian=res.data.content[0];
 					}
 				})
 			},

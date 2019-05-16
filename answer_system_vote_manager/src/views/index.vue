@@ -71,6 +71,11 @@
 </script>
 
 <style lang="scss">
+	.juzhong {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 	.tap_div {
 		width: 10rem;
 		height: 100%;

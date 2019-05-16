@@ -13,7 +13,7 @@
 					<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
 						<div class="stu_head_div">
 							<div class="stu_head" :style="'background-image: url('+k.headUrl+');'"></div>
-							<img :src="i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
+							<img :src="name != ''&&i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
 						</div>
 						<div class="stu_info">
 							<span class="s1">{{k.name}}</span>
@@ -73,7 +73,6 @@
 		created() {
 			this.name = this.$route.query.key == undefined ? '' : this.$route.query.key;
 			this.initInfo();
-			this.getStudent();
 		},
 		data() {
 			return {
@@ -125,6 +124,52 @@
 				})).then(res => {
 					if (res) {
 						this.nianjibas = res.data.content;
+						if (this.name != '') {
+							this.$http.post('/vote/allplayers', this.$qs.stringify({
+								name: this.name,
+								sname: this.sname,
+								grade: '',
+								p: this.nowPage
+							})).then(res => {
+								if (res) {
+									if (res.status == 100) {
+										this.$notify({
+											title: '异常',
+											dangerouslyUseHTMLString: true,
+											iconClass: 'el-icon-warning',
+											message: '<strong>没有信息</strong>',
+											showClose: false
+										});
+									} else {
+										this.stuInfo.push(...res.data);
+									}
+								}
+							});
+						} else {
+							res.data.content.forEach(g => {
+								this.$http.post('/vote/allplayers', this.$qs.stringify({
+									name: this.name,
+									sname: this.sname,
+									grade: g,
+									p: this.nowPage
+								})).then(res => {
+									if (res) {
+										if (res.status == 100) {
+											this.$notify({
+												title: '异常',
+												dangerouslyUseHTMLString: true,
+												iconClass: 'el-icon-warning',
+												message: '<strong>已全部加载</strong>',
+												showClose: false
+											});
+										} else {
+											this.stuInfo.push(...res.data);
+										}
+									}
+								});
+							})
+						}
+
 					}
 				})
 			},
@@ -148,7 +193,7 @@
 							this.stuInfo.push(...res.data);
 						}
 					}
-				})
+				});
 			},
 			toAll() {
 				this.nowPage++;

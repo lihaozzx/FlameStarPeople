@@ -1,16 +1,24 @@
 <template>
 	<div>
-		<el-table v-loading="inAdd" :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" height="94%"  style="width: 100%;">
+		<!-- tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())) -->
+		<el-table v-loading="inAdd" :data="tableData" height="94%"  style="width: 100%;">
 			<el-table-column label="序号" prop="serial"></el-table-column>
 			<el-table-column label="姓名" prop="name"></el-table-column>
 			<el-table-column label="学校" prop="school" show-overflow-tooltip></el-table-column>
 			<el-table-column label="年级" prop="grade"></el-table-column>
 			<el-table-column label="头像名称" prop="head"></el-table-column>
-			<el-table-column label="视频名称" prop="video"></el-table-column>
+			<el-table-column label="" prop="video">
+				<template slot="header" slot-scope="scope">
+					<div style="display: flex;">
+						<span>视频名称</span>
+						<el-input v-model="name" size="mini" placeholder="姓名搜索" />
+					</div>
+				</template>
+			</el-table-column>
 			<el-table-column align="right" width="240">
 				<template slot="header" slot-scope="scope">
 					<div style="display: flex;">
-						<el-input v-model="search" size="mini" placeholder="姓名搜索" />
+						<el-button @click="getStuInfo">搜索</el-button>
 						<el-button type="success" round @click="showup=true">上传</el-button>
 					</div>
 				</template>
@@ -27,8 +35,7 @@
 
 		<el-dialog title="上传" :visible.sync="showup">
 			<div v-if="haveInfo">
-				<el-table :data="upedTable.filter(data => !search2 || data.name.toLowerCase().includes(search2.toLowerCase()))"
-				 style="width: 100%">
+				<el-table :data="upedTable.filter(data => !search2 || data.name.toLowerCase().includes(search2.toLowerCase()))" style="width: 100%" height="500px">
 					<el-table-column label="序号" prop="serial" width="50" fixed="left"></el-table-column>
 					<el-table-column label="姓名" prop="name"></el-table-column>
 					<el-table-column label="学校" prop="school"></el-table-column>
@@ -173,6 +180,7 @@
 				})).then(res => {
 					if (res) {
 						this.showup = false;
+						this.cancelUp();
 					}
 					this.inAdd = false;
 				});
@@ -220,12 +228,6 @@
 </script>
 
 <style scoped>
-	.juzhong {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
 	.cell_span {
 		width: 100%;
 		text-align: center;
