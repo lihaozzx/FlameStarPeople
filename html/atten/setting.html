@@ -3,40 +3,94 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link rel="stylesheet" type="text/css" href="../../aaa/css/public.css" />
-		<script src="../../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
-
+			.info_box{
+				display: flex;
+				flex-wrap: wrap;
+				height: 700px;
+			}
+			.one_info {
+				width: 350px;
+				height: 180px;
+				background: rgba(255, 255, 255, 1);
+				border: 1px solid rgba(236, 236, 236, 1);
+				border-radius: 10px;
+				box-sizing: border-box;
+				padding: 20px;
+				margin:0 50px 50px 0;
+			}
+			.info_title{
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				margin-bottom: 20px;
+			}
+			.info_title span:nth-of-type(1){
+				font-size: 18px;
+				font-weight: 900;
+				color: #707070;
+			}
+			.info_title span:nth-of-type(2){
+				font-size: 14px;
+				color: #078BFF;
+				cursor: pointer;
+			}
+			.one_info p{
+				font-size: 14px;
+				color: #707070;
+				margin-bottom: 20px;
+			}
 		</style>
 	</head>
 	<body>
-		<div>
-			<div></div>
+		<div class="y_body">
+			<div class="y_floatBox">
+				<!-- 名称 编号筛选 -->
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加部门考勤" data-url="./project/add.html"><i class="y_icon add">新增</i></span>
+			</div>
+			<div class="y_top10 info_box">
+				<div class="one_info">
+					<div class="info_title">
+						<span>研发部</span><span class="">查看</span>
+					</div>
+					<p>上班时间</p>
+					<p>下班时间</p>
+					<p>上班日期</p>
+				</div>
+				
+				<div class="one_info">
+					<div class="info_title">
+						<span>研发部</span><span>查看</span>
+					</div>
+					<p>上班时间</p>
+					<p>下班时间</p>
+					<p>上班日期</p>
+				</div>
+				
+			</div>
+			<div class="y_pageBody page"></div>
 		</div>
 	</body>
-</html>
-<script type="text/javascript">
-	$(function() {
-		loading();
-		$.ajax({
-			url: reqUrl + '/api/atten/xkqInfo',
-			type: 'post',
-			data: {token: tokens, dt: dt, p: pages},
-			dataType: 'json',
-			success: function(res){
-				if(res.status == 0){
-					setList(res.data.kqjl);
-					setPage('.page', res.pager);
-				}else{
-					$('.y_tab').hide();
-					noData('.y_body');
-					setPage('.page', false);
+	<script type="text/javascript">
+		$(function() {
+			loading();
+			$.ajax({
+				url: reqUrl + '',
+				type: 'post',
+				data: {
+					token: tokens,
+				},
+				dataType: 'json',
+				success: function(res) {
+					
+				},
+				complete: function() {
+					loading('none');
 				}
-			},
-			complete: function(){
-				loading('none');
-			}
-		});
-	})
-</script>
+			});
+		})
+	</script>
+</html>

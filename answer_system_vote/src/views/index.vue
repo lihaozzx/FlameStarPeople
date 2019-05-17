@@ -27,24 +27,30 @@
 							<span>{{k}}</span>
 						</div>
 					</div>
-					<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
-						<div class="stu_head_div">
-							<div class="stu_head" :style="'background-image: url('+k.headUrl+');'"></div>
-							<img :src="i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
-						</div>
-						<div class="stu_info">
-							<span class="s1">{{k.name}}</span>
-							<span class="s2">{{k.grade}} | {{k.school}}</span>
-							<div class="info">
-								<div style="width: 75%;">
-									<span>上榜值：{{k.face}}</span>
-								</div>
-								<div>
-									<span>排名：{{i+1}}</span>
+					
+					<!-- 等待图 -->
+					<div class="load_box" v-if="onload"><img :src="load_img" alt=""></div>
+					<div class="stuInfo_box" v-show="!onload">
+						<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
+							<div class="stu_head_div">
+								<div class="stu_head" :style="'background-image: url('+k.headUrl+');'"></div>
+								<img :src="i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
+							</div>
+							<div class="stu_info">
+								<span class="s1">{{k.name}}</span>
+								<span class="s2">{{k.grade}} | {{k.school}}</span>
+								<div class="info">
+									<div style="width: 75%;">
+										<span>上榜值：{{k.face}}</span>
+									</div>
+									<div>
+										<span>排名：{{i+1}}</span>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					
 				</div>
 				<div class="seeAll">
 					<span @click="toAll">查看全部参赛人员 >></span>
@@ -84,6 +90,7 @@
 	import jinshi from '@/assets/jinshi.png'
 	import guize from '@/assets/rule-hd.png'
 	import fenmian from '@/assets/video_img.jpg'
+	import load_img from '@/assets/loading-spin.svg'
 
 	import shipin from '@/assets/WeChat_20190422144635.mp4'
 	export default {
@@ -97,6 +104,8 @@
 		},
 		created() {
 			this.getStudent();
+			let s = this.$utils.getcookie('oldstuinfos');
+			if(s!='')this.stuInfo = this.$qs.parse(s).cont;
 			setInterval(() => {
 				if (this.yunwenscroll > 300000) {
 					this.yunwenscroll = 0;
@@ -135,6 +144,19 @@
 						imgUrl: that.$url + '/uploads/stu/logo.png', // 分享图标
 					});
 				}
+				if (wx.updateTimelineShareData) {
+					wx.updateTimelineShareData({
+						title: '立德树人工程青少年国学大会', // 分享标题
+						link: 'http://tp.nzjykj.com/index',
+						imgUrl: that.$url + '/uploads/stu/logo.png', // 分享图标
+					})
+				} else {
+					wx.onMenuShareTimeline({
+						title: '立德树人工程青少年国学大会', // 分享标题
+						link: 'http://tp.nzjykj.com/index',
+						imgUrl: that.$url + '/uploads/stu/logo.png', // 分享图标
+					});
+				}
 			});
 		},
 		data() {
@@ -151,6 +173,8 @@
 				guize,
 				fenmian,
 				shipin,
+				load_img,
+				onload:true,
 				guizetupian:'',
 				niaodong: null,
 				niaodongqilai: 0,
@@ -204,7 +228,11 @@
 			getStudent() {
 				this.$http.post('/vote/players').then(res => {
 					if (res) {
-						this.stuInfo = res.data
+						this.stuInfo = res.data;
+						setTimeout(()=>{
+							this.onload = false;
+						},2000)
+						this.$utils.setCookie('oldstuinfos',this.$qs.stringify({cont:res.data.filter(r=>r.grade=='三年级').splice(0,6)}));
 					}
 				})
 			},
@@ -230,7 +258,7 @@
 						} else {
 							wx.config({
 								debug: false,
-								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
+								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage','updateTimelineShareData','onMenuShareTimeline'],
 								...res.data
 							});
 						}
@@ -387,102 +415,116 @@
 						border: 2px solid rgba(253, 210, 107, 1);
 					}
 				}
-
-				.stuInfo {
-					width: 100%;
-					height: 100px;
-					margin-bottom: 5px;
+				.load_box{
 					display: flex;
-
-					.stu_head_div {
-						width: 33%;
-						padding-top: 33%;
-						// height: 100px;
-						position: relative;
-
-						.stu_head {
-							width: 80%;
-							padding-top: 80%;
-							position: absolute;
-							top: 0;
-							margin: 10px 2%;
-							border-radius: 90px;
-							background-color: #F9F1CA;
-							overflow: scroll;
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							background-position: center;
-							background-size: cover;
-							border: solid 2px #ab1f1e;
-
-							.img1 {
-								width: 100%;
+					justify-content: center;
+					align-items: center;
+					width: 100%;
+					height: 120px;
+					
+					img{
+						width: 80px;
+						border-radius: 40px;
+						box-shadow: 0 0 30px 10px #8c8c8c;
+					}
+				}
+				.stuInfo_box{
+					.stuInfo {
+						width: 100%;
+						height: 100px;
+						margin-bottom: 5px;
+						display: flex;
+					
+						.stu_head_div {
+							width: 33%;
+							padding-top: 33%;
+							// height: 100px;
+							position: relative;
+					
+							.stu_head {
+								width: 80%;
+								padding-top: 80%;
 								position: absolute;
 								top: 0;
-							}
-
-						}
-
-						.img2 {
-							position: absolute;
-							left: -12%;
-							width: 110%;
-							bottom: 5%;
-						}
-					}
-
-					.stu_head::-webkit-scrollbar {
-						display: none;
-					}
-
-					.stu_info {
-						width: calc(100% - 80px - 8%);
-						display: flex;
-						flex-direction: column;
-						justify-content: space-between;
-						margin: 10px 2%;
-
-						.s1 {
-							color: #AB1F1E;
-							font-weight: 900;
-							font-size: 1.8rem;
-						}
-
-						.s2 {
-							font-size: 1.2rem;
-						}
-
-						.info {
-							width: 100%;
-							font-size: 1.2rem;
-							display: flex;
-							border-radius: 5px;
-
-							div {
-								width: 50%;
-								box-sizing: border-box;
-								padding: 2px 5px;
-								align-items: center;
-								justify-content: center;
+								margin: 10px 2%;
+								border-radius: 90px;
+								background-color: #F9F1CA;
+								overflow: scroll;
 								display: flex;
-								border: 1px solid rgba(171, 31, 30, 1);
-								border-radius: 3px 0 0 3px;
-
-								span {
-									overflow: hidden;
-									text-overflow: ellipsis;
-									white-space: nowrap;
+								justify-content: center;
+								align-items: center;
+								background-position: center;
+								background-size: cover;
+								border: solid 2px #ab1f1e;
+					
+								.img1 {
+									width: 100%;
+									position: absolute;
+									top: 0;
+								}
+					
+							}
+					
+							.img2 {
+								position: absolute;
+								left: -12%;
+								width: 110%;
+								bottom: 5%;
+							}
+						}
+					
+						.stu_head::-webkit-scrollbar {
+							display: none;
+						}
+					
+						.stu_info {
+							width: calc(100% - 80px - 8%);
+							display: flex;
+							flex-direction: column;
+							justify-content: space-between;
+							margin: 10px 2%;
+					
+							.s1 {
+								color: #AB1F1E;
+								font-weight: 900;
+								font-size: 1.8rem;
+							}
+					
+							.s2 {
+								font-size: 1.2rem;
+							}
+					
+							.info {
+								width: 100%;
+								font-size: 1.2rem;
+								display: flex;
+								border-radius: 5px;
+					
+								div {
+									width: 50%;
+									box-sizing: border-box;
+									padding: 2px 5px;
+									align-items: center;
+									justify-content: center;
+									display: flex;
+									border: 1px solid rgba(171, 31, 30, 1);
+									border-radius: 3px 0 0 3px;
+					
+									span {
+										overflow: hidden;
+										text-overflow: ellipsis;
+										white-space: nowrap;
+									}
+								}
+					
+								div:nth-of-type(2) {
+									border-radius: 0 3px 3px 0;
+									border-left: none;
 								}
 							}
-
-							div:nth-of-type(2) {
-								border-radius: 0 3px 3px 0;
-								border-left: none;
-							}
 						}
+					
 					}
-
 				}
 
 				.stuInfoLast {

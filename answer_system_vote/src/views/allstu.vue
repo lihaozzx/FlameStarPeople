@@ -13,7 +13,7 @@
 					<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
 						<div class="stu_head_div">
 							<div class="stu_head" :style="'background-image: url('+k.headUrl+');'"></div>
-							<img :src="name != ''&&i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
+							<img v-if="i<20" :src="name != ''&&i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
 						</div>
 						<div class="stu_info">
 							<span class="s1">{{k.name}}</span>

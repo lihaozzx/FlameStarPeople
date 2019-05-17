@@ -10,7 +10,7 @@ export default new Router({
 			name: 'index',
 			component: index,
 			meta: {
-				title: '立德树人'
+				title: '国学文化交流大使评选活动'
 			}
 		},
 		{

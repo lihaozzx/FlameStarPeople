@@ -11,7 +11,8 @@
 				<scroll scrollType="scroll-left-linear"></scroll>
 				<div class="video_div" @click="showcontrols">
 					<!-- webkit-playsinline="true" playsinline="true" -->
-					<video controls :poster="stuInfo.headUrl" preload="auto" x5-video-player-fullscreen="true" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-playsinline  :src="stuInfo.videoUrl">您的浏览器不支持 video 标签。</video>
+					<video controls :poster="stuInfo.headUrl" preload="auto" x5-video-player-fullscreen="true" webkit-playsinline="true"
+					 x-webkit-airplay="true" playsinline="true" x5-playsinline :src="stuInfo.videoUrl">您的浏览器不支持 video 标签。</video>
 					<!-- <video v-if="!showc" :src="" ></video>
 					<video v-else :src="stuInfo.videoUrl" controls autoplay></video> -->
 				</div>
@@ -107,7 +108,7 @@
 				</div>
 				<div class="needpay">需支付{{chchongzhi==-1?0:chongzhifangshi[chchongzhi].price}}元</div>
 				<div class="note"><span>感谢您为中华少年儿童慈善救助基金会助力！</span></div>
-				
+
 				<div class="search_btn" @click="recharge">
 					<span>助TA上榜</span>
 				</div>
@@ -250,6 +251,19 @@
 						imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
 					});
 				}
+				if (wx.updateTimelineShareData) {
+					wx.updateTimelineShareData({
+						title: '国学大会选手【' + that.stuInfo.name + '】，正在践行国学精神，落实国学行动，请帮TA加油', // 分享标题
+						link: 'http://tp.nzjykj.com/index?state=' + that.stuInfo.id + '/#/info', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+						imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
+					})
+				} else {
+					wx.onMenuShareTimeline({
+						title: '国学大会选手【' + that.stuInfo.name + '】，正在践行国学精神，落实国学行动，请帮TA加油', // 分享标题
+						link: 'http://tp.nzjykj.com/index?state=' + that.stuInfo.id + '/#/info', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+						imgUrl: that.$url + that.stuInfo.headUrl, // 分享图标
+					});
+				}
 			});
 		},
 		data() {
@@ -266,7 +280,7 @@
 					school: '',
 					face: '',
 					videoUrl: '',
-					headUrl:''
+					headUrl: ''
 				},
 				gonggao: '',
 				guanxi: [],
@@ -374,7 +388,7 @@
 						} else {
 							wx.config({
 								debug: false,
-								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage'],
+								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage','updateTimelineShareData','onMenuShareTimeline'],
 								...res.data
 							});
 						}
@@ -838,7 +852,8 @@
 			width: 100%;
 			text-align: center;
 		}
-		.note{
+
+		.note {
 			color: #008000;
 			width: 100%;
 			text-align: center;
