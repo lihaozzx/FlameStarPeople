@@ -11,7 +11,7 @@
 				<scroll scrollType="scroll-left-linear"></scroll>
 				<div class="video_div" @click="showcontrols">
 					<!-- webkit-playsinline="true" playsinline="true" -->
-					<video controls :poster="stuInfo.headUrl" preload="auto" x5-video-player-fullscreen="true" webkit-playsinline="true"
+					<video controls :poster="stuInfo.headUrl" preload="none" x5-video-player-fullscreen="true" webkit-playsinline="true"
 					 x-webkit-airplay="true" playsinline="true" x5-playsinline :src="stuInfo.videoUrl">您的浏览器不支持 video 标签。</video>
 					<!-- <video v-if="!showc" :src="" ></video>
 					<video v-else :src="stuInfo.videoUrl" controls autoplay></video> -->
@@ -76,7 +76,7 @@
 						<div class="info" v-for="u in toupiao" :key="u.id">
 							<div class="head_div" :style="'background-image: url('+ u.head +')'"></div>
 							<div class="xiangqin">
-								<div><span>{{u.shenf}}</span><span>{{u.date}}</span></div>
+								<div><span>{{u.shenf!=''?u.shenf:u.tname}}</span><span>{{u.date}}</span></div>
 								<span>为 {{stuInfo.name}} 增加了 {{u.num}} 上榜值</span>
 							</div>
 						</div>
@@ -375,20 +375,39 @@
 				});
 			},
 			authorization() {
+				let sq = this.$utils.getcookie('wxsqxq');
+				if (sq != '') {
+					let sqo = this.$qs.parse(sq);
+					wx.config({
+						debug: false,
+						jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage', 'updateTimelineShareData',
+							'onMenuShareTimeline'
+						],
+						...sqo
+					});
+					return;
+				}
 				this.$http.post('/vote/getSignpackage', this.$qs.stringify({
 					url: window.location.href.split('#')[0]
 				})).then(res => {
 					if (res) {
 						if (res.status == 800) {
 							this.$http.post('/vote/getJsapiTicket').then(res => {
-								if (res) {
-									this.authorization();
+								if (res.status != 0) {
+									return;
+								} else {
+									setTimeout(() => {
+										this.authorization();
+									}, 4000)
 								}
 							})
 						} else {
+							this.$utils.setCookie('wxsqxq', this.$qs.stringify(res.data), 0.0625);
 							wx.config({
 								debug: false,
-								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage','updateTimelineShareData','onMenuShareTimeline'],
+								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage', 'updateTimelineShareData',
+									'onMenuShareTimeline'
+								],
 								...res.data
 							});
 						}

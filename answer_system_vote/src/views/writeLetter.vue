@@ -51,7 +51,8 @@
 				jiashuc:'',
 				showdialog:false,
 				showerr:false,
-				suc:true
+				suc:true,
+				subing:false
 			};
 		},
 		methods: {
@@ -64,10 +65,14 @@
 				}
 			},
 			subLetter(){
+				if(this.subing){
+					return;
+				}
 				if(this.jiashuc.length<60){
 					this.showerr = true;
 					return;
 				}
+				this.subing=true;
 				this.$http.post('/vote/addletter',this.$qs.stringify({
 					pid:this.stuInfo.id,
 					openid: this.$store.getters.userInfo.openid,

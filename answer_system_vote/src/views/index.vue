@@ -63,7 +63,7 @@
 				<img :src="guize">
 			</div>
 			<div class="video_div">
-				<video controls="controls" preload="auto" x5-video-player-fullscreen="true" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-playsinline :src="shipin" :poster="fenmian">您的浏览器不支持 video 标签。</video>
+				<video controls="controls" preload="none" x5-video-player-fullscreen="true" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-playsinline :src="shipin" :poster="fenmian">您的浏览器不支持 video 标签。</video>
 			</div>
 			<div class="guize">
 				<div class="body">
@@ -126,7 +126,9 @@
 				this.niaodongqilai++;
 			}, 1);
 			this.initInfo();
-			this.authorization();
+			setTimeout(()=>{
+				this.authorization();
+			},2000)
 			let that = this;
 			wx.ready(function() {
 				if (wx.updateAppMessageShareData) {
@@ -245,17 +247,32 @@
 				// this.$router.push({path:'info',query:{userId:id}});
 			},
 			authorization() {
+				let sq = this.$utils.getcookie('wxsqsy');
+				if(sq != ''){
+					let sqo = this.$qs.parse(sq);
+					wx.config({
+						debug: false,
+						jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage','updateTimelineShareData','onMenuShareTimeline'],
+						...sqo
+					});
+					return;
+				}
 				this.$http.post('/vote/getSignpackage', this.$qs.stringify({
 					url: window.location.href.split('#')[0]
 				})).then(res => {
 					if (res) {
 						if (res.status == 800) {
 							this.$http.post('/vote/getJsapiTicket').then(res => {
-								if (res) {
-									this.authorization();
+								if (res.status != 0) {
+									return;
+								} else {
+									setTimeout(() => {
+										this.authorization();
+									}, 4000)
 								}
-							})
+							});
 						} else {
+							this.$utils.setCookie('wxsqsy',this.$qs.stringify(res.data),0.0625);
 							wx.config({
 								debug: false,
 								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage','updateTimelineShareData','onMenuShareTimeline'],

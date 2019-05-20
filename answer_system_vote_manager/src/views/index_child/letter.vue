@@ -1,32 +1,33 @@
 <template>
 	<div>
-		<el-table v-loading="inAdd" :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-		 height="94%" style="width: 100%;">
+		<el-table v-loading="inAdd" :data="tableData" height="94%" style="width: 100%;">
 			<el-table-column label="选手编号" prop="pid"></el-table-column>
 			<el-table-column label="家书人身份" prop="shenf"></el-table-column>
 			<el-table-column label="家书人名称" prop="tname" show-overflow-tooltip></el-table-column>
 			<el-table-column label="上传时间" prop="date"></el-table-column>
 			<el-table-column align="right" width="240">
-				<template slot="header">
+				<template slot="header" slot-scope="scope">
 					<div style="display: flex;">
 						<el-input v-model="search" size="mini" placeholder="选手序号搜索" />
-						<el-button type="primary" round>搜索</el-button>
+						<el-button type="primary" round @click="searchFun">搜索</el-button>
 					</div>
 				</template>
 				<template slot-scope="scope">
 					<el-button size="mini" @click="handleReview(scope.$index, scope.row)" :disabled="scope.row.review==1">审核</el-button>
 					<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button size="mini" type="success" @click="handleRecommend(scope.$index, scope.row)" >{{scope.row.zhu==1?'取消推荐':'推荐'}}</el-button>
+					<el-button size="mini" type="success" @click="handleRecommend(scope.$index, scope.row)">{{scope.row.zhu==1?'取消推荐':'推荐'}}</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
-
+		<div>
+			<span class="mr">未审核</span>
+			<el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="chsh"></el-switch>
+		</div>
 		<div class="infoFooter">
-			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage"
-			 @current-change="selCpm"></el-pagination>
+			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selCpm"></el-pagination>
 		</div>
 
-		<el-dialog title="修改" :visible.sync="showChange">
+		<el-dialog :title="isReview?'审核':'修改'" :visible.sync="showChange">
 			<vue-ueditor-wrap v-model="msg" :config="myConfig"></vue-ueditor-wrap>
 
 			<div slot="footer">
@@ -41,11 +42,33 @@
 <script>
 	import VueUeditorWrap from 'vue-ueditor-wrap'
 	export default {
+		watch: {
+			chsh() {
+				this.inAdd = true;
+				this.pageInfo.nowPage =1;
+				this.$http.post('/admin/letters', this.$qs.stringify({
+					p: this.pageInfo.nowPage,
+					fre:this.chsh?1:'',
+					number:this.search
+				})).then(res => {
+					if (res) {
+						this.tableData = res.data;
+						this.pageInfo = {
+							totalCount: parseInt(res.pager.total_count),
+							size: res.pager.page_size,
+							nowPage: res.pager.current_page,
+						}
+					}
+					this.inAdd = false;
+				})
+			}
+		},
 		created() {
 			this.getStuInfo()
 		},
 		data() {
 			return {
+				chsh:false,
 				tableData: [],
 				upedTable: [],
 				search: '',
@@ -81,6 +104,24 @@
 			}
 		},
 		methods: {
+			searchFun() {
+				this.inAdd = true;
+				this.pageInfo.nowPage = 1;
+				this.$http.post('/admin/letters', this.$qs.stringify({
+					p: this.pageInfo.nowPage,
+					number:this.search
+				})).then(res => {
+					if (res) {
+						this.tableData = res.data;
+						this.pageInfo = {
+							totalCount: parseInt(res.pager.total_count),
+							size: res.pager.page_size,
+							nowPage: res.pager.current_page,
+						}
+					}
+					this.inAdd = false;
+				})
+			},
 			handleReview(index, row) { //审核
 				this.isReview = true;
 				this.msg = row.content;
@@ -96,11 +137,13 @@
 			},
 			handleRecommend(index, row) { //推荐
 				const h = this.$createElement;
-				if(row.zhu == 1){
+				if (row.zhu == 1) {
 					this.$msgbox({
 						title: '消息',
 						message: h('p', null, [
-							h('span', { style: 'color: red' }, '确认取消推荐这份家书吗'),
+							h('span', {
+								style: 'color: red'
+							}, '确认取消推荐这份家书吗'),
 						]),
 						showCancelButton: true,
 						confirmButtonText: '确定',
@@ -121,10 +164,10 @@
 								done();
 							}
 						}
-					}).then(action => {
+					}).then(() => {
 						this.getStuInfo();
 					});
-				}else{
+				} else {
 					this.$msgbox({
 						title: '消息',
 						message: h('p', null, [
@@ -149,15 +192,17 @@
 								done();
 							}
 						}
-					}).then(action => {
+					}).then(() => {
 						this.getStuInfo();
 					});
 				}
-				
+
 			},
 			getStuInfo() {
 				this.inAdd = true;
 				this.$http.post('/admin/letters', this.$qs.stringify({
+					fre:this.chsh?1:'',
+					number:this.search,
 					p: this.pageInfo.nowPage
 				})).then(res => {
 					if (res) {
@@ -200,19 +245,28 @@
 			},
 			changeStu() {
 				this.inAdd = true;
-				this.$http.post('/admin/reviewLet', this.$qs.stringify({
+				this.$http.post('/admin/uplettrs', this.$qs.stringify({
 					id: this.nowCL,
-					review: 1
+					content: this.msg
 				})).then(res => {
 					if (res) {
-						this.showChange = false;
-						this.getStuInfo();
-						this.$notify({
-							title: '成功',
-							dangerouslyUseHTMLString: true,
-							iconClass: 'el-icon-success',
-							message: '<strong style="color:#7FFF00">审核成功</strong>',
-							showClose: false
+						this.inAdd = true;
+						this.$http.post('/admin/reviewLet', this.$qs.stringify({
+							id: this.nowCL,
+							review: 1
+						})).then(res => {
+							if (res) {
+								this.showChange = false;
+								this.getStuInfo();
+								this.$notify({
+									title: '成功',
+									dangerouslyUseHTMLString: true,
+									iconClass: 'el-icon-success',
+									message: '<strong style="color:#7FFF00">审核成功</strong>',
+									showClose: false
+								});
+							}
+							this.inAdd = false;
 						});
 					}
 					this.inAdd = false;
@@ -288,5 +342,8 @@
 		position: absolute;
 		right: 5px;
 		bottom: 1%;
+	}
+	.mr{
+		margin-right: 2px;
 	}
 </style>

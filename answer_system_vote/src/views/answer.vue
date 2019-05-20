@@ -55,7 +55,7 @@
 			</div>
 		</div>
 		<el-dialog :title="dialogText==0?'请登录':'感谢'" :visible.sync="showdialog" width="80%" :modal-append-to-body='false'>
-			<span>{{dialogText==0?'答题之前请登录':'您回答正确'+this.score+'题，已为' + this.stuInfo.name + '增加' + this.score * 10 + '上榜值'}}</span>
+			<span>{{dialogText==0?'答题之前请登录':'您回答正确'+this.score+'题，已为' + this.stuInfo.name + '增加' + this.score>10?100: this.score * 10 + '上榜值'}}</span>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showdialog = false">取 消</el-button>
 				<el-button type="primary" @click="goback">确 定</el-button>
@@ -186,7 +186,7 @@
 							openid: this.$store.getters.userInfo.openid,
 							head: this.$store.getters.userInfo.headimgurl,
 							tname: this.$store.getters.userInfo.nickname,
-							num: this.score * 10
+							num: this.score>10?100: this.score * 10
 						})).then(res => {
 							if (res) {
 								this.showdialog = true;

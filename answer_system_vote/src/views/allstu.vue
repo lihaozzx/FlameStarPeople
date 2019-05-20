@@ -4,26 +4,28 @@
 			<div class="bangdan">
 				<img class="head" src="../assets/pub-bg-1.png">
 				<div class="body">
-					<img :src="paimin" class="paimin">
+					<img v-if="name == ''" :src="paimin" class="paimin">
 					<div class="ninaji">
 						<div class="nian" v-for="(k,i) in nianjibas" :key="i" :class="ch==i?'active':'nochose'" @click="changeShownianji(i)">
 							<span>{{k}}</span>
 						</div>
 					</div>
-					<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
-						<div class="stu_head_div">
-							<div class="stu_head" :style="'background-image: url('+k.headUrl+');'"></div>
-							<img v-if="i<20" :src="name != ''&&i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
-						</div>
-						<div class="stu_info">
-							<span class="s1">{{k.name}}</span>
-							<span class="s2">{{k.grade}} | {{k.school}}</span>
-							<div class="info">
-								<div style="width: 75%;">
-									<span>上榜值：{{k.face}}</span>
-								</div>
-								<div v-if="name == ''">
-									<span>排名：{{i+1}}</span>
+					<div class="stuInfo_box">
+						<div class="stuInfo" v-for="(k,i) in show" :key="k.id" :class="i==stuInfo.length-1?'stuInfoLast':''" @click="toInfo(k.id)">
+							<div class="stu_head_div">
+								<div class="stu_head" :style="'background-image: url('+k.headUrl+');'"></div>
+								<img v-if="i<20&&name == ''" :src="i==0?zhuangyuan:i==1?bangyan:i==2?tanhua:jinshi" class="img2">
+							</div>
+							<div class="stu_info">
+								<span class="s1">{{k.name}}</span>
+								<span class="s2">{{k.grade}} | {{k.school}}</span>
+								<div class="info">
+									<div style="width: 75%;">
+										<span>上榜值：{{k.face}}</span>
+									</div>
+									<div v-if="name == ''">
+										<span>排名：{{i+1}}</span>
+									</div>
 								</div>
 							</div>
 						</div>
