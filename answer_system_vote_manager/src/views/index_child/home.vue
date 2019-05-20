@@ -75,16 +75,16 @@
 				<el-button type="primary" @click="subAddVote">确 定</el-button>
 			</span>
 		</el-dialog>
-		<el-dialog title="检验信息" :visible.sync="ssi" width="15%" :modal-append-to-body='false'>
+		<el-dialog title="检验信息" v-if="ssi" :visible.sync="ssi" width="15%" :modal-append-to-body='false'>
 			<el-form label-width="80px">
 				<el-form-item label="选手编号">
-					<span></span>
+					<span>{{checkStuInfo.id}}</span>
 				</el-form-item>
 				<el-form-item label="选手姓名">
-					<span></span>
+					<span>{{checkStuInfo.name}}</span>
 				</el-form-item>
 				<el-form-item label="学校">
-					<span></span>
+					<span>{{checkStuInfo.school}}</span>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -111,9 +111,17 @@
 <script>
 	export default {
 		created() {
-			this.$http.post('/admin/basis').then(res => {
-				console.log(res);
-			})
+			// 通知公告
+			this.$http.post('/vote/basisInfo', this.$qs.stringify({
+				id: 6
+			})).then(res => {
+				if (res) {
+					this.gongao = res.data.content[0];
+				}
+			});
+			// this.$http.post('/admin/basis').then(res => {
+			// 	console.log(res);
+			// })
 			this.getzhuliInfo();
 		},
 		data() {
@@ -295,7 +303,7 @@
 					id: this.addvote.id
 				})).then(res => {
 					if (res) {
-						this.checkStuInfo = res.data;
+						this.checkStuInfo = res.data[0];
 						this.ssi = true;
 					}
 				})

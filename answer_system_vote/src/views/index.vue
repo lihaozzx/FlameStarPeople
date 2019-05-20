@@ -211,26 +211,12 @@
 					name: 'allstu'
 				})
 			},
-			initInfo() {
-				this.$http.post('/vote/basisInfo', this.$qs.stringify({
-					id: 4
-				})).then(res => {
-					if (res) {
-						this.nianjibas.push(...res.data.content);
-					}
-				})
-				this.$http.post('/vote/basisInfo', this.$qs.stringify({
-					id: 7
-				})).then(res => {
-					if (res) {
-						this.guizetupian=res.data.content[0];
-					}
-				})
-			},
 			getStudent() {
 				this.$http.post('/vote/players').then(res => {
 					if (res) {
-						this.stuInfo = res.data;
+						this.nianjibas.push(...res.data.grade); 
+						this.guizetupian=res.data.imageb[0]; 
+						this.stuInfo = res.data.players;
 						setTimeout(()=>{
 							this.onload = false;
 						},2000)

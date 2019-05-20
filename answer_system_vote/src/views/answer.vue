@@ -55,7 +55,7 @@
 			</div>
 		</div>
 		<el-dialog :title="dialogText==0?'请登录':'感谢'" :visible.sync="showdialog" width="80%" :modal-append-to-body='false'>
-			<span>{{dialogText==0?'答题之前请登录':'您回答正确'+this.score+'题，已为' + this.stuInfo.name + '增加' + this.score>10?100: this.score * 10 + '上榜值'}}</span>
+			<span>{{dialogText==0?'答题之前请登录':'您回答正确'+this.score+'题，已为' + this.stuInfo.name + '增加' + (this.score>10?100: this.score * 10) + '上榜值'}}</span>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showdialog = false">取 消</el-button>
 				<el-button type="primary" @click="goback">确 定</el-button>
@@ -81,14 +81,19 @@
 			}
 		},
 		created() {
+			let id = this.$route.query.userId;
+			if(id == undefined){
+				location.href = this.$url + '/index';
+				return; 
+			}
 			this.$http.post('/vote/playerinfo', this.$qs.stringify({
-				id: this.$route.query.userId
+				id: id
 			})).then(res => {
 				this.stuInfo = res.data
 			});
 			if (this.$store.getters.userInfo != null) {
 				this.$http.post('/vote/topics', this.$qs.stringify({
-					pid: this.$route.query.userId,
+					pid: id,
 					openid: this.$store.getters.userInfo.openid
 				})).then(res => {
 					if (res) {
@@ -105,12 +110,12 @@
 						})
 						this.tiku = res.data;
 					}else{
-						this.$router.go(-1)
+						this.$router.go(-1);
 					}
 				});
 			} else {
-				this.showdialog = true;
-				this.dialogText = 0;
+				let urls = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' + id + '#wechat_redirect';
+				location.href = urls;
 			}
 
 		},
