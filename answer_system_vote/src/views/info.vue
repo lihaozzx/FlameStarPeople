@@ -293,7 +293,8 @@
 				chongzhi: false,
 				test: null,
 				jssl: 0,
-				goodletter: null
+				goodletter: null,
+				czed:false
 			};
 		},
 		methods: {
@@ -348,6 +349,8 @@
 					});
 					return;
 				}
+				if(this.czed)return;
+				this.czed = true;
 				this.$http.post('/vote/wxPay', this.$qs.stringify({
 					pid: this.userId,
 					gid: this.chongzhifangshi[this.chchongzhi].id,
@@ -357,9 +360,7 @@
 					tname: this.$store.getters.userInfo.nickname
 				})).then(res => {
 					if (res) {
-						WeixinJSBridge.invoke(
-							'getBrandWCPayRequest', res,
-							function(ress) {
+						WeixinJSBridge.invoke('getBrandWCPayRequest', res,function(ress) {
 								this.test = ress;
 
 								if (ress.err_msg == "get_brand_wcpay_request:ok") {
@@ -368,7 +369,8 @@
 									this.chongzhi = false;
 									this.getuser();
 								}
-							});
+						});
+						this.czed = false;
 					}
 				});
 			},

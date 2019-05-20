@@ -125,7 +125,6 @@
 				}
 				this.niaodongqilai++;
 			}, 1);
-			this.initInfo();
 			setTimeout(()=>{
 				this.authorization();
 			},2000)
@@ -220,7 +219,7 @@
 						setTimeout(()=>{
 							this.onload = false;
 						},2000)
-						this.$utils.setCookie('oldstuinfos',this.$qs.stringify({cont:res.data.filter(r=>r.grade=='三年级').splice(0,6)}));
+						this.$utils.setCookie('oldstuinfos',this.$qs.stringify({cont:res.data.players.filter(r=>r.grade=='三年级').splice(0,6)}));
 					}
 				})
 			},
