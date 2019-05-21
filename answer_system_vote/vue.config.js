@@ -1,7 +1,14 @@
 module.exports = {
 	publicPath:'./',
-	productionSourceMap:false 
-// 	devServer:{
-// 		port:7788
-// 	}
+	productionSourceMap:false
+ // 	configureWebpack:config=>{
+	// 	Object.assign(config,{
+	// 		externals:{
+	// 			'vue':'Vue',
+	// 			'element-ui':'ELEMENT',
+	// 			'vue-router': 'VueRouter',
+	// 			'vuex': 'Vuex',
+	// 		}
+	// 	})
+	// }
 }

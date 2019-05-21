@@ -2,7 +2,7 @@
 	<div>
 		<!-- tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())) -->
 		<el-table v-loading="inAdd" :data="tableData" height="94%"  style="width: 100%;">
-			<el-table-column label="序号" prop="serial"></el-table-column>
+			<el-table-column label="序号" prop="id"></el-table-column>
 			<el-table-column label="姓名" prop="name"></el-table-column>
 			<el-table-column label="学校" prop="school" show-overflow-tooltip></el-table-column>
 			<el-table-column label="年级" prop="grade"></el-table-column>
@@ -25,6 +25,7 @@
 				<template slot-scope="scope">
 					<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
 					<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" disabled>删除</el-button>
+					<el-button size="mini" @click="handledc(scope.row)">导出</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -36,7 +37,7 @@
 		<el-dialog title="上传" :visible.sync="showup">
 			<div v-if="haveInfo">
 				<el-table :data="upedTable.filter(data => !search2 || data.name.toLowerCase().includes(search2.toLowerCase()))" style="width: 100%" height="500px">
-					<el-table-column label="序号" prop="serial" width="50" fixed="left"></el-table-column>
+					<el-table-column label="编号" prop="serial" width="50" fixed="left"></el-table-column>
 					<el-table-column label="姓名" prop="name"></el-table-column>
 					<el-table-column label="学校" prop="school"></el-table-column>
 					<el-table-column label="年级" prop="grade"></el-table-column>
@@ -93,6 +94,15 @@
 				<el-button type="primary" @click="changeStu" :loading="inAdd">修 改</el-button>
 			</div>
 		</el-dialog>
+		<el-dialog title="导出" :visible.sync="sdc">
+			<div style="display: flex;align-items: center;justify-content: space-between;height: 200px;">
+				<el-button @click="dcdd" :loading="inAdd2">导出支付订单</el-button>
+				<el-button @click="dcdt" :loading="inAdd2">导出答题助力</el-button>
+				<el-button @click="dczf" :loading="inAdd2">导出支付助力</el-button>
+				<el-button @click="dcjs" :loading="inAdd2">导出家书加分</el-button>
+			</div>
+			
+		</el-dialog>
 	</div>
 </template>
 
@@ -111,6 +121,7 @@
 				showChange: false,
 				inAdd: false,
 				haveInfo: false,
+				sdc:false,
 				dizhi: '',
 				showForm: {},
 				oldForm: {},
@@ -120,7 +131,9 @@
 					totalCount: 0,
 					size: 0,
 					nowPage: 1,
-				}
+				},
+				dcId:'',
+				inAdd2:false
 			}
 		},
 		methods: {
@@ -134,11 +147,26 @@
 			handleDelete(index, row) {
 				console.log(index, row);
 			},
+			handledc(row){
+				this.sdc=true;
+				this.dcId = row.id
+			},
+			dcdd(){
+				location.href = this.$url + '/admin/dcPays?st=1&pid=' +this.dcId + '&token=' + this.$store.getters.tokens;
+			},
+			dcdt(){
+				location.href = this.$url + '/admin/dcVoter?type=1&pid=' +this.dcId + '&token=' + this.$store.getters.tokens;
+			},
+			dczf(){
+				location.href = this.$url + '/admin/dcVoter?type=2&pid=' +this.dcId + '&token=' + this.$store.getters.tokens;
+			},
+			dcjs(){
+				location.href = this.$url + '/admin/dcVoter?type=3&pid=' +this.dcId + '&token=' + this.$store.getters.tokens;
+			},
 			getStuInfo() {
 				this.inAdd = true;
 				this.$http.post('/admin/student', this.$qs.stringify({
-					name: this.name,
-					sname: this.sname,
+					id: this.name,
 					p:this.pageInfo.nowPage
 				})).then(res => {
 					if (res) {

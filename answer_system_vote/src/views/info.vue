@@ -71,7 +71,6 @@
 						<span class="s1">亲友助力</span>
 						<span class="s2">已有{{all}}次亲友助力</span>
 					</div>
-					{{test}}
 					<div class="infos">
 						<div class="info" v-for="u in toupiao" :key="u.id">
 							<div class="head_div" :style="'background-image: url('+ u.head +')'"></div>
@@ -122,7 +121,6 @@
 	import juanzhou from '@/assets/juanzhou.png'
 	import close from '@/assets/close.png'
 
-	import shipin from '@/assets/WeChat_20190422144635.mp4'
 	import scroll from '../components/scrollText.vue'
 	export default {
 		computed: {
@@ -269,7 +267,6 @@
 				back,
 				juanzhou,
 				close,
-				shipin,
 				all: 0,
 				showc: false,
 				stuInfo: {

@@ -263,7 +263,7 @@
 							iconClass: 'el-icon-success',
 							message: '<strong style="color:green">助力方式' + this.chsbid == '' ? '添加' : '修改' + '成功</strong>',
 						});
-						this.inAdd = fasle;
+						this.inAdd = false;
 					}
 				});
 			},
@@ -285,7 +285,7 @@
 							iconClass: 'el-icon-success',
 							message: '<strong style="color:green">添加成功</strong>',
 						});
-						this.inAdd = fasle;
+						this.inAdd = false;
 					}
 				});
 			},

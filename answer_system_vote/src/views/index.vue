@@ -63,7 +63,7 @@
 				<img :src="guize">
 			</div>
 			<div class="video_div">
-				<video controls="controls" preload="none" x5-video-player-fullscreen="true" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-playsinline :src="shipin" :poster="fenmian">您的浏览器不支持 video 标签。</video>
+				<video controls="controls" preload="none" x5-video-player-fullscreen="true" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-playsinline src="http://pru8yoip2.bkt.clouddn.com/WeChat_20190422144635.09d23be7.mp4" :poster="fenmian">您的浏览器不支持 video 标签。</video>
 			</div>
 			<div class="guize">
 				<div class="body">
@@ -92,7 +92,6 @@
 	import fenmian from '@/assets/video_img.jpg'
 	import load_img from '@/assets/loading-spin.svg'
 
-	import shipin from '@/assets/WeChat_20190422144635.mp4'
 	export default {
 		computed: {
 			show() {
@@ -173,7 +172,6 @@
 				jinshi,
 				guize,
 				fenmian,
-				shipin,
 				load_img,
 				onload:true,
 				guizetupian:'',

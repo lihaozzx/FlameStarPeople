@@ -4,13 +4,8 @@ import router from './router'
 import store from './store'
 
 import './plugins/request.js'
-// import './plugins/element.js'
+import './plugins/element.js'
 import common from './plugins/common'
-
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-
-Vue.use(ElementUI);
 
 Vue.prototype.$utils = common;
 

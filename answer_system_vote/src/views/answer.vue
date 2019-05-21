@@ -82,9 +82,9 @@
 		},
 		created() {
 			let id = this.$route.query.userId;
-			if(id == undefined){
+			if (id == undefined) {
 				location.href = this.$url + '/index';
-				return; 
+				return;
 			}
 			this.$http.post('/vote/playerinfo', this.$qs.stringify({
 				id: id
@@ -109,12 +109,14 @@
 							t.xuanx = o;
 						})
 						this.tiku = res.data;
-					}else{
+					} else {
 						this.$router.go(-1);
 					}
 				});
 			} else {
-				let urls = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' + id + '#wechat_redirect';
+				let urls =
+					'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
+					id + '#wechat_redirect';
 				location.href = urls;
 			}
 
@@ -141,11 +143,11 @@
 		methods: {
 			// 组件的方法
 			goback() {
-				if(this.dialogText==0){
+				if (this.dialogText == 0) {
 					this.$router.push({
 						name: 'index'
 					});
-				}else{
+				} else {
 					this.$router.go(-1);
 				}
 			},
@@ -175,32 +177,48 @@
 				this.chs.pop();
 			},
 			next() {
-				if (this.ch == -1 && this.chs.length == 0 && this.zuhedaan == '') {
-					this.$message('请选择答案');
-				} else {
-					if (this.now == 9) {
-						if (this.isright()) {
-							this.$message('答对了');
-							this.score++;
-						} else {
-							this.$message('回答错误');
-						}
-						//提交
-						this.$http.post('/vote/addVoteType', this.$qs.stringify({
-							pid: this.stuInfo.id,
-							openid: this.$store.getters.userInfo.openid,
-							head: this.$store.getters.userInfo.headimgurl,
-							tname: this.$store.getters.userInfo.nickname,
-							num: this.score>10?100: this.score * 10
-						})).then(res => {
-							if (res) {
-								this.showdialog = true;
-								this.dialogText = 1;
-							}
-						})
+				if (this.cannext) {
+					this.cannext = false;
+					if (this.ch == -1 && this.chs.length == 0 && this.zuhedaan == '') {
+						this.$message('请选择答案');
+						this.cannext = true;
 					} else {
-						if (this.cannext) {
-							this.cannext = false;
+						if (this.now == 9) {
+							if (this.isright()) {
+								this.$message('答对了');
+								this.score++;
+							} else {
+								this.$message('回答错误');
+							}
+							//提交
+							const loading = this.$loading({
+								lock: true,
+								text: '提交中',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.7)'
+							});
+							this.$http.post('/vote/addVoteType', this.$qs.stringify({
+								pid: this.stuInfo.id,
+								openid: this.$store.getters.userInfo.openid,
+								head: this.$store.getters.userInfo.headimgurl,
+								tname: this.$store.getters.userInfo.nickname,
+								num: (this.score > 10 ? 100 : this.score * 10)
+							})).then(res => {
+								if (res) {
+									this.showdialog = true;
+									this.dialogText = 1;
+								}
+								this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+									loading.close();
+								});
+							})
+						} else {
+							const loading = this.$loading({
+								lock: true,
+								text: '下一题',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0)'
+							});
 							if (this.isright()) {
 								this.$message('回答正确，3秒后下一题');
 								this.score++;
@@ -210,6 +228,9 @@
 							setTimeout(() => {
 								this.now++;
 								this.cannext = true;
+								this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+									loading.close();
+								});
 							}, 3000);
 							this.ch = -1;
 							this.chs = [];
