@@ -223,7 +223,8 @@
 								this.$message('回答正确，3秒后下一题');
 								this.score++;
 							} else {
-								this.$message('回答错误，正确答案：' + this.topic.answer + '，3秒后下一题');
+								let out = this.topic.answer.replace(/@/g, ' ');
+								this.$message('回答错误，正确答案：' + out + '，3秒后下一题');
 							}
 							setTimeout(() => {
 								this.now++;

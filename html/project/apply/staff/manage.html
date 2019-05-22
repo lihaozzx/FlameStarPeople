@@ -96,12 +96,12 @@
 			}
 
 			function init() {
-				/* 获取项目信息*/
+				/* 获取人工信息*/
 				$.ajax({
 					type: "post",
 					url: reqUrl + "/api/projects/Catestype",
 					data: {
-						type: 2,
+						type: 3,
 						token: tokens
 					},
 					dataType: 'json',
