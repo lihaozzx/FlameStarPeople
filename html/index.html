@@ -16,7 +16,7 @@
 		<div class="y_bgc y_imgBg"></div>
 		<!--头部-->
 		<div class="y_header">
-			<span class="y_head_date">2018年01月02日 星期四</span>
+			<span class="y_head_date"></span>
 			<div class="y_head_logo">
 				<img class="y_head_logo_img" src="aaa/images/icon/index_logo.png" alt="峰源智能办公系统" />
 				<div class="y_head_logo_tex">
@@ -27,8 +27,8 @@
 			<div class="y_head_menu">
 				<ul class="y_head_menu_box">
 					<li class="y_head_menu_item">
-						<span class="y_hd_daib">待办事项（<i class="upcoming">0</i>）</span>
-						<span class="y_hd_zuix">新消息（<i class="todos">0</i>）</span>
+						<span class="y_hd_daib  y_newHtml" data-class="a_36" data-title="待办事项" data-url="./pop/see.html?type=1">待办事项（<i class="upcoming">0</i>）</span>
+						<span class="y_hd_zuix  y_newHtml" data-class="a_37" data-title="新消息" data-url="./pop/see.html?type=2">新消息（<i class="todos">0</i>）</span>
 					</li>
 					<li class="y_head_menu_item user">
 						<div class="y_head_img_box"><img class="head" src="" /></div>
@@ -55,7 +55,7 @@
 							<span>工作台</span><i class="y_nav_icon"></i>
 						</a>
 					</li>
-				<!-- 	<li class="y_nav_item not active">
+						<li class="y_nav_item not active">
 						<i class="y_nav_item_bg"></i>
 						<a class="y_nav_name a_2 y_newHtml" data-class="a_2" data-title="通知公告" data-url="./info/notice.html">
 							<span>通知公告</span><i class="y_nav_icon"></i>
@@ -246,7 +246,7 @@
 						<a class="y_nav_name a_34 y_newHtml" data-class="a_34" data-title="文件管理" data-url="./file/index.html">
 							<span>文件管理</span><i class="y_nav_icon"></i>
 						</a>
-					</li> -->
+					</li>
 					<li class="y_nav_item not active">
 						<i class="y_nav_item_bg"></i>
 						<a class="y_nav_name a_35 y_newHtml" data-class="a_35" data-title="考勤设置" data-url="./atten/setting.html">
@@ -371,24 +371,51 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="erweima" style="height: 360px;display: flex;">
+			<img src="aaa/images/img/download.png" style="height: 360px;">
+		</div>
 	</body>
 
 </html>
 <script type="text/javascript">
 	(function () {
 		let str = ''
-		let d = new Date();
+		let d = dateFtt('MM月dd日 hh:mm:ss',new Date());
 		$('.y_head_date').html(d);
+		setInterval(()=>{
+			let d = dateFtt('MM月dd日 hh:mm:ss',new Date());
+			$('.y_head_date').html(d);
+		},1000)
+		
 	})()
-	
+
+	function dateFtt(fmt, date) { //author: meizz   
+		var o = {
+			"M+": date.getMonth() + 1, //月份   
+			"d+": date.getDate(), //日   
+			"h+": date.getHours(), //小时   
+			"m+": date.getMinutes(), //分   
+			"s+": date.getSeconds(), //秒   
+			"q+": Math.floor((date.getMonth() + 3) / 3), //季度   
+			"S": date.getMilliseconds() //毫秒   
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+		for (var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+
 	/*图片地址*/
 	var imgUrl = './aaa/';
 	/*页面路径地址*/
 	var pagUrl = './';
 
 	/*退出登录*/
-	$('.userout').click(function() {
-		Confirm('确定退出？', function(e) {
+	$('.userout').click(function () {
+		Confirm('确定退出？', function (e) {
 			if (e) {
 				deleteCookie('isLogin');
 				deleteCookie('tokens');
@@ -398,7 +425,7 @@
 	})
 
 	/*修改昵称*/
-	$('.ncxg').click(function() {
+	$('.ncxg').click(function () {
 		var that = $(this);
 		if (that.text() == '修改') {
 			that.text('保存')
@@ -414,8 +441,8 @@
 					nickname: val
 				},
 				dataType: 'json',
-				success: function(dat) {
-					Alert(dat.msg, function() {
+				success: function (dat) {
+					Alert(dat.msg, function () {
 						if (dat.status == 0) {
 							$('input.nickname').hide();
 							$('span.nickname').show().text(val);
@@ -428,9 +455,9 @@
 	})
 
 	/*修改头像*/
-	$('.upfile').change(function() {
-		imgBase(this.files[0], function(img) {
-			Confirm('确认修改？', function(e) {
+	$('.upfile').change(function () {
+		imgBase(this.files[0], function (img) {
+			Confirm('确认修改？', function (e) {
 				if (e) {
 					$.ajax({
 						url: reqUrl + '/api/user/Head',
@@ -440,8 +467,8 @@
 							img: img
 						},
 						dataType: 'json',
-						success: function(dat) {
-							Alert(dat.msg, function() {
+						success: function (dat) {
+							Alert(dat.msg, function () {
 								if (dat.status == 0) {
 									$('.head').attr({
 										src: reqUrl + '/' + dat.data
@@ -463,8 +490,8 @@
 			token: tokens
 		},
 		dataType: 'json',
-		success: function(res) {
-			$.each(res.data, function(k, v) {
+		success: function (res) {
+			$.each(res.data, function (k, v) {
 				$('.' + k).text(v)
 			});
 			$('.head').attr({
@@ -475,7 +502,7 @@
 	})
 
 	/*修改密码接口*/
-	$('.changPasd').click(function() {
+	$('.changPasd').click(function () {
 		var ypassword = $('.ypassword').val();
 		var password = $('.password').val();
 		var com_password = $('.com_password').val();
@@ -497,8 +524,8 @@
 					com_password: com_password
 				},
 				dataType: 'json',
-				success: function(res) {
-					Alert(res.msg, function() {
+				success: function (res) {
+					Alert(res.msg, function () {
 						if (res.status == 0) {
 							$('.ypassword').val('');
 							$('.password').val('');
@@ -507,7 +534,7 @@
 						}
 					})
 				},
-				complete: function() {
+				complete: function () {
 					loading('none');
 				}
 			});
@@ -526,7 +553,7 @@
 				token: tokens
 			},
 			dataType: 'json',
-			success: function(res) {
+			success: function (res) {
 				if (res.status == 0) {
 					$('.todos').text(res.data.todos);
 					$('.upcoming').text(res.data.upcoming);

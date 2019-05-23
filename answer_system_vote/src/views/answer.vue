@@ -115,7 +115,7 @@
 				});
 			} else {
 				let urls =
-					'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
+					'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe4f4898be7eb9d18&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
 					id + '#wechat_redirect';
 				location.href = urls;
 			}

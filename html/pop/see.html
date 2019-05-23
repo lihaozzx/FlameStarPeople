@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<div class="y_body">
+			<div class="y_floatBox">
+				<!-- <input type="text" name="" class="y_input y_rit10 serch_title" placeholder="输入项目名称" />
+				<button class="y_btn prim y_rit10 serch">搜索</button>
+				<span class="y_btn y_reset y_rit10">重置</span>
+				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+				<span class="y_btn gren y_floatRight y_newPop" data-title="添加项目" data-url="./project/add.html"><i class="y_icon add">新增</i></span> -->
+			</div>
+			<div class="y_top10">
+				<table class="y_tab y_bordtr">
+					<thead class="y_textCenter table_head">
+						
+					</thead>
+					<tbody class="y_textCenter y_exchag y_hover list">
+						
+					</tbody>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			loading();
+			let type = getParametersFromUrl('type');
+			if(type==1){
+				$('.table_head').append('<tr><td>申请类型</td><td>内容</td><td>申请人</td><td>申请时间</td><td>审核步骤</td><td>当前审核人</td><td>步骤状态</td><td>操作</td></tr>')
+			}else{
+				$('.table_head').append('<tr><td>类型</td><td>标题</td><td>发布时间</td><td>状态</td><td>操作</td></tr>')
+			}
+			$.ajax({
+				url: reqUrl + (type==1?'/api/user/upcoming':'/api/user/messages'),
+				type: 'post',
+				data: {
+					token: tokens
+				},
+				dataType: 'json',
+				success: function(res) {
+					if (res.status == 0) {
+						let str = '';
+						if(type==1){
+							//待办事项
+							res.data.forEach(d=>{
+								let url = '';
+								if(d.modelid==42){
+									//申请
+									if(d.modelname.indexOf('材料')!=-1){
+										url='./project/apply/material/change.html?id='+d.tid;
+									}else if(d.modelname.indexOf('人工')!=-1){
+										url='./project/apply/staff/change.html?id='+d.tid;
+									}else if(d.modelname.indexOf('机械')!=-1){
+										url='./project/apply/machine/change.html?id='+d.tid;
+									}
+								}else if(d.modelid==9){
+									//任务
+									url="./contFile/work.html?id="+d.tid;
+								}else if(d.modelid==13){
+									//离职
+									url="./personalMen/changeLizhi.html?id="+d.tid;
+								}else if(d.modelid==12){
+									//转正
+									url="./personalMen/changeZhuanzhen.html?id="+d.tid;
+								}
+								str+='<tr><td>'+d.modelname+'</td><td>'+d.summary+'</td><td>'+d.uname+'</td><td>'+d.addtime+'</td><td>'+d.cname+'</td><td>'+d.nowcheckname+'</td><td>'+d.statustext+'</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="'+d.summary+'" data-url="'+url+'"><a>详情</a></li></ul></div></td></tr>'
+							})
+							$('.list').append(str)
+						}else{
+							//新消息
+							res.data.forEach(d=>{
+								let url = '';
+								if(d.modelid==42){
+									//申请
+									if(d.modelname.indexOf('材料')!=-1){
+										url='./project/apply/material/change.html?id='+d.tid;
+									}else if(d.modelname.indexOf('人工')!=-1){
+										url='./project/apply/staff/change.html?id='+d.tid;
+									}else if(d.modelname.indexOf('机械')!=-1){
+										url='./project/apply/machine/change.html?id='+d.tid;
+									}
+								}else if(d.modelid==9){
+									//任务
+									url="./contFile/work.html?id="+d.tid;
+								}else if(d.modelid==13){
+									//离职
+									url="./personalMen/changeLizhi.html?id="+d.tid;
+								}else if(d.modelid==12){
+									//转正
+									url="./personalMen/changeZhuanzhen.html?id="+d.tid;
+								}else if(d.modelid==35){
+									//会议
+									url="./meeting/detile.html?id="+d.tid;
+								}else if(d.modelid==1){
+									//通知
+									url="./contFile/notice.html?id="+d.tid;
+								}
+								str+='<tr><td>'+d.modelname+'</td><td>'+d.title+'</td><td>'+d.adddt+'</td><td>'+(d.isread==1?'已读':'未读')+'</td><td><div class="y_slectMenu y_colorInfo">操作 +<ul class="y_slect"><li class="y_slectItem y_newPop" data-title="'+d.title+'" data-url="'+url+'"><a>详情</a></li></ul></div></td></tr>'
+							})
+							$('.list').append(str)
+						}
+						setPage('.page', res.pager);
+					} else {
+						$('.y_tab').hide();
+						noData('.y_body');
+						setPage('.page', false);
+					}
+				},
+				complete: function() {
+					loading('none');
+				}
+			});
+		})
+	</script>
+</html>

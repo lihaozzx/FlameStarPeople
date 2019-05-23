@@ -162,13 +162,15 @@
 			},
 			dataType: "json",
 			success: function(res) {
-				console.log(res);
 				if (res.status == 0) {
 					parent.window.loading('none');
 					setInfo(res.data.result);
 					setLogs(res.data.log);
 					setBill(res.data.bill,res.data.course);
 				}
+			},
+			complete: function() {
+				parent.window.loading('none');
 			}
 		});
 	}

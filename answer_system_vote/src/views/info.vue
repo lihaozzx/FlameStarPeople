@@ -205,7 +205,7 @@
 						that.$store.commit('userInfo', that.$qs.parse(o));
 					} else {
 						if (code == null) {
-							let urls ='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' + userid + '#wechat_redirect';
+							let urls ='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe4f4898be7eb9d18&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' + userid + '#wechat_redirect';
 							location.href = urls;
 						} else {
 							that.$http.post('/vote/get_usertoken', that.$qs.stringify({
@@ -371,18 +371,6 @@
 				});
 			},
 			authorization() {
-				let sq = this.$utils.getcookie('wxsqxq');
-				if (sq != '') {
-					let sqo = this.$qs.parse(sq);
-					wx.config({
-						debug: false,
-						jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage', 'updateTimelineShareData',
-							'onMenuShareTimeline'
-						],
-						...sqo
-					});
-					return;
-				}
 				this.$http.post('/vote/getSignpackage', this.$qs.stringify({
 					url: window.location.href.split('#')[0]
 				})).then(res => {

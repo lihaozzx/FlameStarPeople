@@ -3,7 +3,7 @@
 		<div class="first_div">
 			<div class="zhuangyuanbang">
 				<img class="bang_img" :src="bang">
-				<img class="niao_img" :src="niao">
+				<img class="niao_img" :src="niao" @click="delCookieAll">
 				<img class="yun_img" :src="yun">
 			</div>
 			<div class="seaech_div" @click="choseSearch">
@@ -104,6 +104,7 @@
 			this.ch = 0;
 		},
 		created() {
+			this.delCookieAll();
 			this.getStudent();
 			let s = this.$utils.getcookie('oldstuinfos');
 			if (s != '') this.stuInfo = this.$qs.parse(s).cont;
@@ -226,25 +227,13 @@
 			},
 			toInfo(id) {
 				let urls =
-					'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48c6ea54e0a3e9c7&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
+					'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe4f4898be7eb9d18&redirect_uri=http%3a%2f%2ftp.nzjykj.com%2findex%2f%23%2finfo&response_type=code&scope=snsapi_userinfo&state=' +
 					id + '#wechat_redirect';
 				location.href = urls;
 				// 跳转详情 上线后需要切换到跳转授权
 				// this.$router.push({path:'info',query:{userId:id}});
 			},
 			authorization() {
-				let sq = this.$utils.getcookie('wxsqsy');
-				if (sq != '') {
-					let sqo = this.$qs.parse(sq);
-					wx.config({
-						debug: false,
-						jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage', 'updateTimelineShareData',
-							'onMenuShareTimeline'
-						],
-						...sqo
-					});
-					return;
-				}
 				this.$http.post('/vote/getSignpackage', this.$qs.stringify({
 					url: window.location.href.split('#')[0]
 				})).then(res => {
@@ -272,6 +261,11 @@
 					}
 				});
 			},
+			delCookieAll(){
+				this.$utils.delCookie('wxsqsy');
+				this.$utils.delCookie('weixinInfo');
+				this.$utils.delCookie('wxsqxq');
+			}
 		}
 	}
 </script>

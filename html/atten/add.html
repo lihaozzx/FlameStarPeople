@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<div class="y_body">
+			<div>
+				<table>
+					<tr>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div class="y_pageBody page"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			loading();
+			$.ajax({
+				url: reqUrl + '',
+				type: 'post',
+				data: {
+					token: tokens,
+				},
+				dataType: 'json',
+				success: function(res) {
+					
+				},
+				complete: function() {
+					loading('none');
+				}
+			});
+		})
+	</script>
+</html>

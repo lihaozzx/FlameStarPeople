@@ -169,6 +169,9 @@
 					setLogs(res.data.log);
 					setBill(res.data.bill,res.data.course);
 				}
+			},
+			complete: function() {
+				loading('none');
 			}
 		});
 	}

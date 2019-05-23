@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../aaa/css/public.css" />
+		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<div class="y_body">
+			
+			<div class="y_pageBody page"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			parent.window.loading();
+			let id = getIdFromUrl();
+			$.ajax({
+				url: reqUrl + '',
+				type: 'post',
+				data: {
+					token: tokens,
+				},
+				dataType: 'json',
+				success: function(res) {
+					
+				},
+				complete: function() {
+					parent.window.loading('none');
+				}
+			});
+		})
+	</script>
+</html>
