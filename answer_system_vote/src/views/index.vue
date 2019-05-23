@@ -27,7 +27,7 @@
 							<span>{{k}}</span>
 						</div>
 					</div>
-					
+
 					<!-- 等待图 -->
 					<div class="load_box" v-if="onload"><img :src="load_img" alt=""></div>
 					<div class="stuInfo_box" v-show="!onload">
@@ -50,7 +50,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
 				<div class="seeAll">
 					<span @click="toAll">查看全部参赛人员 >></span>
@@ -63,7 +63,9 @@
 				<img :src="guize">
 			</div>
 			<div class="video_div">
-				<video controls="controls" preload="none" x5-video-player-fullscreen="true" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-playsinline src="http://pru8yoip2.bkt.clouddn.com/WeChat_20190422144635.09d23be7.mp4" :poster="fenmian">您的浏览器不支持 video 标签。</video>
+				<video controls="controls" preload="none" x5-video-player-fullscreen="true" webkit-playsinline="true"
+				 x-webkit-airplay="true" playsinline="true" x5-playsinline src="http://pru8yoip2.bkt.clouddn.com/WeChat_20190422144635.09d23be7.mp4"
+				 :poster="fenmian">您的浏览器不支持 video 标签。</video>
 			</div>
 			<div class="guize">
 				<div class="body">
@@ -104,7 +106,7 @@
 		created() {
 			this.getStudent();
 			let s = this.$utils.getcookie('oldstuinfos');
-			if(s!='')this.stuInfo = this.$qs.parse(s).cont;
+			if (s != '') this.stuInfo = this.$qs.parse(s).cont;
 			setInterval(() => {
 				if (this.yunwenscroll > 300000) {
 					this.yunwenscroll = 0;
@@ -124,11 +126,11 @@
 				}
 				this.niaodongqilai++;
 			}, 1);
-			setTimeout(()=>{
+			setTimeout(() => {
 				this.authorization();
-			},2000)
+			}, 2000)
 			let that = this;
-			wx.ready(function() {
+			wx.ready(function () {
 				if (wx.updateAppMessageShareData) {
 					wx.updateAppMessageShareData({
 						title: '立德树人工程青少年国学大会', // 分享标题
@@ -173,8 +175,8 @@
 				guize,
 				fenmian,
 				load_img,
-				onload:true,
-				guizetupian:'',
+				onload: true,
+				guizetupian: '',
 				niaodong: null,
 				niaodongqilai: 0,
 				yunwenscroll: 0,
@@ -211,13 +213,14 @@
 			getStudent() {
 				this.$http.post('/vote/players').then(res => {
 					if (res) {
-						this.nianjibas.push(...res.data.grade); 
-						this.guizetupian=res.data.imageb[0]; 
+						this.nianjibas.push(...res.data.grade);
+						this.guizetupian = res.data.imageb[0];
 						this.stuInfo = res.data.players;
-						setTimeout(()=>{
+						setTimeout(() => {
 							this.onload = false;
-						},2000)
-						this.$utils.setCookie('oldstuinfos',this.$qs.stringify({cont:res.data.players.filter(r=>r.grade=='三年级').splice(0,6)}));
+						}, 2000)
+						this.$utils.setCookie('oldstuinfos', this.$qs.stringify({ cont: res.data.players.filter(r => r.grade == '三年级').splice(
+								0, 6) }));
 					}
 				})
 			},
@@ -231,11 +234,13 @@
 			},
 			authorization() {
 				let sq = this.$utils.getcookie('wxsqsy');
-				if(sq != ''){
+				if (sq != '') {
 					let sqo = this.$qs.parse(sq);
 					wx.config({
 						debug: false,
-						jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage','updateTimelineShareData','onMenuShareTimeline'],
+						jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage', 'updateTimelineShareData',
+							'onMenuShareTimeline'
+						],
 						...sqo
 					});
 					return;
@@ -255,10 +260,12 @@
 								}
 							});
 						} else {
-							this.$utils.setCookie('wxsqsy',this.$qs.stringify(res.data),0.0625);
+							this.$utils.setCookie('wxsqsy', this.$qs.stringify(res.data), 0.0625);
 							wx.config({
 								debug: false,
-								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage','updateTimelineShareData','onMenuShareTimeline'],
+								jsApiList: ['updateAppMessageShareData', 'onMenuShareAppMessage', 'updateTimelineShareData',
+									'onMenuShareTimeline'
+								],
 								...res.data
 							});
 						}
@@ -313,6 +320,7 @@
 				height: 100%;
 				display: flex;
 				align-items: center;
+
 				.search_input {
 					position: relative;
 					top: -1px;
@@ -415,32 +423,34 @@
 						border: 2px solid rgba(253, 210, 107, 1);
 					}
 				}
-				.load_box{
+
+				.load_box {
 					display: flex;
 					justify-content: center;
 					align-items: center;
 					width: 100%;
 					height: 120px;
-					
-					img{
+
+					img {
 						width: 80px;
 						border-radius: 40px;
 						box-shadow: 0 0 30px 10px #8c8c8c;
 					}
 				}
-				.stuInfo_box{
+
+				.stuInfo_box {
 					.stuInfo {
 						width: 100%;
 						height: 100px;
 						margin-bottom: 5px;
 						display: flex;
-					
+
 						.stu_head_div {
 							width: 33%;
 							padding-top: 33%;
 							// height: 100px;
 							position: relative;
-					
+
 							.stu_head {
 								width: 80%;
 								padding-top: 80%;
@@ -456,15 +466,15 @@
 								background-position: center;
 								background-size: cover;
 								border: solid 2px #ab1f1e;
-					
+
 								.img1 {
 									width: 100%;
 									position: absolute;
 									top: 0;
 								}
-					
+
 							}
-					
+
 							.img2 {
 								position: absolute;
 								left: -12%;
@@ -472,34 +482,34 @@
 								bottom: 5%;
 							}
 						}
-					
+
 						.stu_head::-webkit-scrollbar {
 							display: none;
 						}
-					
+
 						.stu_info {
 							width: calc(100% - 80px - 8%);
 							display: flex;
 							flex-direction: column;
 							justify-content: space-between;
 							margin: 10px 2%;
-					
+
 							.s1 {
 								color: #AB1F1E;
 								font-weight: 900;
 								font-size: 1.8rem;
 							}
-					
+
 							.s2 {
 								font-size: 1.2rem;
 							}
-					
+
 							.info {
 								width: 100%;
 								font-size: 1.2rem;
 								display: flex;
 								border-radius: 5px;
-					
+
 								div {
 									width: 50%;
 									box-sizing: border-box;
@@ -509,21 +519,21 @@
 									display: flex;
 									border: 1px solid rgba(171, 31, 30, 1);
 									border-radius: 3px 0 0 3px;
-					
+
 									span {
 										overflow: hidden;
 										text-overflow: ellipsis;
 										white-space: nowrap;
 									}
 								}
-					
+
 								div:nth-of-type(2) {
 									border-radius: 0 3px 3px 0;
 									border-left: none;
 								}
 							}
 						}
-					
+
 					}
 				}
 

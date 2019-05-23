@@ -20,6 +20,14 @@
 				this.$router.isBack = false
 			}
 		},
+		created(){
+				const loading = this.$loading({
+				lock: true,
+				text: '服务器升级中，请稍后',
+				spinner: 'el-icon-warning',
+				background: 'rgba(0, 0, 0, 0.9)'
+			});
+		},
 		data() {
 			return {
 				transitionName: 'slide-right',
