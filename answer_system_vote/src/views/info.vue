@@ -106,8 +106,7 @@
 					</div>
 				</div>
 				<div class="needpay">需支付{{chchongzhi==-1?0:chongzhifangshi[chchongzhi].price}}元</div>
-				<div class="note"><span>感谢您为中华少年儿童慈善救助基金会助力！</span></div>
-
+				
 				<div class="search_btn" @click="recharge">
 					<span>助TA上榜</span>
 				</div>
