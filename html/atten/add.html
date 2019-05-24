@@ -12,32 +12,99 @@
 	<body>
 		<div class="y_body">
 			<div>
-				<table>
-					<tr>
-						<td></td>
-					</tr>
-				</table>
+				<form id="check_form">
+					<table class="y_tab y_border y_top20">
+						<tr>
+							<td class="y_textRight"><i class="y_colorRead">*</i>部门：</td>
+							<td colspan="5">
+								<select name="did" class="dep y_input">
+									<option value="">通用</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="y_textRight"><i class="y_colorRead">*</i>上班时间：</td>
+							<td colspan="5">
+								<input type="text" name="address" class="y_input block" />
+							</td>
+						</tr>
+						<tr>
+							<td class="y_textRight"><i class="y_colorRead">*</i>下班时间：</td>
+							<td colspan="5">
+								<input type="text" name="address" class="y_input block" />
+							</td>
+						</tr>
+						<tr>
+							<td class="y_textRight"><i class="y_colorRead">*</i>工作日：</td>
+							<td colspan="5">
+								
+							</td>
+						</tr>
+					</table>
+					<div class="y_inPopFoot">
+						<input type="hidden" name="token" class="token" value="" />
+						<span class="y_btn lg y_rit20 prim submit">发 布</span>
+					</div>
+					<div class="y_top20"></div>
+				</form>
 			</div>
 			<div class="y_pageBody page"></div>
 		</div>
 	</body>
 	<script type="text/javascript">
 		$(function() {
-			loading();
+			parent.window.loading();
+			
 			$.ajax({
-				url: reqUrl + '',
+				url: reqUrl + '/api/public/department',
 				type: 'post',
 				data: {
 					token: tokens,
 				},
 				dataType: 'json',
 				success: function(res) {
-					
+					if(res.status==0){
+						let str = '';
+						res.data.forEach(d=>{
+							str+='<option value="'+d.id+'">'+d.department+'</option>'
+						});
+						$('.dep').append(str);
+					}
 				},
 				complete: function() {
-					loading('none');
+					parent.window.loading('none');
 				}
 			});
+			
+			/*提交*/
+			$('.submit').click(function() {
+				$('.token').val(tokens);
+				do_sub();
+			})
 		})
+		/* 提交 */
+		function do_sub() {
+			parent.window.loading();
+			$.ajax({
+				type: "GET",
+				url: reqUrl + '/api/projects/savePro',
+				data: $('#check_form').serialize(),
+				dataType: "json",
+				error: function(request) {
+					parent.window.loading('none');
+					parent.window.Alert('提交失败');
+				},
+				success: function(data) {
+					parent.window.loading('none');
+					parent.window.Alert(data.msg, function() {
+						if (data.status == 0) {
+							parent.window.closePop('', function() {
+								parent.window.Reload();
+							})
+						}
+					});
+				}
+			});
+		}
 	</script>
 </html>

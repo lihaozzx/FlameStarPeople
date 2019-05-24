@@ -65,52 +65,6 @@
 				<span class="y_btn gren y_floatRight y_newPop" data-title="添加部门考勤" data-url="./atten/add.html"><i class="y_icon add">新增</i></span>
 			</div>
 			<div class="y_top10 info_box">
-				<div class="one_info">
-					<div class="info_title">
-						<span>研发部</span><span class="seeMore y_newPop" data-title="修改考勤" data-url="./atten/change.html?id=">查看</span>
-					</div>
-					<table class="table_kq">
-						<tr>
-							<td>星期</td>
-							<td>一</td>
-							<td>二</td>
-							<td>三</td>
-							<td>四</td>
-							<td>五</td>
-							<td>六</td>
-							<td>日</td>
-						</tr>
-						<tr class="c70">
-							<td>上班时间：</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-						</tr>
-						<tr class="c70" style="margin-top: 10px;">
-							<td>下班时间：</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-							<td>10:00</td>
-						</tr>
-					</table>
-				</div>
-				
-				<div class="one_info">
-					<div class="info_title">
-						<span>研发部</span><span>查看</span>
-					</div>
-					<p>上班时间：</p>
-					<p>下班时间：</p>
-					<p>上班日期：</p>
-				</div>
 				
 			</div>
 			<div class="y_pageBody page"></div>
@@ -120,14 +74,20 @@
 		$(function() {
 			loading();
 			$.ajax({
-				url: reqUrl + '',
+				url: reqUrl + '/api/atten/setattens',
 				type: 'post',
 				data: {
-					token: tokens,
+					token: tokens
 				},
 				dataType: 'json',
 				success: function(res) {
-					
+					if(res.status==0){
+						let str = '';
+						res.data.forEach(d=>{
+							str+='<div class="one_info"><div class="info_title"><span>'+d.name+'</span><span class="seeMore y_newPop" data-title="修改考勤" data-url="./atten/change.html?id='+d.did+'">查看</span></div><table class="table_kq"><tr><td>星期</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td></tr><tr class="c70"><td>上班时间：</td><td>'+d.startime[1]+'</td><td>'+d.startime[2]+'</td><td>'+d.startime[3]+'</td><td>'+d.startime[4]+'</td><td>'+d.startime[5]+'</td><td>'+d.startime[6]+'</td><td>'+(d.startime[7]==undefined?'/':d.startime[7])+'</td></tr><tr class="c70" style="margin-top: 10px;"><td>下班时间：</td><td>'+d.endtime[1]+'</td><td>'+d.endtime[2]+'</td><td>'+d.endtime[3]+'</td><td>'+d.endtime[4]+'</td><td>'+d.endtime[5]+'</td><td>'+d.endtime[6]+'</td><td>'+(d.endtime[7]==undefined?'/':d.endtime[7])+'</td></tr></table></div>'
+						});
+						$('.info_box').append(str);
+					}
 				},
 				complete: function() {
 					loading('none');

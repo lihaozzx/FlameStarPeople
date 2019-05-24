@@ -20,7 +20,7 @@
 			parent.window.loading();
 			let id = getIdFromUrl();
 			$.ajax({
-				url: reqUrl + '',
+				url: reqUrl + '/api/atten/attensInfo',
 				type: 'post',
 				data: {
 					token: tokens,

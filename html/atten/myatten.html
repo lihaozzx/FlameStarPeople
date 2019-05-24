@@ -41,7 +41,7 @@
 							<td rowspan="2">序号</td>
 							<td rowspan="2">日期</td>
 							<td colspan="3">上午</td>
-							<td colspan="3">下午</td>
+							<td colspan="3" style="position: relative;background-color: rgba(0,0,0,0);">下午</td>
 						</tr>
 						<tr>
 							<td>打卡时间</td>
@@ -49,7 +49,7 @@
 							<td>打卡地址</td>
 							<td>打卡时间</td>
 							<td>打卡说明</td>
-							<td>打卡地址</td>
+							<td style="position: relative;background-color: rgba(0,0,0,0);">打卡地址</td>
 						</tr>
 					</thead>
 					<tbody class="y_textCenter y_exchag y_hover list"></tbody>
@@ -111,7 +111,7 @@
 			$.each(data.days, function(k, v){
 				++i
 				str += 	'<tr><td>'+i+'</td><td>'+v.dt+'</td><td>'+v.ztime+'</td><td>'+v.ztname+'</td><td>'+v.zaddress+'</td><td>'+v.etime+'</td>'
-						+'<td>'+v.etname+'</td><td>'+v.eaddress+'</td></tr>'
+						+'<td>'+v.etname+'</td><td style="position: relative;background-color: rgba(0,0,0,0);">'+v.eaddress+'</td></tr>'
 			})
 			if(str == ''){
 				$('.y_tab').hide();

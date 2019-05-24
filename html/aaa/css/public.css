@@ -308,7 +308,7 @@ input.y_btn.block{height: 40px;line-height: 40px;padding: 0;}
 .y_bordtr tr{border: 1px solid #dcdcdc;}
 .y_exchag .y_even{background-color: #f9f9f9;}
 .y_tab .y_hover tr:hover{background-color: #e3eaf1;}
-.y_tab td,.y_tab th{padding: 6px 8px;height: 18px;max-width: 350px;}
+.y_tab td,.y_tab th{padding: 6px 8px;height: 18px;max-width: 350px;white-space:nowrap}
 /*分页*/
 .y_pageBody{margin-top: 20px;text-align: center;}
 .y_page{display: inline-block;vertical-align: middle;overflow: hidden;color: #5d5d5d;font-size: 12px;}

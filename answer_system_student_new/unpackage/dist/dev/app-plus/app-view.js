@@ -2118,7 +2118,9 @@ __wxAppCode__['pages/info/info.wxml']=$gwx('./pages/info/info.wxml');
 
 ;var __pageFrameEndTime__ = Date.now();
 (function() {
-        plus.webview.postMessageToUniNView({
-            type: 'UniWebviewReady-' + plus.webview.currentWebview().id
-        }, '__uniapp__service');
+        window.UniLaunchWebviewReady = function(isWebviewReady){
+          // !isWebviewReady && console.log('launchWebview fallback ready')
+          plus.webview.postMessageToUniNView({type: 'UniWebviewReady-' + plus.webview.currentWebview().id}, '__uniapp__service');
+        }
+        UniLaunchWebviewReady(true);
 })();
