@@ -7,16 +7,67 @@
 		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
+			.y_input {
+				width: 80px;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="y_body">
-			
-			<div class="y_pageBody page"></div>
+			<table class="y_tab y_border">
+				<tr>
+					<th colspan="8"><span class="bmname"></span></th>
+				</tr>
+				<tr>
+					<th>星期</th>
+					<th>一</th>
+					<th>二</th>
+					<th>三</th>
+					<th>四</th>
+					<th>五</th>
+					<th>六</th>
+					<th>日</th>
+				</tr>
+				<tr class="y_textCenter">
+					<td>上班时间</td>
+					<td><input type="text" name="startime" class="y_input" /></td>
+					<td><input type="text" name="startime" class="y_input" /></td>
+					<td><input type="text" name="startime" class="y_input" /></td>
+					<td><input type="text" name="startime" class="y_input" /></td>
+					<td><input type="text" name="startime" class="y_input" /></td>
+					<td><input type="text" name="startime" class="y_input" /></td>
+					<td><input type="text" name="startime" class="y_input" /></td>
+				</tr>
+				<tr class="y_textCenter">
+					<td>下班时间</td>
+					<td><input type="text" name="endtime" class="y_input" /></td>
+					<td><input type="text" name="endtime" class="y_input" /></td>
+					<td><input type="text" name="endtime" class="y_input" /></td>
+					<td><input type="text" name="endtime" class="y_input" /></td>
+					<td><input type="text" name="endtime" class="y_input" /></td>
+					<td><input type="text" name="endtime" class="y_input" /></td>
+					<td><input type="text" name="endtime" class="y_input" /></td>
+				</tr>
+				<tr class="y_textCenter">
+					<td>工作日</td>
+					<td><input type="checkbox" name="workday" /></td>
+					<td><input type="checkbox" name="workday" /></td>
+					<td><input type="checkbox" name="workday" /></td>
+					<td><input type="checkbox" name="workday" /></td>
+					<td><input type="checkbox" name="workday" /></td>
+					<td><input type="checkbox" name="workday" /></td>
+					<td><input type="checkbox" name="workday" /></td>
+				</tr>
+			</table>
+			<div class="y_inPopFoot">
+				<input type="hidden" name="token" class="token" value="" />
+				<span class="y_btn lg y_rit20 prim submit">发 布</span>
+			</div>
+			<div class="y_top20"></div>
 		</div>
 	</body>
 	<script type="text/javascript">
-		$(function() {
+		$(function () {
 			parent.window.loading();
 			let id = getIdFromUrl();
 			$.ajax({
@@ -24,15 +75,75 @@
 				type: 'post',
 				data: {
 					token: tokens,
+					id: id
 				},
 				dataType: 'json',
-				success: function(res) {
-					
+				success: function (res) {
+					if (res.status == 0) {
+						$('.bmname').html(res.data.name)
+						let start = res.data.startime;
+						let end = res.data.endtime;
+						$('input[name="startime"]').each(function (e) {
+							if (start[e + 1] != undefined) {
+								$(this).val(start[e + 1])
+							}
+						})
+						$('input[name="endtime"]').each(function (e) {
+							if (end[e + 1] != undefined) {
+								$(this).val(end[e + 1])
+							}
+						})
+						$('input[name="workday"]').each(function (e) {
+							if (end[e + 1] != undefined) {
+								$(this).attr("checked", true);
+							}
+						})
+					}
 				},
-				complete: function() {
+				complete: function () {
 					parent.window.loading('none');
 				}
 			});
+			$('.submit').on('click', function () {
+				sub(id);
+			})
 		})
+		
+		function sub(id) {
+			parent.window.loading();
+			let outstar = {}
+			let outend = {}
+			$('input[name="workday"]').each(function (e) {
+				if (this.checked) {
+					outstar[e + 1] = $($('input[name="startime"]')[e]).val()
+					outend[e + 1] = $($('input[name="endtime"]')[e]).val()
+				}
+			});
+			$.ajax({
+				url: reqUrl + '/api/atten/saveattens',
+				type: 'post',
+				data: {
+					token: tokens,
+					id: id,
+					startime: outstar,
+					endtime: outend
+				},
+				dataType: 'json',
+				success: function (res) {
+					parent.window.loading('none');
+					parent.window.Alert(res.msg, function () {
+						if (res.status == 0) {
+							parent.window.closePop('', function () {
+								parent.window.Reload();
+							})
+						}
+					});
+			
+				},
+				complete: function () {
+					parent.window.loading('none');
+				}
+			});
+		}
 	</script>
 </html>
