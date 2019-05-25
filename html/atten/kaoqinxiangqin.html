@@ -7,6 +7,9 @@
 		<script src="../aaa/js/jquery.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../aaa/js/public.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
+			span{
+				display: block;
+			}
 		</style>
 	</head>
 	<body>
@@ -35,111 +38,15 @@
 				<button class="y_btn prim y_rit10 serch">搜索</button>
 				<span class="y_btn y_reset y_rit10">重置</span>
 				<div class="y_btn info y_rit10" onclick="Refresh()"><i class="y_icon fresh">刷新</i></div>
+				<div class="y_btn y_rit10"><i class="y_icon outexcl">导出</i></div>
 			</div>
 			<div class="y_top10">
 				<ul>
 					<li>
-						<table class="y_tab y_border">
-							<tr>
-								<td>工号66666</td>
-								<td>某某</td>
-								<td>1</td>
-								<td>2</td>
-								<td>3</td>
-								<td>4</td>
-								<td>5</td>
-								<td>6</td>
-								<td>7</td>
-								<td>8</td>
-								<td>9</td>
-								<td>10</td>
-								<td>11</td>
-								<td>12</td>
-								<td>13</td>
-								<td>14</td>
-								<td>15</td>
-								<td>16</td>
-								<td>17</td>
-								<td>18</td>
-								<td>19</td>
-								<td>20</td>
-								<td>21</td>
-								<td>22</td>
-								<td>23</td>
-								<td>34</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-							</tr>
-							<tr>
-								<td colspan="2">上班打卡</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-								<td>10:00</td>
-							</tr>
-							<tr>
-								<td colspan="2">下班打卡</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-								<td>1</td>
-							</tr>
+						<table class="y_tab y_border y_textCenter list">
+							<tbody class="list">
+								
+							</tbody>
 						</table>
 					</li>
 				</ul>
@@ -153,6 +60,7 @@
 			var year_str = '';
 			var mont_str = '';
 			var year,month;
+			var nowShow=[];
 			
 			for(var i = 2019; i <= years; i++){
 				year_str += '<li class="y_inpSect_item" data-val="'+i+'">'+i+'</li>';
@@ -169,13 +77,12 @@
 			function getList(){
 				loading();
 				$.ajax({
-					url: reqUrl + '/api/atten/mykanay',
+					url: reqUrl + '/api/atten/allkqanay',
 					type: 'post',
 					data: {token: tokens, dt: dt, p: pages},
 					dataType: 'json',
 					success: function(res){
 						if(res.status == 0){
-							console.log(res);
 							setList(res.data);
 							setPage('.page', res.pager);
 						}else{
@@ -192,12 +99,23 @@
 			
 			function setList(data){
 				$('.list').children().remove();
-				var str = '';
-				var i = 0;
-				$.each(data.days, function(k, v){
-					++i
-					str += 	'<tr><td>'+i+'</td><td>'+v.dt+'</td><td>'+v.ztime+'</td><td>'+v.ztname+'</td><td>'+v.zaddress+'</td><td>'+v.etime+'</td>'
-							+'<td>'+v.etname+'</td><td style="position: relative;background-color: rgba(0,0,0,0);">'+v.eaddress+'</td></tr>'
+				var str = '<thead><tr class="htr"><td colspan="4">日期</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td></tr></thead>';
+				let i = 0;
+				$.each(data, function(k, d){
+					i++;
+					str += 	'<tr><td colspan="4">工号：'+d.number+'</td><td colspan="4">姓名：'+d.name+'</td><td colspan="4">部门	：'+d.departmentname+'</td><td style="color: #078BFF;cursor: pointer;" class="zhankaiFun" index="'+i+'">展开</td><td colspan="22"></td></tr><tbody class="suolue'+i+'"><tr><td colspan="4">上班打卡</td>'
+					for (let s=0;s<31;s++) {
+						str+='<td class="startTime'+i+'"><span class="t_stime'+i+'" style="width:60px"></span></td>'
+					}
+					str+='</tr><tr><td colspan="4">上班打卡</td>'
+					for (let s=0;s<31;s++) {
+						str+='<td class="endTime'+i+'"><span class="t_etime'+i+'" style="width:60px"></span></td>'
+					}
+					str+='</tr></tbody><tbody class="zhankai'+i+'" style=" display:none "><tr><td colspan="2">日期</td><td colspan="2">上班状态</td><td colspan="2">上班打卡时间</td><td colspan="2">上班打卡地址</td><td colspan="2">下班状态</td><td colspan="2">下班打卡时间</td><td colspan="2">下班打卡地址</td><td colspan="21"></td></tr>'
+					d.days.forEach(d=>{
+						str+='<tr><td colspan="2">'+d.dt+'</td><td colspan="2">'+d.ztname+'</td><td colspan="2">'+d.ztime+'</td><td colspan="2">'+d.zaddress+'</td><td colspan="2">'+d.etname+'</td><td colspan="2">'+d.etime+'</td><td colspan="2">'+d.eaddress+'</td><td colspan="21"></td></tr>'
+					})
+					str+='<tr><td colspan="35"></td></tr></tbody>'
 				})
 				if(str == ''){
 					$('.y_tab').hide();
@@ -207,6 +125,40 @@
 					$('.y_noData').remove();
 					$('.list').append(str)
 				}
+				/* dom元素添加完成 */
+				
+				$('.zhankaiFun').on('click',function (){
+					console.log(nowShow)
+					let i = $(this).attr('index');
+					for(let s=0;s<nowShow.length;s++){
+						let ix = nowShow[s];
+						if(ix==i){//收起
+							$($('.zhankaiFun')[i-1]).html('展开');
+							$('.zhankai'+i).hide(500);
+							$('.suolue'+i).show(500);
+							nowShow.splice(s,1);
+							return;
+						}
+					}
+					nowShow.push(i);
+					$($('.zhankaiFun')[i-1]).html('收起');
+					$('.suolue'+i).hide(500);
+					$('.zhankai'+i).show(500);
+				})
+				let j = 0;
+				data.forEach(info=>{
+					j++;
+					info.days.forEach(day=>{
+						$($('.t_stime'+j)[day.dt-1]).html(day.ztime)
+						$($('.t_etime'+j)[day.dt-1]).html(day.etime)
+						if(day.ztname!='正常'){
+							$($('.startTime'+j)[day.dt-1]).css("background-color",'red');
+						}
+						if(day.etime!='正常'){
+							$($('.endTime'+j)[day.dt-1]).css("background-color",'red');
+						}
+					})
+				})
 			}
 			
 			/*页码跳转*/
@@ -230,6 +182,15 @@
 				}
 				getList();
 			})
+			$('.outexcl').on('click',function (){
+				if($('.year').val() && $('.month').val()){
+					dt = $('.year').val() + '-' + $('.month').val();
+				}else{
+					dt = '';
+				}
+				location.href = reqUrl + '/api/atten/dcallkqanay?token='+tokens+'&dt='+dt;
+			})
 		})
+		
 	</script>
 </html>
