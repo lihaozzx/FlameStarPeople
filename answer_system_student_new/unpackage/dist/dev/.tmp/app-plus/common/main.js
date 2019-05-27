@@ -82,6 +82,7 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default =
 {
   onLaunch: function onLaunch() {var _this = this;
+    plus.navigator.setFullscreen(true);
     plus.screen.lockOrientation('landscape-primary'); //锁定
     var self = plus.webview.currentWebview();
     self.setStyle({
@@ -91,10 +92,10 @@ __webpack_require__.r(__webpack_exports__);
       url: 'ws://192.168.1.100:7272' });
 
     uni.onSocketOpen(function (res) {
-      console.log('WebSocket连接已打开！', " at App.vue:13");
+      console.log('WebSocket连接已打开！', " at App.vue:14");
     });
     uni.onSocketError(function (res) {
-      console.log('WebSocket连接打开失败，请检查！', " at App.vue:16");
+      console.log('WebSocket连接打开失败，请检查！', " at App.vue:17");
       uni.connectSocket({
         url: 'ws://192.168.1.100:7272' });
 
@@ -102,7 +103,7 @@ __webpack_require__.r(__webpack_exports__);
     uni.onSocketMessage(function (res) {
       var e = JSON.parse(res.data);
       if (e.type == 'login') {
-        console.log('已登录', " at App.vue:24");
+        console.log('已登录', " at App.vue:25");
       }
       if (e.type == 'say') {
         _this.$store.commit('onMessage', e.content);

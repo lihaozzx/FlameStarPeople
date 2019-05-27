@@ -73,6 +73,12 @@
 						<div class="btn" @click="sendRule">
 							<span>显示规则</span>
 						</div>
+						<div class="btn" @click="sendseefenmian(1)">
+							<span>显示封面1</span>
+						</div>
+						<div class="btn" @click="sendseefenmian(2)">
+							<span>显示封面2</span>
+						</div>
 					</div>
 				</div>
 				<div class="btn_box">
@@ -86,6 +92,9 @@
 						</div>
 						<div class="btn" v-if="grabAnswerStu!=null">
 							<span>{{grabAnswerStu.name}} 正在抢答</span>
+						</div>
+						<div class="btn" @click="sendShowAnswer">
+							<span>显示答案</span>
 						</div>
 						<div class="btn" @click="grabAnswerRight">
 							<span>正确</span>
@@ -144,7 +153,9 @@
 						break;
 					case 'clickQiangda':
 						// 学生点击抢答
-						this.grabAnswerStu = n.data
+						if(this.grabAnswerStu==null){
+							this.grabAnswerStu = n.data
+						}
 						break;
 					default:
 						break;
@@ -222,6 +233,7 @@
 					clearInterval(this.daojishiIn)
 				}
 				this.daojishi = 25;
+				this.grabAnswerStu = null;
 				this.daojishiIn = setInterval(() => {
 					if (this.daojishi <= 0) {
 						clearInterval(this.daojishiIn)
@@ -304,7 +316,7 @@
 					pid:this.grabAnswerStu.id,
 					gid:this.gameInfo.id,
 					tid:this.paper[this.nowTopic-1].id,
-					score:(6-parseInt(this.xiansuoNum))
+					score:(this.paper[this.nowTopic-1].score-parseInt(this.xiansuoNum))
 				})).then(res=>{
 					alert('上报完成')
 				})
@@ -431,14 +443,27 @@
 				}));
 			},
 			sendShowClue(){
-				this.xiansuoNum++;
-				this.websock.send(this.$mso({
-					type: 'showClue',
-				}));
+				if(this.xiansuoNum<this.paper[this.nowTopic-1].xuanx.length){
+					this.xiansuoNum++;
+					this.websock.send(this.$mso({
+						type: 'showClue',
+					}));
+				}
 			},
 			sendStartGrabAnswer(){
+				this.grabAnswerStu = null;
 				this.websock.send(this.$mso({
 					type: 'startGrabAnswer',
+				}));
+			},
+			sendShowAnswer(){
+				this.websock.send(this.$mso({
+					type: 'showGrabAnswer',
+				}));
+			},
+			sendseefenmian(k){
+				this.websock.send(this.$mso({
+					type: 'showFenMian'+k,
 				}));
 			},
 			/* websocket */

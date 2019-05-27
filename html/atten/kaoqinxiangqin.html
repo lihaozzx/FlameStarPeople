@@ -13,7 +13,7 @@
 		</style>
 	</head>
 	<body>
-		<div class="y_body">
+		<div class="y_body" style="height: 800px;overflow-y: auto;">
 			<div class="y_floatBox">
 				<label class="y_inpSect y_rit10 btn">
 					<span class="y_inpSect_tex" data-int="--请选择--">--请选择--</span>
@@ -113,7 +113,11 @@
 					}
 					str+='</tr></tbody><tbody class="zhankai'+i+'" style=" display:none "><tr><td colspan="2">日期</td><td colspan="2">上班状态</td><td colspan="2">上班打卡时间</td><td colspan="2">上班打卡地址</td><td colspan="2">下班状态</td><td colspan="2">下班打卡时间</td><td colspan="2">下班打卡地址</td><td colspan="21"></td></tr>'
 					d.days.forEach(d=>{
-						str+='<tr><td colspan="2">'+d.dt+'</td><td colspan="2">'+d.ztname+'</td><td colspan="2">'+d.ztime+'</td><td colspan="2">'+d.zaddress+'</td><td colspan="2">'+d.etname+'</td><td colspan="2">'+d.etime+'</td><td colspan="2">'+d.eaddress+'</td><td colspan="21"></td></tr>'
+						let err = false;
+						if(d.ztname==null||d.ztname=='迟到'||d.etname==null||d.etname=='早退'){
+							err = true;
+						}
+						str+='<tr '+(err?'style="background-color: red;':'')+'"><td colspan="2">'+d.dt+'</td><td colspan="2">'+(d.ztname!=null?d.ztname:'')+'</td><td colspan="2">'+(d.ztime!=null?d.ztime:'')+'</td><td colspan="2">'+(d.zaddress!=null?d.zaddress:'')+'</td><td colspan="2">'+(d.etname!=null?d.etname:'')+'</td><td colspan="2">'+(d.etime!=null?d.etime:'')+'</td><td colspan="2">'+(d.eaddress!=null?d.eaddress:'')+'</td><td colspan="21"></td></tr>'
 					})
 					str+='<tr><td colspan="35"></td></tr></tbody>'
 				})
@@ -128,7 +132,6 @@
 				/* dom元素添加完成 */
 				
 				$('.zhankaiFun').on('click',function (){
-					console.log(nowShow)
 					let i = $(this).attr('index');
 					for(let s=0;s<nowShow.length;s++){
 						let ix = nowShow[s];
@@ -149,8 +152,8 @@
 				data.forEach(info=>{
 					j++;
 					info.days.forEach(day=>{
-						$($('.t_stime'+j)[day.dt-1]).html(day.ztime)
-						$($('.t_etime'+j)[day.dt-1]).html(day.etime)
+						$($('.t_stime'+j)[day.dt-1]).html(day.ztime!=null?day.ztime:'')
+						$($('.t_etime'+j)[day.dt-1]).html(day.etime!=null?day.etime:'')
 						if(day.ztname!='正常'){
 							$($('.startTime'+j)[day.dt-1]).css("background-color",'red');
 						}

@@ -62,7 +62,7 @@
 			<text class="ts36 c8c">{{topicName}}</text>
 			<view v-if="canQiang" class="qiangda" @click="qdfun"><span>抢答</span></view>
 			<view v-else v-for="(t,k) in timuxinxi.xuanx" :key="k">
-				<span v-if="k<xiansuonum">{{t}}</span>
+				<span style="font-size: 14px;" v-if="k<xiansuonum">{{t}}</span>
 			</view>
 		</view>
 
@@ -86,6 +86,7 @@
 				switch (n.type) {
 					case 'nextTopic':
 						// 题目信息
+						this.xiansuonum = 0;
 						this.timuxinxi = n.data.topic;
 						this.nowTopicNum = n.data.num + 1;
 						this.start = true;
@@ -636,6 +637,7 @@
 				box-sizing: border-box;
 				justify-content: center;
 				align-items: center;
+				
 			}
 
 			width: 850upx;

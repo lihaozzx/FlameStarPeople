@@ -10,13 +10,12 @@
 			.info_box{
 				display: flex;
 				flex-wrap: wrap;
-				height: 700px;
 			}
 			.one_info {
 				width: 400px;
 				height: 180px;
 				background: rgba(255, 255, 255, 1);
-				border: 1px solid rgba(236, 236, 236, 1);
+				border: 1px solid #8c8c8c;
 				border-radius: 10px;
 				box-sizing: border-box;
 				padding: 20px;
@@ -56,6 +55,9 @@
 				font-size: 14px;
 				color: #707070;
 			}
+			td{
+				width: 42px;
+			}
 		</style>
 	</head>
 	<body>
@@ -84,7 +86,7 @@
 					if(res.status==0){
 						let str = '';
 						res.data.forEach(d=>{
-							str+='<div class="one_info"><div class="info_title"><span>'+d.name+'</span><span class="seeMore y_newPop" data-title="修改考勤" data-url="./atten/change.html?id='+d.id+'">查看</span></div><table class="table_kq"><tr><td>星期</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td></tr><tr class="c70"><td>上班时间：</td><td>'+(d.startime[1]==undefined?'/':d.startime[1])+'</td><td>'+(d.startime[2]==undefined?'/':d.startime[2])+'</td><td>'+(d.startime[3]==undefined?'/':d.startime[3])+'</td><td>'+(d.startime[4]==undefined?'/':d.startime[4])+'</td><td>'+(d.startime[5]==undefined?'/':d.startime[5])+'</td><td>'+(d.startime[6]==undefined?'/':d.startime[6])+'</td><td>'+(d.startime[7]==undefined?'/':d.startime[7])+'</td></tr><tr class="c70" style="margin-top: 10px;"><td>下班时间：</td><td>'+(d.endtime[1]==undefined?'/':d.endtime[1])+'</td><td>'+(d.endtime[2]==undefined?'/':d.endtime[2])+'</td><td>'+(d.endtime[3]==undefined?'/':d.endtime[3])+'</td><td>'+(d.endtime[4]==undefined?'/':d.endtime[4])+'</td><td>'+(d.endtime[5]==undefined?'/':d.endtime[5])+'</td><td>'+(d.endtime[6]==undefined?'/':d.endtime[6])+'</td><td>'+(d.endtime[7]==undefined?'/':d.endtime[7])+'</td></tr></table></div>'
+							str+='<div class="one_info"><div class="info_title"><span>'+d.name+'</span><span class="seeMore y_newPop" data-title="修改考勤" data-url="./atten/change.html?id='+d.id+'">查看</span></div><table class="table_kq"><tr><td>星期</td><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td></tr><tr class="c70"><td>上班</td><td>'+(d.startime[1]==undefined?'/':d.startime[1])+'</td><td>'+(d.startime[2]==undefined?'/':d.startime[2])+'</td><td>'+(d.startime[3]==undefined?'/':d.startime[3])+'</td><td>'+(d.startime[4]==undefined?'/':d.startime[4])+'</td><td>'+(d.startime[5]==undefined?'/':d.startime[5])+'</td><td>'+(d.startime[6]==undefined?'/':d.startime[6])+'</td><td>'+(d.startime[7]==undefined?'/':d.startime[7])+'</td></tr><tr class="c70" style="margin-top: 10px;"><td>下班</td><td>'+(d.endtime[1]==undefined?'/':d.endtime[1])+'</td><td>'+(d.endtime[2]==undefined?'/':d.endtime[2])+'</td><td>'+(d.endtime[3]==undefined?'/':d.endtime[3])+'</td><td>'+(d.endtime[4]==undefined?'/':d.endtime[4])+'</td><td>'+(d.endtime[5]==undefined?'/':d.endtime[5])+'</td><td>'+(d.endtime[6]==undefined?'/':d.endtime[6])+'</td><td>'+(d.endtime[7]==undefined?'/':d.endtime[7])+'</td></tr></table></div>'
 						});
 						$('.info_box').append(str);
 					}

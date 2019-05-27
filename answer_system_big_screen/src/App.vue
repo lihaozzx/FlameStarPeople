@@ -38,6 +38,8 @@
 						// 下一题
 						this.$store.commit('startDao');
 						this.$store.commit('showansno');
+						this.$store.commit('initxsn');
+						this.$store.commit('initqdans');
 						if (this.$router.history.current.name == "answer") {
 							this.$store.commit('saveTopic', n.data.topic);
 							this.$store.commit('nextAns', n.data.num + 1);
@@ -127,18 +129,38 @@
 						})
 						break;
 					case 'seeRule':
-						// 开始比赛
+						// 查看规则
+						this.$store.commit('setrule',0)
+						this.$router.push({
+							name: 'rule',
+						})
+						break;
+					case 'showFenMian1':
+						// 查看封面1
+						this.$store.commit('setrule',1)
+						this.$router.push({
+							name: 'rule',
+						})
+						break;
+					case 'showFenMian2':
+						// 查看封面2
+						this.$store.commit('setrule',2)
 						this.$router.push({
 							name: 'rule',
 						})
 						break;
 					case 'showClue':
 						// 下一个线索
+						this.$store.commit('initqdstu')
 						this.$store.commit('addxsn')
 						break;
 					case 'clickQiangda':
 						// 点击抢答按钮
 						this.$store.commit('setqdstu',n.data)
+						break;
+					case 'showGrabAnswer':
+						//抢答题显示答案
+						this.$store.commit('setqdans')
 						break;
 				}
 			}

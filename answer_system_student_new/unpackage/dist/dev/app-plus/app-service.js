@@ -1205,7 +1205,7 @@ _(cT,hU)
 cs.pop()
 }
 else{cT.wxVkey=2
-cs.push("./pages/ans/ans.wxml:block:1:4472")
+cs.push("./pages/ans/ans.wxml:block:1:4496")
 cs.pop()
 }
 cT.wxXCkey=1
@@ -1380,6 +1380,7 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default =
 {
   onLaunch: function onLaunch() {var _this = this;
+    plus.navigator.setFullscreen(true);
     plus.screen.lockOrientation('landscape-primary'); //锁定
     var self = plus.webview.currentWebview();
     self.setStyle({
@@ -1389,10 +1390,10 @@ __webpack_require__.r(__webpack_exports__);
       url: 'ws://192.168.1.100:7272' });
 
     uni.onSocketOpen(function (res) {
-      console.log('WebSocket连接已打开！', " at App.vue:13");
+      console.log('WebSocket连接已打开！', " at App.vue:14");
     });
     uni.onSocketError(function (res) {
-      console.log('WebSocket连接打开失败，请检查！', " at App.vue:16");
+      console.log('WebSocket连接打开失败，请检查！', " at App.vue:17");
       uni.connectSocket({
         url: 'ws://192.168.1.100:7272' });
 
@@ -1400,7 +1401,7 @@ __webpack_require__.r(__webpack_exports__);
     uni.onSocketMessage(function (res) {
       var e = JSON.parse(res.data);
       if (e.type == 'login') {
-        console.log('已登录', " at App.vue:24");
+        console.log('已登录', " at App.vue:25");
       }
       if (e.type == 'say') {
         _this.$store.commit('onMessage', e.content);
@@ -2195,7 +2196,7 @@ function getData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"app-plus","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"app-plus","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -8269,7 +8270,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"app-plus","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"app-plus","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8290,14 +8291,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"app-plus","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"app-plus","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"app-plus","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"app-plus","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -8366,7 +8367,7 @@ var patch = function(oldVnode, vnode) {
         });
         var diffData = diff(data, mpData);
         if (Object.keys(diffData).length) {
-            if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"app-plus","BASE_URL":"/"}).VUE_APP_DEBUG) {
+            if (Object({"VUE_APP_PLATFORM":"app-plus","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
                 console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
                     ']差量更新',
                     JSON.stringify(diffData));
@@ -10984,6 +10985,7 @@ var _default =
       switch (n.type) {
         case 'nextTopic':
           // 题目信息
+          this.xiansuonum = 0;
           this.timuxinxi = n.data.topic;
           this.nowTopicNum = n.data.num + 1;
           this.start = true;
@@ -11218,8 +11220,8 @@ var _default =
                 if (typeof a[s] === 'object') {
                   out(a[s]);
                 } else {
-                  console.log(s, " at pages\\ans\\ans.vue:323");
-                  console.log(a[s], " at pages\\ans\\ans.vue:324");
+                  console.log(s, " at pages\\ans\\ans.vue:324");
+                  console.log(a[s], " at pages\\ans\\ans.vue:325");
                 }
               }
             }
@@ -11247,7 +11249,7 @@ var _default =
         if (this.isduoxuan) {
           out = out.substring(0, out.length - 1);
         }
-        console.log(out, " at pages\\ans\\ans.vue:352");
+        console.log(out, " at pages\\ans\\ans.vue:353");
         uni.request({
           url: this.$api + '/stock/subAnswer',
           data: {
@@ -11262,8 +11264,8 @@ var _default =
                 if (typeof a[s] === 'object') {
                   out(a[s]);
                 } else {
-                  console.log(s, " at pages\\ans\\ans.vue:367");
-                  console.log(a[s], " at pages\\ans\\ans.vue:368");
+                  console.log(s, " at pages\\ans\\ans.vue:368");
+                  console.log(a[s], " at pages\\ans\\ans.vue:369");
                 }
               }
             }

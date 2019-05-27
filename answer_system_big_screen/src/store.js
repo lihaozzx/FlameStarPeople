@@ -18,7 +18,9 @@ export default new Vuex.Store({
 		time:0,
 		timeIn:null,
 		xiansuoNum:0,
-		qdStu:null
+		qdStu:null,
+		showqsans:false,
+		ruletype:0
 	},
 	mutations: {
 		changeTitle(state, k) {
@@ -84,7 +86,21 @@ export default new Vuex.Store({
 			state.xiansuoNum=0;
 		},
 		setqdstu(state,k){
-			state.qdStu = k
+			if(state.qdStu == null){
+				state.qdStu = k
+			}
+		},
+		initqdstu(state){
+			state.qdStu = null
+		},
+		initqdans(state){
+			state.showqsans=false
+		},
+		setqdans(state){
+			state.showqsans=true
+		},
+		setrule(state,k){
+			state.ruletype=k
 		}
 	},
 	actions: {
@@ -122,6 +138,9 @@ export default new Vuex.Store({
 		},
 		qdStu(state){
 			return state.qdStu
+		},
+		qdansisshow(state){
+			return state.showqsans
 		}
 	}
 })

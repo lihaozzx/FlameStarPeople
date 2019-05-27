@@ -1,6 +1,7 @@
 <script>
 	export default {
 		onLaunch: function() {
+			plus.navigator.setFullscreen(true);
 			plus.screen.lockOrientation('landscape-primary'); //锁定
 			var self = plus.webview.currentWebview();
 			self.setStyle({

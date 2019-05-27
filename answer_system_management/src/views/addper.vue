@@ -34,6 +34,10 @@
 			<i class="el-icon-back"></i>
 			<span>返回场次列表</span>
 		</div>
+		<div class="div_back" style="top:-23px; left:600px; width: 300px;height: 40px;" >
+			<el-input v-model="pnum" autocomplete="off" placeholder="分页数量"></el-input>
+			<el-button type="primary" @click="selStu(1)" style="margin-left: 20px;">修改</el-button>
+		</div>
 
 		<div class="infoFooter">
 			<el-pagination layout="prev, pager, next" :total="pageInfo.totalCount" :page-size="pageInfo.size" :current-page="pageInfo.nowPage" @current-change="selStu"></el-pagination>
@@ -108,6 +112,7 @@
 			return {
 				loadingTable: true,
 				tableData: [],
+				pnum:32,
 				pageInfo: {
 					totalCount: 0,
 					size: 1,
@@ -133,7 +138,8 @@
 				inAdd: false,
 				id: '',
 				choseStu: [],
-				chosedStu:[]
+				chosedStu:[],
+				
 			};
 		},
 		created() {
@@ -153,7 +159,8 @@
 					params: {
 						p: this.pageInfo.nowPage,
 						name: this.search.name,
-						sname: this.search.sname
+						sname: this.search.sname,
+						pnum:this.pnum
 					}
 				}).then(res => {
 					if (res.status == 200 && res.data.status == 0) {
@@ -266,6 +273,7 @@
 		top: 10px;
 		left: 30px;
 		color: #1890FF;
+		display: flex;
 	}
 
 	.el-table__body-wrapper::-webkit-scrollbar {

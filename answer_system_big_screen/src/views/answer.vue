@@ -6,7 +6,10 @@
 					<span class="anstitle">{{topic.name}}</span>
 					
 					<div class="xiansuo">
-						<p v-for="(t,i) in topic.xuanx" :key="i"><span v-if="i<xiansuoNum">{{t}}</span></p>
+						<p v-for="(t,i) in topic.xuanx" :key="i"><span  v-if="i<xiansuoNum">{{t}}</span></p>
+					</div>
+					<div v-if="qdans" style="font-size: 32px;padding-left:40px;margin-top: 60px;">
+						<span>答案:{{topic.answer}}</span>
 					</div>
 				</div>
 				<div class="man">
@@ -79,6 +82,9 @@
 			},
 			nowQiangdaStu(){
 				return this.$store.getters.qdStu;
+			},
+			qdans(){
+				return this.$store.getters.qdansisshow;
 			}
 		},
 		watch: {
@@ -268,7 +274,7 @@
 		
 	}
 	.xiansuo{
-		font-size: 40px;
+		font-size: 26px;
 		padding-left:40px ;
 	}
 
