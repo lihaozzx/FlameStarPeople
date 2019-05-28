@@ -232,7 +232,7 @@
 				if (this.daojishiIn != null) {
 					clearInterval(this.daojishiIn)
 				}
-				this.daojishi = 25;
+				this.daojishi = 3;
 				this.grabAnswerStu = null;
 				this.daojishiIn = setInterval(() => {
 					if (this.daojishi <= 0) {

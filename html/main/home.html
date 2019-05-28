@@ -15,51 +15,11 @@
 
 			.body {
 				width: 100%;
-				height: 100%;
 				display: flex;
 				flex-wrap: wrap;
 				overflow-y: auto;
-			}
-
-			.one_card {
-				width: 40%;
-				height: 40%;
-				border-radius: 20px;
-				box-shadow: 2px 2px 10px 2px rgba(0, 0, 0, 0.1);
-				margin: 0.5% 2%;
 				box-sizing: border-box;
-				padding: 5px;
-			}
-
-			.infos {
-				width: 100%;
-				height: calc(100% - 55px);
-				border-top: #2CB773 solid 1px;
-				font-size: 16px;
-				box-sizing: border-box;
-				padding: 15px;
-				overflow-y: auto;
-			}
-
-			.infos ul li {
-				margin-bottom: 10px;
-			}
-
-			.infos::-webkit-scrollbar {
-				width: 3px;
-
-			}
-
-			.lanse {
-				color: #1582E6;
-			}
-
-			.lvse {
-				color: #2CB773;
-			}
-
-			.hongse {
-				color: #B11717;
+				padding: 30px;
 			}
 
 			.erweima {
@@ -69,34 +29,118 @@
 				right: -550px;
 				bottom: 10%;
 				width: 610px;
+				cursor: pointer;
+			}
+			
+			.one_card{
+				width: 350px;
+				height: 230px;
+				border-radius: 10px;
+				border:1px solid #8C8C8C;
+				box-sizing: border-box;
+				padding: 20px;
+				margin-right: 40px;
+				margin-bottom: 30px;
+				box-shadow: 0 0 10px 1px rgba(50,70,110,.5);
+			}
+			.one_card ul{
+				margin-top: 20px;
+				height: 140px;
+				overflow-y: auto;
+			}
+			.one_card_long{
+				width: 1130px;
+				height: 150px;
+				border-radius: 10px;
+				border:1px solid #8C8C8C;
+				box-sizing: border-box;
+				padding: 20px;
+				box-shadow: 0 0 10px 1px rgba(50,70,110,.5);
+			}
+			.title{
+				color: #707070;
+				font-size: 18px;
+				font-weight: 900;
+			}
+			.one_card_long .btn_box{
+				display: flex;
+				flex-wrap: wrap;
+				margin-top: 14px;
+			}
+			.one_card_long .btn_box span{
+				font-size: 14px;
+				color: #078BFF;
+				width: 85px;
+				margin-right: 60px;
+				cursor: pointer;
+				margin-bottom: 20px;
+			}
+			.some_box{
+				display: flex;
+				flex-wrap: wrap;
+			}
+			.sonme{
+				width: 75px;
+				margin: 10px 5px 5px 0;
+				color: #707070;
+			}
+			.xms,.khs,.lxr,.wq,.hts{
+				color: #CECECE;
 			}
 		</style>
 	</head>
 	<body>
 		<div class="body">
+			<div class="one_card" style="height: 150px;">
+				<div style="display: flex;justify-content: space-between;"><span class="title">销售简报</span><span style="color: #078BFF;">本周</span></div>
+				<div class="some_box">
+					<span class="sonme">项目数：<span class="xms"></span></span>
+					<span class="sonme">客户数：<span class="khs"></span></span>
+					<span class="sonme">联系人：<span class="lxr"></span></span>
+					<span class="sonme">外勤：<span class="wq"></span></span>
+					<span class="sonme">合同数：<span class="hts"></span></span>
+				</div>
+			</div>
+			<div class="one_card_long" style="height: 150px;">
+				<div style="display: flex;justify-content: space-between;"><span class="title">快捷操作</span><span style="color: #078BFF;"></span></div>
+				<div class="btn_box">
+					<span class="y_newPop" data-title="添加公告" data-url="./addFile/notice.html">新增通知</span>
+					<span class="y_newPop" data-title="添加任务" data-url="./addFile/work.html">新建任务</span>
+					<span class="y_newPop" data-title="添加汇报" data-url="./addFile/report.html">添加汇报</span>
+					<span class="y_newPop" data-title="添加客户" data-url="./addFile/customer.html">新增客户</span>
+					<!-- <span class="y_newPop" data-title="添加公告" data-url="./addFile/notice.html">添加日程</span> -->
+					<span class="y_newPop" data-title="转正申请" data-url="./personalMen/addZhuanzhen.html">转正申请</span>
+					<span class="y_newPop" data-title="离职申请" data-url="./personalMen/addLizhi.html">离职申请</span>
+					<span class="y_newPop" data-title="添加会议" data-url="./meeting/add.html">添加会议</span>
+					<!-- <span class="y_newPop" data-title="添加公告" data-url="./addFile/notice.html">添加文件</span> -->
+					<span class="y_newPop" data-title="添加材料申请" data-url="./project/apply/material/add.html">材料申请</span>
+					<span class="y_newPop" data-title="添加机械申请" data-url="./project/apply/machine/add.html">机械申请</span>
+					<span class="y_newPop" data-title="添加人工申请" data-url="./project/apply/staff/add.html">人工申请</span>
+				</div>
+			</div>
 			<div class="one_card">
-				<p class="y_popSpeed" style="font-size: 20px;">待办事项</p>
-				<div class="infos shixiang">
+				<div style="display: flex;justify-content: space-between;"><span class="title">通知公告</span><span style="color: #078BFF;cursor:pointer;" class="y_newHtml"data-class="a_2" data-title="通知公告" data-url="./info/notice.html">更多</span></div>
+				<ul class="tongzhi">
 					
-				</div>
+				</ul>
 			</div>
 			<div class="one_card">
-				<p class="y_popSpeed" style="font-size: 20px;">新消息</p>
-				<div class="infos xiaoxi">
+				<div style="display: flex;justify-content: space-between;"><span class="title">待办事项</span></div>
+				<ul class="shixiang">
 					
-				</div>
+				</ul>
 			</div>
 			<div class="one_card">
-				<p class="y_popSpeed" style="font-size: 20px;">通知</p>
-				<div class="infos tongzhi">
-
-				</div>
+				<div style="display: flex;justify-content: space-between;"><span class="title">全部汇报</span><span style="color: #078BFF;cursor:pointer;" class="a_12 y_newHtml" data-class="a_12" data-title="我的下属汇报" data-url="./report/mysureport.html">更多</span></div>
+				<ul class="huibao">
+					
+				</ul>
 			</div>
 			<div class="one_card">
-				<p class="y_popSpeed" style="font-size: 20px;">日程</p>
-				<div class="infos richen">
-
-				</div>
+				<div style="display: flex;justify-content: space-between;"><span class="title">新消息</span><span style="color: #078BFF;cursor:pointer;" class="y_newHtml" data-class="a_37" data-title="新消息" data-url="./pop/see.html?type=2">更多</span></div>
+				<ul class="allnews">
+					
+				</ul>
 			</div>
 			<div class="erweima" id="erwei">
 				<img src="../aaa/images/img/download.png" style="height: 180px;">
@@ -140,38 +184,15 @@
 			success: function (res) {
 				if (res.status == 0) {
 					parent.window.loading('none');
-					let str = '<ul>'
+					let str = ''
 					res.data.forEach(v => {
 						str += '<li><span class="lanse">' + v.uname + '</span> 于 ' + v.applydt + ' 发起 <span class="lvse">' + v.summary +
 							'</span></li>'
 					})
-					str += '</ul>'
 					$('.shixiang').append(str);
 				} else {
 					parent.window.loading('none');
 					$('.shixiang').append('暂时没有待办事项');
-				}
-			}
-		});
-		$.ajax({
-			type: "post",
-			url: reqUrl + '/api/user/messages',
-			data: {
-				token: tokens
-			},
-			dataType: "json",
-			success: function (res) {
-				if (res.status == 0) {
-					parent.window.loading('none');
-					let str = '<ul>'
-					res.data.forEach(v => {
-						str += '<li>' + v.adddt + ' 收到的 <span class="lvse">' + v.modelname + '消息：</span>' + v.title + '</li>'
-					})
-					str += '</ul>'
-					$('.xiaoxi').append(str);
-				} else {
-					parent.window.loading('none');
-					$('.xiaoxi').append('暂时没有新消息');
 				}
 			}
 		});
@@ -185,12 +206,11 @@
 			success: function (res) {
 				if (res.status == 0) {
 					parent.window.loading('none');
-					let str = '<ul>'
+					let str = ''
 					res.data.forEach(v => {
 						str += '<li><span class="lanse">' + v.zuozhe + '</span> 于 ' + v.date + ' 发出的通知: <span class="hongse">' + v
 							.title + '</span></li>'
 					})
-					str += '</ul>'
 					$('.tongzhi').append(str);
 				} else {
 					parent.window.loading('none');
@@ -200,7 +220,7 @@
 		});
 		$.ajax({
 			type: "post",
-			url: reqUrl + '/api/plans/myPlans',
+			url: reqUrl + '/api/report/mySubDaily',
 			data: {
 				token: tokens
 			},
@@ -208,15 +228,116 @@
 			success: function (res) {
 				if (res.status == 0) {
 					parent.window.loading('none');
-					let str = '<ul>'
+					let str = ''
 					res.data.forEach(v => {
-						str += '<li>您于 ' + v.date + ' 有安排</li>'
+						str += '<li>'+v.uname+'于 '+v.date+' 提交了 ' + v.type + '</li>'
 					})
-					str += '</ul>'
-					$('.richen').append(str);
+					$('.huibao').append(str);
 				} else {
 					parent.window.loading('none');
-					$('.richen').append('暂时没有日程安排');
+					$('.huibao').append('暂时没有汇报');
+				}
+			}
+		});
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/user/messages',
+			data: {
+				token: tokens
+			},
+			dataType: "json",
+			success: function (res) {
+				if (res.status == 0) {
+					parent.window.loading('none');
+					let str = ''
+					res.data.forEach(v => {
+						str += '<li>'+v.adddt+' 的 '+v.modelname+': '+v.title+'</li>'
+					})
+					$('.allnews').append(str);
+				} else {
+					parent.window.loading('none');
+					$('.allnews').append('暂时没有消息');
+				}
+			}
+		});
+		/* 销售 */
+		
+		
+		
+		
+		
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/customer/JBcust',
+			data: {
+				token: tokens
+			},
+			dataType: "json",
+			success: function (res) {
+				if (res.status == 0) {
+					$('.xms').html(res.data.length)
+				} else {
+					$('.xms').html(0)
+				}
+			}
+		});
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/customer/JBcont',
+			data: {
+				token: tokens
+			},
+			dataType: "json",
+			success: function (res) {
+				if (res.status == 0) {
+					$('.khs').html(res.data.length)
+				} else {
+					$('.khs').html(0)
+				}
+			}
+		});
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/customer/JBpro',
+			data: {
+				token: tokens
+			},
+			dataType: "json",
+			success: function (res) {
+				if (res.status == 0) {
+					$('.lxr').html(res.data.length)
+				} else {
+					$('.lxr').html(0)
+				}
+			}
+		});
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/customer/JBdk',
+			data: {
+				token: tokens
+			},
+			dataType: "json",
+			success: function (res) {
+				if (res.status == 0) {
+					$('.wq').html(res.data.length)
+				} else {
+					$('.wq').html(0)
+				}
+			}
+		});
+		$.ajax({
+			type: "post",
+			url: reqUrl + '/api/customer/JBract',
+			data: {
+				token: tokens
+			},
+			dataType: "json",
+			success: function (res) {
+				if (res.status == 0) {
+					$('.hts').html(res.data.length)
+				} else {
+					$('.hts').html(0)
 				}
 			}
 		});
