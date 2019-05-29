@@ -82,10 +82,10 @@
 						<el-input v-model="showForm.grade"></el-input>
 					</el-form-item>
 					<el-form-item label="头像地址">
-						<el-input v-model="showForm.headUrl"></el-input>
+						<el-input v-model="showForm.head"></el-input>
 					</el-form-item>
 					<el-form-item label="视频地址">
-						<el-input v-model="showForm.videoUrl"></el-input>
+						<el-input v-model="showForm.video"></el-input>
 					</el-form-item>
 				</el-form>
 			</div>

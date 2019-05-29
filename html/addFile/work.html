@@ -44,6 +44,14 @@
 						</td>
 					</tr>
 					<tr>
+						<td class="y_textRight"><i class="y_colorRead">*</i>相关文件：</td>
+						<td colspan="3">
+							<input type="file" name="fileName" id="fileH" style="display: none;" />
+							<input type="text" readonly class="y_input file_name" />
+							<span class="y_btn prim fileC">选择</span>
+						</td>
+					</tr>
+					<tr>
 						<td class="y_textRight">开始时间：</td>
 						<td>
 							<input type="text" name="start" readonly="readonly" class="y_input y_dat_opens" />
@@ -65,13 +73,38 @@
 					<span class="y_btn lg y_rit20 prim submit">发 布</span>
 				</div>
 				<div class="y_top20"></div>
+				<input type="hidden" name="files" id="asdasdsadasdasdasd"/>
 			</form>
 		</div>
 	</body>
 </html>
 <script type="text/javascript">
 	$(function(){
-		
+		/* 上传*/
+		$('.fileC').on('click', function() {
+			$('#fileH').trigger('click');
+		});
+		$('#fileH').on('change', function(e) {
+			let name = e.target.value.split('\\')[2];
+			$('.file_name').val(name);
+			var formData = new FormData();
+			formData.append("file", document.getElementById("fileH").files[0]);
+			formData.append("name", 'file');
+			$.ajax({
+				url: reqUrl + "/api/public/uploadFile",
+				secureuri: false,
+				type: 'post',
+				dataType: 'json', //返回数据的类型
+				data: formData,
+				cache: false,
+				processData: false,
+				contentType: false,
+				success: function(res) {
+					$('#asdasdsadasdasdasd').val(res.data.id)
+				},
+				error: function(data, status, e) {}
+			});
+		})
 		/*获取人员信息*/
 		$.ajax({
 			type: "post",

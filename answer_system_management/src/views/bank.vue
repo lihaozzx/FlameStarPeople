@@ -10,7 +10,14 @@
 				</div>
 			</div>
 		</div>
-		<el-dialog title="题目信息" :visible.sync="per" width="70%">
+		<el-dialog :visible.sync="per" width="70%">
+			<span slot="title" style="display: flex;justify-content: space-between;" class="dialog-header">
+				<span style="font-size: 18px;">题目信息</span>
+				<div style="width: 300px;display: inline-flex;margin-right: 100px;">
+					<el-input v-model="key" placeholder="搜索" style="margin-right: 20px;"/>
+					<el-button type="primary" @click="searchFun" :loading="sering">搜索</el-button>
+				</div>
+			</span>
 			<el-table v-loading="loadingTable" :data="bankInfo[show].timu" style="width: 100%" :height="500" :border='false'>
 				<el-table-column prop="cate" label="主题" width="100"></el-table-column>
 				<el-table-column prop="name" label="题目"></el-table-column>
@@ -32,8 +39,7 @@
 				<el-button type="primary" @click="per = false">确 定</el-button>
 			</span>
 			<div class="infoFooterDialog">
-				<el-pagination layout="prev, pager, next" :total="pageInfo[show].totalCount" :page-size="pageInfo[show].size"
-				 :current-page="pageInfo[show].nowPage" @current-change="selTop"></el-pagination>
+				<el-pagination layout="prev, pager, next" :total="pageInfo[show].totalCount" :page-size="pageInfo[show].size" :current-page="pageInfo[show].nowPage" @current-change="selTop"></el-pagination>
 			</div>
 		</el-dialog>
 		<!-- 弹窗 -->
@@ -102,7 +108,9 @@
 				addTopic:{
 					type:[],
 					cate:[]
-				}
+				},
+				key:'',
+				sering:false
 			};
 		},
 		created() {
@@ -204,16 +212,16 @@
 			topic(i) {
 				return this.$http.get('/admin/topics', {
 					params: {
-						type: i
+						type: i,
+						keywrod:this.key
 					}
 				})
 			},
 			showInfoFun(e){
 				this.showInfo = true;
-				e.xuanx = e.xuanx.split('|');
+				e.xuanx = e.xuanx.split('@');
 				this.form = {...e};
-				this.oldForm = { ...this.form
-				}
+				this.oldForm = { ...this.form}
 			},
 			addxuanx(){
 				this.form.xuanx.push('');
@@ -252,7 +260,22 @@
 					});
 					this.inAdd = false;
 				})
-			}
+			},
+			searchFun(){
+				this.sering=true;
+				this.pageInfo[this.show].nowPage=1
+				this.topic(this.bankInfo[this.show].type).then(res=>{
+					if(res.data.status == 0){
+						this.bankInfo[this.show].timu=res.data.data;
+						this.pageInfo[this.show]={
+							totalCount: parseInt(res.data.pager.total_count),
+							size: res.data.pager.page_size,
+							nowPage: res.data.pager.current_page
+						}
+					}
+					this.sering=false;
+				})
+			},
 		}
 	}
 </script>
@@ -298,6 +321,6 @@
 	.infoFooterDialog {
 		position: absolute;
 		right: 5px;
-		top: 585px
+		top: 600px
 	}
 </style>

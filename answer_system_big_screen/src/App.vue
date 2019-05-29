@@ -40,6 +40,7 @@
 						this.$store.commit('showansno');
 						this.$store.commit('initxsn');
 						this.$store.commit('initqdans');
+						this.$store.commit('initqdstu')
 						if (this.$router.history.current.name == "answer") {
 							this.$store.commit('saveTopic', n.data.topic);
 							this.$store.commit('nextAns', n.data.num + 1);

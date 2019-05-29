@@ -52,12 +52,13 @@
 						<div class="btn" @click="sendStartGame">
 							<span>开始比赛</span>
 						</div>
-						<div v-if="daojishi==0" :class="nextStr.can?'disbtn':'btn'" @click="nextTopic">
-							<span>{{nextStr.val}}</span>
-						</div>
-						<div v-else class="disbtn">
+						 <!-- v-if="daojishi==0" -->
+						<div :class="nextStr.can?'disbtn':'btn'" @click="nextTopic">
 							<span>{{nextStr.val}}({{daojishi}})</span>
 						</div>
+						<!-- <div v-else class="disbtn">
+							<span>{{nextStr.val}}({{daojishi}})</span>
+						</div> -->
 						<!-- <div class="btn" @click="startAnswer">
 							<span>开始答题</span>
 						</div> -->
@@ -232,7 +233,7 @@
 				if (this.daojishiIn != null) {
 					clearInterval(this.daojishiIn)
 				}
-				this.daojishi = 3;
+				this.daojishi = 25;
 				this.grabAnswerStu = null;
 				this.daojishiIn = setInterval(() => {
 					if (this.daojishi <= 0) {
@@ -257,6 +258,7 @@
 					} else {
 						if (this.nowTopic < this.paper.length) {
 							this.nowTopic++;
+							this.xiansuoNum=0;
 							this.sendTopic();
 						} else {
 							this.sendOver();

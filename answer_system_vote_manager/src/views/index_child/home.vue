@@ -119,9 +119,6 @@
 					this.gongao = res.data.content[0];
 				}
 			});
-			// this.$http.post('/admin/basis').then(res => {
-			// 	console.log(res);
-			// })
 			this.getzhuliInfo();
 		},
 		data() {
