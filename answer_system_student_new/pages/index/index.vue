@@ -44,6 +44,7 @@
 		</view>
 
 	</view>
+	
 </template>
 
 <script>

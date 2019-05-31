@@ -191,9 +191,11 @@ var _default =
           this.nowTopicNum = n.data.num + 1;
           this.start = true;
           this.setTopic(this.timuxinxi);
+          this.canQiang = false;
           break;
         case 'showClue':
           this.xiansuonum++;
+          this.canQiang = false;
           break;
         case 'startGrabAnswer':
           this.canQiang = true;
@@ -421,8 +423,8 @@ var _default =
                 if (typeof a[s] === 'object') {
                   out(a[s]);
                 } else {
-                  console.log(s, " at pages\\ans\\ans.vue:324");
-                  console.log(a[s], " at pages\\ans\\ans.vue:325");
+                  console.log(s, " at pages\\ans\\ans.vue:326");
+                  console.log(a[s], " at pages\\ans\\ans.vue:327");
                 }
               }
             }
@@ -450,7 +452,7 @@ var _default =
         if (this.isduoxuan) {
           out = out.substring(0, out.length - 1);
         }
-        console.log(out, " at pages\\ans\\ans.vue:353");
+        console.log(out, " at pages\\ans\\ans.vue:355");
         uni.request({
           url: this.$api + '/stock/subAnswer',
           data: {
@@ -465,8 +467,8 @@ var _default =
                 if (typeof a[s] === 'object') {
                   out(a[s]);
                 } else {
-                  console.log(s, " at pages\\ans\\ans.vue:368");
-                  console.log(a[s], " at pages\\ans\\ans.vue:369");
+                  console.log(s, " at pages\\ans\\ans.vue:370");
+                  console.log(a[s], " at pages\\ans\\ans.vue:371");
                 }
               }
             }

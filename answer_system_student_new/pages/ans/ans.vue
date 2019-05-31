@@ -91,9 +91,11 @@
 						this.nowTopicNum = n.data.num + 1;
 						this.start = true;
 						this.setTopic(this.timuxinxi);
+						this.canQiang = false;
 						break;
 					case 'showClue':
 						this.xiansuonum++;
+						this.canQiang = false;
 						break;
 					case 'startGrabAnswer':
 						this.canQiang = true;
@@ -830,6 +832,7 @@
 				position: absolute;
 				bottom: 60upx;
 				width: 300upx;
+				// margin-left: calc(50% - 150upx);
 				height: 80upx;
 				background: linear-gradient(270deg, rgba(250, 173, 20, 1) 0%, rgba(255, 193, 68, 1) 100%);
 				color: #FFFFFF;
@@ -845,6 +848,7 @@
 				position: absolute;
 				bottom: 60upx;
 				width: 300upx;
+				// margin-left: calc(50% - 150upx);
 				height: 80upx;
 				background: linear-gradient(270deg, #8c8c8c 0%, #919191 100%);
 				color: #FFFFFF;

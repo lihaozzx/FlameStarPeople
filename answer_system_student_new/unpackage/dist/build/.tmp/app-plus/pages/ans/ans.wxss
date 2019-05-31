@@ -24,7 +24,7 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.root.data-v-8a21aea2 {
+.root.data-v-5c4971a1 {
   position: relative;
   width: 1202rpx;
   height: 706rpx;
@@ -38,21 +38,21 @@
       -ms-flex-pack: center;
           justify-content: center;
 }
-.root .bg.data-v-8a21aea2 {
+.root .bg.data-v-5c4971a1 {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
 }
-.root .bg .view_navigation.data-v-8a21aea2 {
+.root .bg .view_navigation.data-v-5c4971a1 {
       height: 25rpx;
 }
-.root .bg .logo.data-v-8a21aea2 {
+.root .bg .logo.data-v-5c4971a1 {
       height: calc(100% - 25rpx);
       width: 100%;
 }
-.root .content.data-v-8a21aea2 {
+.root .content.data-v-5c4971a1 {
     width: 850rpx;
     height: 100%;
     z-index: 2;
@@ -72,10 +72,10 @@
         -ms-flex-align: center;
             align-items: center;
 }
-.root .content .ched.data-v-8a21aea2 {
+.root .content .ched.data-v-5c4971a1 {
       opacity: 0.3;
 }
-.root .content .qiangda.data-v-8a21aea2 {
+.root .content .qiangda.data-v-5c4971a1 {
       margin-top: 30rpx;
       width: 300rpx;
       height: 300rpx;
@@ -98,7 +98,7 @@
           -ms-flex-align: center;
               align-items: center;
 }
-.root .content .ans.data-v-8a21aea2 {
+.root .content .ans.data-v-5c4971a1 {
       margin-top: 14rpx;
       display: -webkit-box;
       display: -webkit-flex;
@@ -107,7 +107,7 @@
       position: relative;
       left: 80rpx;
 }
-.root .content .ans .one.data-v-8a21aea2 {
+.root .content .ans .one.data-v-5c4971a1 {
         width: 60rpx;
         height: 60rpx;
         border-radius: 5rpx;
@@ -127,23 +127,23 @@
         color: #FBAF18;
         font-size: 36px;
 }
-.root .content .ans .no.data-v-8a21aea2 {
+.root .content .ans .no.data-v-5c4971a1 {
         border: 2rpx solid rgba(0, 0, 0, 0.4);
 }
-.root .content .ans .ch.data-v-8a21aea2 {
+.root .content .ans .ch.data-v-5c4971a1 {
         border: 2rpx solid rgba(251, 175, 24, 0.7);
         -webkit-box-shadow: 0 0 30rpx 2rpx #FBAF18;
                 box-shadow: 0 0 30rpx 2rpx #FBAF18;
 }
-.root .content .ans .del_img.data-v-8a21aea2 {
+.root .content .ans .del_img.data-v-5c4971a1 {
         width: 150rpx;
         height: 75rpx;
 }
-.root .content .ans .del_img image.data-v-8a21aea2 {
+.root .content .ans .del_img image.data-v-5c4971a1 {
           width: 100%;
           height: 100%;
 }
-.root .content .daan.data-v-8a21aea2 {
+.root .content .daan.data-v-5c4971a1 {
       width: 360rpx;
       height: 360rpx;
       display: -webkit-box;
@@ -155,7 +155,7 @@
               flex-wrap: wrap;
       position: relative;
 }
-.root .content .daan .one.data-v-8a21aea2 {
+.root .content .daan .one.data-v-5c4971a1 {
         width: calc(100% / 3);
         height: calc(100% / 3);
         font-size: 36rpx;
@@ -172,7 +172,7 @@
             -ms-flex-align: center;
                 align-items: center;
 }
-.root .content .daan .b1.data-v-8a21aea2 {
+.root .content .daan .b1.data-v-5c4971a1 {
         width: 3rpx;
         height: 100%;
         background-color: #707070;
@@ -180,7 +180,7 @@
         position: absolute;
         left: calc(100% / 3);
 }
-.root .content .daan .b2.data-v-8a21aea2 {
+.root .content .daan .b2.data-v-5c4971a1 {
         width: 3rpx;
         height: 100%;
         background-color: #707070;
@@ -188,7 +188,7 @@
         position: absolute;
         left: calc(100% / 3 * 2);
 }
-.root .content .daan .b3.data-v-8a21aea2 {
+.root .content .daan .b3.data-v-5c4971a1 {
         width: 100%;
         height: 1rpx;
         background-color: #707070;
@@ -196,7 +196,7 @@
         position: absolute;
         top: calc(100% / 3);
 }
-.root .content .daan .b4.data-v-8a21aea2 {
+.root .content .daan .b4.data-v-5c4971a1 {
         width: 100%;
         height: 1rpx;
         background-color: #707070;
@@ -204,7 +204,7 @@
         position: absolute;
         top: calc(100% / 3 * 2);
 }
-.root .content .daan2.data-v-8a21aea2 {
+.root .content .daan2.data-v-5c4971a1 {
       width: 480rpx;
       height: 360rpx;
       display: -webkit-box;
@@ -216,7 +216,7 @@
               flex-wrap: wrap;
       position: relative;
 }
-.root .content .daan2 .one.data-v-8a21aea2 {
+.root .content .daan2 .one.data-v-5c4971a1 {
         width: 120rpx;
         height: 120rpx;
         font-size: 36rpx;
@@ -233,7 +233,7 @@
             -ms-flex-align: center;
                 align-items: center;
 }
-.root .content .daan2 .b1.data-v-8a21aea2 {
+.root .content .daan2 .b1.data-v-5c4971a1 {
         width: 3rpx;
         height: 100%;
         background-color: #707070;
@@ -241,7 +241,7 @@
         position: absolute;
         left: 120rpx;
 }
-.root .content .daan2 .b2.data-v-8a21aea2 {
+.root .content .daan2 .b2.data-v-5c4971a1 {
         width: 3rpx;
         height: 100%;
         background-color: #707070;
@@ -249,7 +249,7 @@
         position: absolute;
         left: 240rpx;
 }
-.root .content .daan2 .b5.data-v-8a21aea2 {
+.root .content .daan2 .b5.data-v-5c4971a1 {
         width: 3rpx;
         height: 100%;
         background-color: #707070;
@@ -257,7 +257,7 @@
         position: absolute;
         left: 360rpx;
 }
-.root .content .daan2 .b3.data-v-8a21aea2 {
+.root .content .daan2 .b3.data-v-5c4971a1 {
         width: 100%;
         height: 1rpx;
         background-color: #707070;
@@ -265,7 +265,7 @@
         position: absolute;
         top: calc(100% / 3);
 }
-.root .content .daan2 .b4.data-v-8a21aea2 {
+.root .content .daan2 .b4.data-v-5c4971a1 {
         width: 100%;
         height: 1rpx;
         background-color: #707070;
@@ -273,7 +273,7 @@
         position: absolute;
         top: calc(100% / 3 * 2);
 }
-.root .content .xuanzedaan.data-v-8a21aea2 {
+.root .content .xuanzedaan.data-v-5c4971a1 {
       width: 80%;
       display: -webkit-box;
       display: -webkit-flex;
@@ -289,20 +289,20 @@
               flex-wrap: wrap;
       height: 400rpx;
 }
-.root .content .xuanzedaan .one.data-v-8a21aea2 {
+.root .content .xuanzedaan .one.data-v-5c4971a1 {
         position: relative;
         width: 40%;
         margin-top: 10rpx;
         margin-left: 50rpx;
 }
-.root .content .xuanzedaan .one .ch_img.data-v-8a21aea2 {
+.root .content .xuanzedaan .one .ch_img.data-v-5c4971a1 {
           position: absolute;
           width: 62rpx;
           height: 62rpx;
           left: -20rpx;
           top: -6rpx;
 }
-.root .content .sure_btn.data-v-8a21aea2 {
+.root .content .sure_btn.data-v-5c4971a1 {
       position: absolute;
       bottom: 60rpx;
       width: 300rpx;
@@ -328,7 +328,7 @@
       border-radius: 50rpx;
       font-size: 30rpx;
 }
-.root .content .subed_btn.data-v-8a21aea2 {
+.root .content .subed_btn.data-v-5c4971a1 {
       position: absolute;
       bottom: 60rpx;
       width: 300rpx;
@@ -355,7 +355,7 @@
       font-size: 30rpx;
       color: #ffffff;
 }
-.root .content .daojishi.data-v-8a21aea2 {
+.root .content .daojishi.data-v-5c4971a1 {
       position: absolute;
       bottom: 20rpx;
       font-size: 22rpx;

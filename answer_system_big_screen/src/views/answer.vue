@@ -1,12 +1,14 @@
 <template>
 	<div>
+		<audio :src="djs" controls="controls" preload id="music1" hidden></audio>
+		<audio :src="dong" controls="controls" preload id="music2" hidden></audio>
 		<jz>
 			<div class="infoans" v-if="topic.type=='抢答题'">
 				<div class="topicInfo">
 					<span class="anstitle">{{topic.name}}</span>
-					
+
 					<div class="xiansuo">
-						<p v-for="(t,i) in topic.xuanx" :key="i"><span  v-if="i<xiansuoNum">{{t}}</span></p>
+						<p v-for="(t,i) in topic.xuanx" :key="i"><span v-if="i<xiansuoNum">{{t}}</span></p>
 					</div>
 					<div v-if="qdans" style="font-size: 32px;padding-left:40px;margin-top: 60px;">
 						<span>答案:{{topic.answer}}</span>
@@ -47,13 +49,16 @@
 </template>
 
 <script>
+	import djs from '@/assets/MP3/daojishi.mp3'
+	import dong from '@/assets/MP3/dong.mp3'
 	export default {
 		data() {
 			return {
 				topic: {
 					name: '无',
 					xuanx: []
-				}
+				},
+				djs,dong
 			};
 		},
 		computed: {
@@ -68,22 +73,22 @@
 				}
 				return o
 			},
-			topicFromX(){
+			topicFromX() {
 				return this.$store.getters.topic;
 			},
-			showanss(){
+			showanss() {
 				return this.$store.getters.showans;
 			},
-			daojishi(){
+			daojishi() {
 				return this.$store.getters.daojishi;
 			},
-			xiansuoNum(){
+			xiansuoNum() {
 				return this.$store.getters.xiansuoNum;
 			},
-			nowQiangdaStu(){
+			nowQiangdaStu() {
 				return this.$store.getters.qdStu;
 			},
-			qdans(){
+			qdans() {
 				return this.$store.getters.qdansisshow;
 			}
 		},
@@ -92,27 +97,54 @@
 				this.$store.commit('changeTitle', this.numToStr(this.ans));
 				document.title = this.numToStr(n);
 			},
-			topicFromX(n){
-				while(n.answer.indexOf('@')!= -1){
-					n.answer = n.answer.substring(0,n.answer.indexOf('@'))+'、' + n.answer.substring(n.answer.indexOf('@')+1,n.answer.length)
+			topicFromX(n) {
+				while (n.answer.indexOf('@') != -1) {
+					n.answer = n.answer.substring(0, n.answer.indexOf('@')) + '、' + n.answer.substring(n.answer.indexOf('@') + 1, n.answer
+						.length)
 				}
-				while(n.name.indexOf('#')!= -1){
-					n.name = n.name.substring(0,n.name.indexOf('#'))+' __ ' + n.name.substring(n.name.indexOf('#')+1,n.name.length)
+				while (n.name.indexOf('#') != -1) {
+					n.name = n.name.substring(0, n.name.indexOf('#')) + ' __ ' + n.name.substring(n.name.indexOf('#') + 1, n.name.length)
 				}
 				this.topic = n;
+			},
+			daojishi(n) {
+				if (this.topic.type!='抢答题'&&n == 2) {
+					var audio = document.getElementById('music1');
+					if (audio !== null) {
+						//检测播放是否已暂停.audio.paused 在播放器播放时返回false.
+						if (audio.paused) {
+							audio.play(); //audio.play();// 这个就是播放  
+						} else {
+							audio.pause(); // 这个就是暂停
+						}
+					}
+				}
+			},
+			nowQiangdaStu(n){
+				if(n!=null){
+					var audio = document.getElementById('music2');
+					if (audio !== null) {
+						//检测播放是否已暂停.audio.paused 在播放器播放时返回false.
+						if (audio.paused) {
+							audio.play(); //audio.play();// 这个就是播放  
+						} else {
+							audio.pause(); // 这个就是暂停
+						}
+					}
+				}
 			}
 		},
 		created() {
 			if (this.$route.params.topic != undefined) {
 				this.topic = this.$route.params.topic;
-				this.$store.commit('saveTopic',this.$route.params.topic);
+				this.$store.commit('saveTopic', this.$route.params.topic);
 				this.$store.commit('nextAns');
-			}else{
+			} else {
 				this.topic = this.$store.getters.topic;
 			}
 			this.$store.commit('changeTitle', this.numToStr(this.ans));
 			document.title = this.numToStr(this.ans);
-			this.$a().then(res=>{
+			this.$a().then(res => {
 				console.log(res);
 			})
 		},
@@ -123,102 +155,102 @@
 			},
 			numToStr(e) {
 				switch (e) {
-					case 0:
-						return '未开始'
-						break;
-					case 1:
-						return '第一题'
-						break;
-					case 2:
-						return '第二题'
-						break;
-					case 3:
-						return '第三题'
-						break;
-					case 4:
-						return '第四题'
-						break;
-					case 5:
-						return '第五题'
-						break;
-					case 6:
-						return '第六题'
-						break;
-					case 7:
-						return '第七题'
-						break;
-					case 8:
-						return '第八题'
-						break;
-					case 9:
-						return '第九题'
-						break;
-					case 10:
-						return '第十题'
-						break;
-					case 11:
-						return '第十一题'
-						break;
-					case 12:
-						return '第十二题'
-						break;
-					case 13:
-						return '第十三题'
-						break;
-					case 14:
-						return '第十四题'
-						break;
-					case 15:
-						return '第十五题'
-						break;
-					case 16:
-						return '第十六题'
-						break;
-					case 17:
-						return '第十七题'
-						break;
-					case 18:
-						return '第十八题'
-						break;
-					case 19:
-						return '第十九题'
-						break;
-					case 20:
-						return '第二十题'
-						break;
-					case 21:
-						return '第二十一题'
-						break;
-					case 22:
-						return '第二十二题'
-						break;
-					case 23:
-						return '第二十三题'
-						break;
-					case 24:
-						return '第二十四题'
-						break;
-					case 25:
-						return '第二十五题'
-						break;
-					case 26:
-						return '第二十六题'
-						break;
-					case 27:
-						return '第二十七题'
-						break;
-					case 28:
-						return '第二十八题'
-						break;
-					case 29:
-						return '第二十九题'
-						break;
-					case 30:
-						return '第三十题'
-						break;
-					default:
-						return '答题结束'
-						break;
+				case 0:
+					return '未开始'
+					break;
+				case 1:
+					return '第一题'
+					break;
+				case 2:
+					return '第二题'
+					break;
+				case 3:
+					return '第三题'
+					break;
+				case 4:
+					return '第四题'
+					break;
+				case 5:
+					return '第五题'
+					break;
+				case 6:
+					return '第六题'
+					break;
+				case 7:
+					return '第七题'
+					break;
+				case 8:
+					return '第八题'
+					break;
+				case 9:
+					return '第九题'
+					break;
+				case 10:
+					return '第十题'
+					break;
+				case 11:
+					return '第十一题'
+					break;
+				case 12:
+					return '第十二题'
+					break;
+				case 13:
+					return '第十三题'
+					break;
+				case 14:
+					return '第十四题'
+					break;
+				case 15:
+					return '第十五题'
+					break;
+				case 16:
+					return '第十六题'
+					break;
+				case 17:
+					return '第十七题'
+					break;
+				case 18:
+					return '第十八题'
+					break;
+				case 19:
+					return '第十九题'
+					break;
+				case 20:
+					return '第二十题'
+					break;
+				case 21:
+					return '第二十一题'
+					break;
+				case 22:
+					return '第二十二题'
+					break;
+				case 23:
+					return '第二十三题'
+					break;
+				case 24:
+					return '第二十四题'
+					break;
+				case 25:
+					return '第二十五题'
+					break;
+				case 26:
+					return '第二十六题'
+					break;
+				case 27:
+					return '第二十七题'
+					break;
+				case 28:
+					return '第二十八题'
+					break;
+				case 29:
+					return '第二十九题'
+					break;
+				case 30:
+					return '第三十题'
+					break;
+				default:
+					return '答题结束'
+					break;
 				}
 			}
 		}
@@ -236,19 +268,22 @@
 		color: #F0B74A;
 		position: relative;
 	}
-	.topicInfo{
+
+	.topicInfo {
 		width: 60%;
 		height: 100%;
 		box-sizing: border-box;
 		padding: 50px;
 	}
-	.man{
+
+	.man {
 		width: 40%;
 		height: 100%;
 		box-sizing: border-box;
 		padding: 50px;
 	}
-	.show_stu_info{
+
+	.show_stu_info {
 		width: 60%;
 		margin-left: 10%;
 		height: 100%;
@@ -259,7 +294,8 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	.head_div{
+
+	.head_div {
 		width: 50%;
 		padding-top: 50%;
 		border-radius: 200px;
@@ -267,15 +303,14 @@
 		background-position: center;
 		background-size: cover;
 	}
-	.stu_num{
-		
-	}
-	.stu_name{
-		
-	}
-	.xiansuo{
+
+	.stu_num {}
+
+	.stu_name {}
+
+	.xiansuo {
 		font-size: 26px;
-		padding-left:40px ;
+		padding-left: 40px;
 	}
 
 	.cont {
@@ -288,8 +323,8 @@
 		box-sizing: border-box;
 		padding-top: 10px;
 	}
-	
-	.anstitle{
+
+	.anstitle {
 		width: 95%;
 		text-align: left;
 	}
@@ -313,20 +348,23 @@
 		align-items: center;
 		justify-content: center;
 	}
-	.oneans2{
+
+	.oneans2 {
 		min-width: 450px;
 		margin: 20px 50px;
 		display: flex;
 		align-items: center;
 	}
-	.dao{
+
+	.dao {
 		position: absolute;
 		top: -100px;
 		right: 80px;
 		font-size: 48px;
 		color: #F0B74A;
 	}
-	.typess{
+
+	.typess {
 		position: absolute;
 		top: -100px;
 		left: 80px;
