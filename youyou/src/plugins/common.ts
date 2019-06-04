@@ -1,5 +1,5 @@
 import Vue from 'vue';
-Vue.prototype.$utils = {
+export default {
 	/**
 	 * 获取cookie
 	 * @param {Object} cname 名称

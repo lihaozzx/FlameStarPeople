@@ -1,23 +1,33 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import router from './router'
+import utils from './plugins/common'
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
+	state: {
 		token:''
-  },
-  mutations: {
+	},
+	mutations: {
+		setToken(state,k:string){
+			utils.setCookie('token',k,999)
+			state.token = k
+		}
+	},
+	actions: {
 		
-  },
-  actions: {
-		
-  },
+	},
 	getters:{
-		tokens(state){
+		tokens(state,mutations){
 			if(state.token == ''){
-				router.push({name:'login'});
+				let token = utils.getcookie('token');
+				if(token == ''){
+					router.push({name:'login'});
+				}else{
+					utils.setCookie('token',token,999);
+					state.token = token;
+				}
 			}
 			return state.token;
 		}

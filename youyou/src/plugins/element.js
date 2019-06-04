@@ -13,7 +13,10 @@ import {
 	Input,
 	Tabs,
 	TabPane,
-	Checkbox
+	Checkbox,
+	Notification,
+	Table,
+	TableColumn,
 } from 'element-ui';
 
 Vue.use(Button);
@@ -32,3 +35,8 @@ Vue.use(Checkbox);
 
 Vue.use(Tabs);
 Vue.use(TabPane);
+
+Vue.use(Table);
+Vue.use(TableColumn);
+
+Vue.prototype.$notify = Notification;

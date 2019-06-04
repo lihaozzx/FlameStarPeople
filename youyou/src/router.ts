@@ -13,6 +13,7 @@ export default new Router({
 				name: 'index',
 				components: {
 					indes: () => import(/* webpackChunkName: "index_child_home" */ '@/views/index_child/home.vue'),
+					role_list:() => import(/* webpackChunkName: "index_child_home" */ '@/views/index_child/manage/Role.vue'),
 					// stuInfo: resolve => require(['@/views/index_child/stuInfo.vue'], resolve),
 					// bank: resolve => require(['@/views/index_child/bank.vue'], resolve),
 					// logs: resolve => require(['@/views/index_child/logs.vue'], resolve),

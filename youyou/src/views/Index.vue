@@ -5,38 +5,17 @@
 			<p @click="logOut">退出登录</p>
 		</div>
 		<el-container class="show_box">
-			<el-aside :width="(collapse?'65':'240')+'px'">
-				<el-menu :collapse="collapse" class="menu">
-					<el-submenu index="1">
+			<el-aside class="scrool" :width="(collapse?'65':'240')+'px'">
+				<el-menu :collapse="collapse" class="menu" :unique-opened="true" >
+					<el-submenu :index="i+''" v-for="(menu,i) in menuList" :key="i">
 						<template slot="title">
-							<i class="el-icon-location"></i>
-							<span>导航一</span>
+							<!-- <i class="el-icon-location"></i> -->
+							<span>{{menu.name}}</span>
 						</template>
 						<el-menu-item-group>
-							<template slot="title">分组一</template>
-							<el-menu-item index="1-1">选项1</el-menu-item>
-							<el-menu-item index="1-2">选项2</el-menu-item>
+							<el-menu-item :index="cmenu.way" v-for="(cmenu,k) in menu.childer" :key="k" @click="addTab(cmenu.name,cmenu.way,cmenu.way)">{{cmenu.name}}</el-menu-item>
 						</el-menu-item-group>
-						<el-menu-item-group title="分组2">
-							<el-menu-item index="1-3">选项3</el-menu-item>
-						</el-menu-item-group>
-						<el-submenu index="1-4">
-							<template slot="title">选项4</template>
-							<el-menu-item index="1-4-1">选项1</el-menu-item>
-						</el-submenu>
 					</el-submenu>
-					<el-menu-item index="2">
-						<i class="el-icon-menu"></i>
-						<span slot="title">导航二</span>
-					</el-menu-item>
-					<el-menu-item index="3" disabled>
-						<i class="el-icon-document"></i>
-						<span slot="title">导航三</span>
-					</el-menu-item>
-					<el-menu-item index="4">
-						<i class="el-icon-setting"></i>
-						<span slot="title">导航四</span>
-					</el-menu-item>
 				</el-menu>
 			</el-aside>
 			<el-main>
@@ -54,24 +33,52 @@
 	import {
 		Component,
 		Vue,
+		Watch
 	} from 'vue-property-decorator';
+	import { Mutation } from 'vuex-class';
+	import {getAuth,logout} from '@/plugins/request';
+	import utils from '@/plugins/common';
+
+	class Table {
+		title: string;
+		name: string;
+		content: string;
+		constructor(title: string, name: string, content: string ) {
+			this.title = title;
+			this.name = name;
+			this.content = content;
+		}
+	}
 
 	@Component
 	export default class Index extends Vue {
-		collapse: boolean = true;
-		msg: string = '123';
-		menu_width: number = 200;
+		collapse: boolean = false;
 		editableTabsValue: string = 'indes';
-		editableTabs: array = [{
+		editableTabs: Table[] = [{
 			title: '主页',
 			name: 'indes',
 			content: 'indes'
 		}];
+		menuList: any[] = [];
+		@Mutation('setToken') setToken:any;
+
+		@Watch('editableTabs')
+		whenTabsIsNull(n:[]){
+			if(n.length==0){
+				this.editableTabs.push(new Table('主页','indes','indes'))
+			}
+		}
+
+		created() {
+			getAuth().then((res:any)=>{
+				this.menuList = res.data
+			})
+		}
 
 		colFun() {
 			this.collapse = !this.collapse;
 		}
-		removeTab() {
+		removeTab(targetName: string) {
 			let tabs = this.editableTabs;
 			let activeName = this.editableTabsValue;
 			if (activeName === targetName) {
@@ -84,12 +91,22 @@
 					}
 				});
 			}
-
 			this.editableTabsValue = activeName;
 			this.editableTabs = tabs.filter(tab => tab.name !== targetName);
 		}
-		logOut(){
-			this.$router.push({name:'login'})
+		addTab(title: string, name: string, content: string){
+			if(this.editableTabs.find(e=>e.content==content)==undefined){
+				this.editableTabs.push(new Table(title,name,content));
+			}
+			this.editableTabsValue=content;
+		}
+		logOut() {
+			logout().then((res:any)=>{
+				this.setToken('');
+				utils.delCookie('token')
+				this.$router.push({ name: 'login' });
+			})
+			
 		}
 	}
 </script>
@@ -139,6 +156,10 @@
 				box-sizing: border-box;
 				padding: 5px;
 			}
+		}
+
+		.scrool::-webkit-scrollbar {
+			display: none;
 		}
 
 	}

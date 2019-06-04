@@ -4,18 +4,19 @@
 	</div>
 </template>
 
-<script>
-	export default {
-		name: 'app',
-		data() {
-			return {
-				hei: 0,
-			};
-		},
-		created() {
+<script lang="ts">
+	import {
+		Component,
+		Vue,
+	} from 'vue-property-decorator';
+	
+	@Component
+	export default class App extends Vue {
+		hei:number = 0;
+		created(){
 			this.hei = document.documentElement.clientHeight;
-		},
-	};
+		}
+	}
 </script>
 
 <style>

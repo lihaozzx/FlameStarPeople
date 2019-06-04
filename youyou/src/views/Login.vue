@@ -14,38 +14,49 @@
 		Component,
 		Vue,
 	} from 'vue-property-decorator';
+	import {
+		Mutation
+	} from 'vuex-class';
+	import {
+		login
+	} from '@/plugins/request';
 
 	@Component
-	export default class  extends Vue {
-		username:string = '';
-		pas:string = '';
-		checked:boolean=false;
-		
-		login(){
-			console.log(this)
-			this.$http.post('/main/login',{
-				username:this.username,
-				password:this.pas
-			}).then(res=>{
-				console.log(res)
+	export default class Login extends Vue {
+		username: string = '';
+		pas: string = '';
+		checked: boolean = false;
+		@Mutation('setToken') setToken: any;
+
+		login() {
+			login({
+				name: this.username,
+				password: this.pas
+			}).then((res: any) => {
+				this.setToken(res.data.token);
+				this.$router.push({
+					name: 'index'
+				});
 			})
 		}
 	}
 </script>
 
 <style scoped>
-	.center{
+	.center {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
-	.form_box{
+
+	.form_box {
 		width: 500px;
 		height: 600px;
 		border: solid 1px black;
 		padding: 20px 50px;
 	}
-	.btn{
+
+	.btn {
 		margin-top: 50px;
 		width: 300px;
 	}

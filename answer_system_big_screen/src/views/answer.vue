@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<iframe allow="autoplay" style="display:none" :src="dong"></iframe>
 		<audio :src="djs" controls="controls" preload id="music1" hidden></audio>
 		<audio :src="dong" controls="controls" preload id="music2" hidden></audio>
 		<jz>
