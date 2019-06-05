@@ -1281,7 +1281,7 @@ return root;
 
 
 
-__wxAppCode__['app.json']={"pages":["pages/index/index","pages/ans/ans","pages/info/info"],"subPackages":[],"window":{"navigationStyle":"custom","navigationBarTextStyle":"black","navigationBarTitleText":"uni-app","navigationBarBackgroundColor":"#F8F8F8","backgroundColor":"#F8F8F8"},"splashscreen":{"alwaysShowBeforeRender":true,"autoclose":false},"appname":"answer_system_student_new","compilerVersion":"1.9.9","usingComponents":{}};
+__wxAppCode__['app.json']={"pages":["pages/index/index","pages/ans/ans","pages/info/info"],"subPackages":[],"window":{"navigationStyle":"custom","navigationBarTextStyle":"black","navigationBarTitleText":"uni-app","navigationBarBackgroundColor":"#F8F8F8","backgroundColor":"#F8F8F8"},"splashscreen":{"alwaysShowBeforeRender":true,"autoclose":false},"appname":"青少年国学大会","compilerVersion":"1.9.9","usingComponents":{}};
 __wxAppCode__['app.wxml']=$gwx('./app.wxml');
 
 __wxAppCode__['pages/ans/ans.json']={"bounce":"none","usingComponents":{}};
@@ -11215,7 +11215,8 @@ var _default =
             pid: uni.getStorageSync('stuId'),
             id: this.topicId,
             timeCost: new Date() - this.thisTopicstart.getTime(),
-            answer: out },
+            answer: out,
+            sort: this.nowTopicNum },
 
           success: function success(res) {
             function out(a) {
@@ -11223,8 +11224,8 @@ var _default =
                 if (typeof a[s] === 'object') {
                   out(a[s]);
                 } else {
-                  console.log(s, " at pages\\ans\\ans.vue:326");
-                  console.log(a[s], " at pages\\ans\\ans.vue:327");
+                  console.log(s, " at pages\\ans\\ans.vue:327");
+                  console.log(a[s], " at pages\\ans\\ans.vue:328");
                 }
               }
             }
@@ -11252,14 +11253,15 @@ var _default =
         if (this.isduoxuan) {
           out = out.substring(0, out.length - 1);
         }
-        console.log(out, " at pages\\ans\\ans.vue:355");
+        console.log(out, " at pages\\ans\\ans.vue:356");
         uni.request({
           url: this.$api + '/stock/subAnswer',
           data: {
             pid: uni.getStorageSync('stuId'),
             id: this.topicId,
             timeCost: new Date() - this.thisTopicstart.getTime(),
-            answer: out },
+            answer: out,
+            sort: this.nowTopicNum },
 
           success: function success(res) {
             function out(a) {
@@ -11267,8 +11269,8 @@ var _default =
                 if (typeof a[s] === 'object') {
                   out(a[s]);
                 } else {
-                  console.log(s, " at pages\\ans\\ans.vue:370");
-                  console.log(a[s], " at pages\\ans\\ans.vue:371");
+                  console.log(s, " at pages\\ans\\ans.vue:372");
+                  console.log(a[s], " at pages\\ans\\ans.vue:373");
                 }
               }
             }

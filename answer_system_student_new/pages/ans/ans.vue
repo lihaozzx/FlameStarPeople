@@ -315,7 +315,8 @@
 							pid: uni.getStorageSync('stuId'),
 							id: this.topicId,
 							timeCost: new Date() - this.thisTopicstart.getTime(),
-							answer: out
+							answer: out,
+							sort:this.nowTopicNum
 						},
 						success: res => {
 							function out(a) {
@@ -359,7 +360,8 @@
 							pid: uni.getStorageSync('stuId'),
 							id: this.topicId,
 							timeCost: new Date() - this.thisTopicstart.getTime(),
-							answer: out
+							answer: out,
+							sort:this.nowTopicNum
 						},
 						success: res => {
 							function out(a) {

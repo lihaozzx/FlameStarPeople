@@ -318,7 +318,8 @@
 					pid:this.grabAnswerStu.id,
 					gid:this.gameInfo.id,
 					tid:this.paper[this.nowTopic-1].id,
-					score:(this.paper[this.nowTopic-1].score-parseInt(this.xiansuoNum))
+					score:(this.paper[this.nowTopic-1].score-parseInt(this.xiansuoNum)),
+					sort:this.nowTopic
 				})).then(res=>{
 					alert('上报完成')
 				})
@@ -328,6 +329,7 @@
 					pid:-1,
 					gid:this.gameInfo.id,
 					tid:this.paper[this.nowTopic-1].id,
+					sort:this.nowTopic
 				})).then(res=>{
 					alert('上报完成')
 				})

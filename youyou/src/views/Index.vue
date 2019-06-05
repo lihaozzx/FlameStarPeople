@@ -19,8 +19,8 @@
 				</el-menu>
 			</el-aside>
 			<el-main>
-				<el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
-					<el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name">
+				<el-tabs v-model="editableTabsValue" type="card" @tab-remove="removeTab">
+					<el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name" :closable="item.title!='主页'">
 						<router-view class="center" :name="item.content"></router-view>
 					</el-tab-pane>
 				</el-tabs>
@@ -36,8 +36,8 @@
 		Watch
 	} from 'vue-property-decorator';
 	import { Mutation } from 'vuex-class';
-	import {getAuth,logout} from '@/plugins/request';
-	import utils from '@/plugins/common';
+	import $api from '@/plugins/request';
+	import $utils from '@/plugins/common';
 
 	class Table {
 		title: string;
@@ -60,17 +60,11 @@
 			content: 'indes'
 		}];
 		menuList: any[] = [];
+
 		@Mutation('setToken') setToken:any;
 
-		@Watch('editableTabs')
-		whenTabsIsNull(n:[]){
-			if(n.length==0){
-				this.editableTabs.push(new Table('主页','indes','indes'))
-			}
-		}
-
 		created() {
-			getAuth().then((res:any)=>{
+			new $api().getAuth().then((res:any)=>{
 				this.menuList = res.data
 			})
 		}
@@ -101,12 +95,11 @@
 			this.editableTabsValue=content;
 		}
 		logOut() {
-			logout().then((res:any)=>{
+			new $api().logout().then((res:any)=>{
 				this.setToken('');
-				utils.delCookie('token')
+				new $utils().delCookie('token')
 				this.$router.push({ name: 'login' });
 			})
-			
 		}
 	}
 </script>
@@ -149,6 +142,19 @@
 		.el-main {
 			padding: 0;
 			margin: 0;
+			width: 100%;
+			height: 100%;
+
+			
+			.el-tabs{
+				height: 100%;
+				.el-tabs__content{
+					height: calc(100% - 56px);
+					.el-tab-pane{
+						height: 100%;
+					}
+				}
+			}
 
 			.center {
 				width: 100%;

@@ -17,9 +17,7 @@
 	import {
 		Mutation
 	} from 'vuex-class';
-	import {
-		login
-	} from '@/plugins/request';
+	import $api from '@/plugins/request';
 
 	@Component
 	export default class Login extends Vue {
@@ -29,7 +27,7 @@
 		@Mutation('setToken') setToken: any;
 
 		login() {
-			login({
+			new $api().login({
 				name: this.username,
 				password: this.pas
 			}).then((res: any) => {

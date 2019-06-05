@@ -17,6 +17,7 @@ import {
 	Notification,
 	Table,
 	TableColumn,
+	Pagination
 } from 'element-ui';
 
 Vue.use(Button);
@@ -38,5 +39,7 @@ Vue.use(TabPane);
 
 Vue.use(Table);
 Vue.use(TableColumn);
+
+Vue.use(Pagination);
 
 Vue.prototype.$notify = Notification;
