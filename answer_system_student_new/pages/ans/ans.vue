@@ -312,7 +312,7 @@
 					uni.request({
 						url: this.$api + '/stock/subAnswer',
 						data: {
-							pid: uni.getStorageSync('stuId'),
+							pid: uni.getStorageSync('id'),
 							id: this.topicId,
 							timeCost: new Date() - this.thisTopicstart.getTime(),
 							answer: out,
@@ -357,7 +357,7 @@
 					uni.request({
 						url: this.$api + '/stock/subAnswer',
 						data: {
-							pid: uni.getStorageSync('stuId'),
+							pid: uni.getStorageSync('id'),
 							id: this.topicId,
 							timeCost: new Date() - this.thisTopicstart.getTime(),
 							answer: out,

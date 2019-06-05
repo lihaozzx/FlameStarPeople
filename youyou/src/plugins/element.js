@@ -17,7 +17,12 @@ import {
 	Notification,
 	Table,
 	TableColumn,
-	Pagination
+	Pagination,
+	Dialog,
+	Form,
+	FormItem,
+	Col,
+	CheckboxGroup,
 } from 'element-ui';
 
 Vue.use(Button);
@@ -33,6 +38,7 @@ Vue.use(Tooltip);
 
 Vue.use(Input);
 Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
 
 Vue.use(Tabs);
 Vue.use(TabPane);
@@ -41,5 +47,11 @@ Vue.use(Table);
 Vue.use(TableColumn);
 
 Vue.use(Pagination);
+Vue.use(Dialog);
+
+Vue.use(Form);
+Vue.use(FormItem);
+
+Vue.use(Col)
 
 Vue.prototype.$notify = Notification;

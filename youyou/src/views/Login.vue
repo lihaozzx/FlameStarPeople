@@ -24,7 +24,7 @@
 		username: string = '';
 		pas: string = '';
 		checked: boolean = false;
-		@Mutation('setToken') setToken: any;
+		@ Mutation('setToken') setToken: any;
 
 		login() {
 			new $api().login({

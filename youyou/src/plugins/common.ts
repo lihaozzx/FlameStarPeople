@@ -11,16 +11,15 @@ export default class {
 	 * @param {Object} cname 名称
 	 */
 	getcookie(cname: string): string {
-		var name = cname + "=";
-		var ca = document.cookie.split(';');
-		for (var i = 0; i < ca.length; i++) {
-			var c = ca[i];
-			while (c.charAt(0) == ' ') c = c.substring(1);
-			if (c.indexOf(name) != -1) {
+		const name = cname + '=';
+		const ca = document.cookie.split(';');
+		for (let c of ca) {
+			while (c.charAt(0) === ' ') c = c.substring(1);
+			if (c.indexOf(name) !== -1) {
 				return c.substring(name.length, c.length);
 			}
 		}
-		return "";
+		return '';
 	}
 	/**
 	 * 存储cookie
@@ -29,27 +28,27 @@ export default class {
 	 * @param {Object} exdays 过期时间（天）
 	 */
 	setCookie(cname: string, cvalue: string, exdays: number): void {
-		var d = new Date();
+		const d = new Date();
 		d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-		var expires = "expires=" + d.toUTCString();
-		document.cookie = cname + "=" + cvalue + "; " + expires;
+		const expires = 'expires=' + d.toUTCString();
+		document.cookie = cname + '=' + cvalue + '; ' + expires;
 	}
 	/**
 	 * 删除cookie
 	 * @param {Object} key cookie名称
 	 */
 	delCookie(key: string): void {
-		var date = new Date();
+		let date = new Date();
 		date.setTime(date.getTime() - 10000);
-		document.cookie = key + "=v; expires =" + date.toUTCString();
+		document.cookie = key + '=v; expires =' + date.toUTCString();
 	}
 	/**
 	 * 获取url传参
 	 * @param {Object} name 参数名
 	 */
 	getUrlParam(name: string): string {
-		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-		var r = window.location.search.substr(1).match(reg);
+		let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+		let r = window.location.search.substr(1).match(reg);
 		if (r != null) return unescape(r[2]);
 		return '';
 	}
@@ -64,14 +63,14 @@ export default class {
 		if ((time + '').length === 10) {
 			time = +time * 1000
 		}
-		var format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}',
+		let format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}',
 			date
 		if (typeof time === 'object') {
 			date = time
 		} else {
 			date = new Date(time)
 		}
-		var formatObj: any = {
+		let formatObj: any = {
 			y: date.getFullYear(),
 			m: date.getMonth() + 1,
 			d: date.getDate(),
@@ -80,8 +79,8 @@ export default class {
 			s: date.getSeconds(),
 			a: date.getDay()
 		}
-		var time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
-			var value = formatObj[key];
+		let time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
+			let value = formatObj[key];
 			if (key === 'a') return ['一', '二', '三', '四', '五', '六', '日'][value - 1]
 			if (result.length > 0 && value < 10) {
 				value = '0' + value
@@ -93,9 +92,9 @@ export default class {
 	/*-----------------localStorage---------------------*/
 	/*设置localStorage*/
 	setLocal(key: string, val: any): void {
-		var setting = arguments[0];
+		let setting = arguments[0];
 		if (Object.prototype.toString.call(setting).slice(8, -1) === 'Object') {
-			for (var i in setting) {
+			for (let i in setting) {
 				this.ls.setItem(i, JSON.stringify(setting[i]))
 			}
 		} else {
@@ -122,9 +121,9 @@ export default class {
 	/*-----------------sessionStorage---------------------*/
 	/*设置sessionStorage*/
 	setSession(key: string, val: any): void {
-		var setting = arguments[0];
+		let setting = arguments[0];
 		if (Object.prototype.toString.call(setting).slice(8, -1) === 'Object') {
-			for (var i in setting) {
+			for (let i in setting) {
 				this.ss.setItem(i, JSON.stringify(setting[i]))
 			}
 		} else {

@@ -9,11 +9,11 @@
 		Component,
 		Vue,
 	} from 'vue-property-decorator';
-	
-	@Component
+
+	@ Component
 	export default class App extends Vue {
-		hei:number = 0;
-		created(){
+		hei: number = 0;
+		created() {
 			this.hei = document.documentElement.clientHeight;
 		}
 	}

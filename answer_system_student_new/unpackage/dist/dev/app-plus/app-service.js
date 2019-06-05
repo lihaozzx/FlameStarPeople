@@ -11212,7 +11212,7 @@ var _default =
         uni.request({
           url: this.$api + '/stock/subAnswer',
           data: {
-            pid: uni.getStorageSync('stuId'),
+            pid: uni.getStorageSync('id'),
             id: this.topicId,
             timeCost: new Date() - this.thisTopicstart.getTime(),
             answer: out,
@@ -11257,7 +11257,7 @@ var _default =
         uni.request({
           url: this.$api + '/stock/subAnswer',
           data: {
-            pid: uni.getStorageSync('stuId'),
+            pid: uni.getStorageSync('id'),
             id: this.topicId,
             timeCost: new Date() - this.thisTopicstart.getTime(),
             answer: out,
@@ -11640,6 +11640,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+//
 //
 //
 //

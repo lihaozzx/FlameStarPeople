@@ -11,6 +11,7 @@
 			<text style="position: absolute;font-size: 30upx;font-weight: 900;top: 0upx;left: 900upx;">{{school}}</text>
 			<view class="info">
 				<view class="topicInfo" v-for="t in topicInfo" :key="t.id" :class="t.score!='0.0'?'right':'wrong'">
+					<text style="font-size:12upx ;">{{t.sort}}</text>
 					<text>{{t.score!='0.0'>0?'正确':'错误'}}</text>
 					<text class="nowr">{{t.score}} 分</text>
 				</view>

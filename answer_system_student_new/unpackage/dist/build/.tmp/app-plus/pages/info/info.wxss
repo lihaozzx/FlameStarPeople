@@ -24,7 +24,7 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.root.data-v-547e82d8 {
+.root.data-v-63aa0060 {
   position: relative;
   width: 1202rpx;
   height: 706rpx;
@@ -42,21 +42,21 @@
       -ms-flex-align: center;
           align-items: center;
 }
-.root .bg.data-v-547e82d8 {
+.root .bg.data-v-63aa0060 {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
 }
-.root .bg .view_navigation.data-v-547e82d8 {
+.root .bg .view_navigation.data-v-63aa0060 {
       height: 25rpx;
 }
-.root .bg .logo.data-v-547e82d8 {
+.root .bg .logo.data-v-63aa0060 {
       height: calc(100% - 25rpx);
       width: 100%;
 }
-.root .content.data-v-547e82d8 {
+.root .content.data-v-63aa0060 {
     width: 1050rpx;
     height: 600rpx;
     background-color: #FFFFFF;
@@ -83,7 +83,7 @@
         -ms-flex-wrap: wrap;
             flex-wrap: wrap;
 }
-.root .content .title.data-v-547e82d8 {
+.root .content .title.data-v-63aa0060 {
       width: 200rpx;
       background: -webkit-gradient(linear, right top, left top, from(#faad14), to(#ffc144));
       background: -o-linear-gradient(right, #faad14 0%, #ffc144 100%);
@@ -96,13 +96,13 @@
       position: absolute;
       top: 0;
 }
-.root .content .head_img.data-v-547e82d8 {
+.root .content .head_img.data-v-63aa0060 {
       width: 100rpx;
       height: 100rpx;
       border-radius: 50rpx;
       background: #8C8C8C;
 }
-.root .content .info.data-v-547e82d8 {
+.root .content .info.data-v-63aa0060 {
       margin-top: 100rpx;
       width: 100%;
       height: 500rpx;
@@ -114,7 +114,7 @@
           -ms-flex-wrap: wrap;
               flex-wrap: wrap;
 }
-.root .content .info .topicInfo.data-v-547e82d8 {
+.root .content .info .topicInfo.data-v-63aa0060 {
         width: 9%;
         height: 25%;
         margin: 10rpx 0.5%;
@@ -141,13 +141,13 @@
         padding: 10rpx 0;
         font-size: 30rpx;
 }
-.root .content .info .topicInfo .nowr.data-v-547e82d8 {
+.root .content .info .topicInfo .nowr.data-v-63aa0060 {
           white-space: nowrap;
 }
-.root .content .info .right.data-v-547e82d8 {
+.root .content .info .right.data-v-63aa0060 {
         background: #52c41a;
 }
-.root .content .info .wrong.data-v-547e82d8 {
+.root .content .info .wrong.data-v-63aa0060 {
         background: #f5222d;
 }
 

@@ -167,11 +167,17 @@ export default class extends Vue {
 			})
 		})
 	}
-	
-}
-
-declare module 'Vue/types/vue' {
-	interface Vue {
-		$http: AxiosInstance
+	editRole(data = {}) {
+		return new Promise((resolve, reject) => {
+			this.request.post('/admin/edit_role	', $qs.stringify(data)).then((res: any) => {
+				if (res.code === 200) {
+					resolve(res);
+				} else {
+					this.err(res.msg);
+					reject(res);
+				}
+			})
+		})
 	}
+	
 }

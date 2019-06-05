@@ -50,7 +50,7 @@
 		}
 	}
 
-	@Component
+	@ Component
 	export default class Index extends Vue {
 		collapse: boolean = false;
 		editableTabsValue: string = 'indes';
@@ -61,7 +61,7 @@
 		}];
 		menuList: any[] = [];
 
-		@Mutation('setToken') setToken:any;
+		@ Mutation('setToken') setToken:any;
 
 		created() {
 			new $api().getAuth().then((res:any)=>{
