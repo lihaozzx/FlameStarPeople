@@ -5,7 +5,7 @@
 				<el-input placeholder="角色名称" v-model="searchName"></el-input>
 			</div>
 			<el-button class="btn" @click="searchFun">搜索</el-button> -->
-			<el-button type="primary" @click="dialogVisible = true"><i class="el-icon-plus"></i> 添加角色</el-button>
+			<el-button type="primary" @click="dialogVisible = true"><i class="el-icon-plus"></i> 添加管理员</el-button>
 		</div>
 		<div class="body_box">
 			<el-table :data="tableData" class="table">
@@ -16,8 +16,8 @@
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="name" label="角色名称" width="200"></el-table-column>
-				<el-table-column prop="auths" label="拥有权限" width="1000"></el-table-column>
+				<el-table-column prop="username" label="管理员账号" width="200"></el-table-column>
+				<el-table-column prop="roleName" label="角色" width="1000"></el-table-column>
 				<el-table-column label="操作" align="center">
 					<template slot-scope="scope">
 						<div>
@@ -37,15 +37,15 @@
 		<div class="foot_pagination">
 			<!-- <el-pagination layout="prev, pager, next" :total="1000"></el-pagination> -->
 		</div>
-		<el-dialog title="添加角色" :visible.sync="dialogVisible" width="70%">
-			<chose-role @changedAuths="changeAuth" @changedName="changedName" @emptyed='emptyed' :empty='emptyForm'>
-			</chose-role>
+		<el-dialog title="添加角色" :visible.sync="dialogVisible" width="50%">
+			<chose-admin >
+			</chose-admin>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialogVisible = false">取 消</el-button>
 				<el-button type="primary" @click="subRole">确 定</el-button>
 			</span>
 		</el-dialog>
-		<el-dialog title="修改角色" :visible.sync="dialogVisible2" width="70%" :before-close="closeChangeRole">
+		<el-dialog title="修改角色" :visible.sync="dialogVisible2" width="50%">
 			<chose-role @changedAuths="changeAuth" @changedName="changedName" @emptyed='emptyed' :empty='emptyForm'
 				:nowid="nowshowid" :nowname="nowshowname"></chose-role>
 			<span slot="footer" class="dialog-footer">
@@ -62,31 +62,31 @@
 		Vue,
 	} from 'vue-property-decorator';
 	import $api from '@/plugins/request';
-	import choseRole from '@/components/choseRole.vue';
+	import choseAdmin from '@/components/choseAdmin.vue';
 	import {
 		Notification,
 		MessageBox
 	} from 'element-ui';
 
 	const http = new $api();
-	class Rolee {
+	class Adminn {
 		id: number;
-		name: string;
-		auths: string;
+		username: string;
+		roleName: string;
 		constructor(o: any) {
 			this.id = o.id;
-			this.name = o.name;
-			this.auths = o.auths;
+			this.username = o.username;
+			this.roleName = o.role_name;
 		}
 	}
 
 	@Component({
 		components: {
-			choseRole
+			choseAdmin
 		}
 	})
-	export default class Role extends Vue {
-		tableData: Rolee[] = [];
+	export default class Admin extends Vue {
+		tableData: Adminn[] = [];
 		searchName: string = '';
 		dialogVisible: boolean = false;
 		dialogVisible2: boolean = false;
@@ -101,19 +101,19 @@
 		}
 
 		getList() {
-			http.roleList({
+			http.adminList({
 				key: this.searchName
 			}).then((res: any) => {
 				this.tableData=[];
 				res.data.forEach((r: any) => {
-					this.tableData.push(new Rolee(r))
+					this.tableData.push(new Adminn(r))
 				});
 			})
 		}
+
 		emptyed() {
 			this.emptyForm = false;
 			this.nowshowid = '';
-			this.nowshowname='';
 		}
 		changedName(val: any) {
 			this.authName = val;
@@ -162,9 +162,9 @@
 			this.emptyForm = true;
 		}
 		changeRole(row: any) {
+			this.dialogVisible2 = true;
 			this.nowshowid = row.id;
 			this.nowshowname = row.name;
-			this.dialogVisible2 = true;
 		}
 		delRole(row: any) {
 			MessageBox.confirm('确定删除角色：' + row.name + ' 吗？', '提示', {

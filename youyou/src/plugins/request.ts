@@ -169,7 +169,43 @@ export default class extends Vue {
 	}
 	editRole(data = {}) {
 		return new Promise((resolve, reject) => {
-			this.request.post('/admin/edit_role	', $qs.stringify(data)).then((res: any) => {
+			this.request.post('/admin/edit_role', $qs.stringify(data)).then((res: any) => {
+				if (res.code === 200) {
+					resolve(res);
+				} else {
+					this.err(res.msg);
+					reject(res);
+				}
+			})
+		})
+	}
+	saveRole(data = {}) {
+		return new Promise((resolve, reject) => {
+			this.request.post('/admin/save_role', $qs.stringify(data)).then((res: any) => {
+				if (res.code === 200) {
+					resolve(res);
+				} else {
+					this.err(res.msg);
+					reject(res);
+				}
+			})
+		})
+	}
+	delRole(data = {}) {
+		return new Promise((resolve, reject) => {
+			this.request.post('/admin/del_role', $qs.stringify(data)).then((res: any) => {
+				if (res.code === 200) {
+					resolve(res);
+				} else {
+					this.err(res.msg);
+					reject(res);
+				}
+			})
+		})
+	}
+	adminList(data = {}) {
+		return new Promise((resolve, reject) => {
+			this.request.post('/admin/admin_list', $qs.stringify(data)).then((res: any) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
