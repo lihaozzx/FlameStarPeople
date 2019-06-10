@@ -1,28 +1,25 @@
 import Vue from 'vue';
 import router from '../router';
-import axios, {
-	AxiosInstance
-} from 'axios';
+import axios from 'axios';
 import $qs from 'qs';
 import utils from '@/plugins/common'
 import store from '../store'
 const turl = process.env.NODE_ENV === 'development' ? '/test' : 'http://uu.scyouyou.com/admin.php';
 
-export default class extends Vue {
-	token: string;
-	request: any = axios.create();
-	url: string = turl;
-	http: any = this.request;
+class api{
+	token;
+	request = axios.create();
+	url = turl;
+	http = this.request;
 
 	constructor() {
-		super();
 		this.token = store.getters.tokens;
 
 		this.request.defaults.baseURL = this.url;
 		this.request.defaults.timeout = 30000;
 		this.request.defaults.headers.common['TOKEN'] = this.token;
 
-		this.request.interceptors.response.use(function (response: any) {
+		this.request.interceptors.response.use(function (response) {
 			// 对响应数据做点什么
 			if (response.status == 200) {
 				if (response.data.code == 401) {
@@ -50,7 +47,7 @@ export default class extends Vue {
 					showClose: false
 				});
 			}
-		}, function (err: any) {
+		}, function (err) {
 			// 对响应错误做点什么
 			if (err && err.response) {
 				switch (err.response.status) {
@@ -99,7 +96,7 @@ export default class extends Vue {
 			return Promise.reject(err)
 		});
 	}
-	err(params: string): void {
+	err(params){
 		Vue.prototype.$notify({
 			title: '异常',
 			dangerouslyUseHTMLString: true,
@@ -107,9 +104,9 @@ export default class extends Vue {
 			message: '<strong style="color:red">' + params + '</strong>',
 		});
 	}
-	getAuth(): Promise < any > {
+	getAuth(){
 		return new Promise((resolve, reject) => {
-			this.request.post('/main/get_auth').then((res: any) => {
+			this.request.post('/main/get_auth').then((res) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
@@ -121,7 +118,7 @@ export default class extends Vue {
 	}
 	login(data = {}) {
 		return new Promise((resolve, reject) => {
-			this.request.post('/main/login', $qs.stringify(data)).then((res: any) => {
+			this.request.post('/main/login', $qs.stringify(data)).then((res) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
@@ -133,7 +130,7 @@ export default class extends Vue {
 	}
 	roleList(data = {}) {
 		return new Promise((resolve, reject) => {
-			this.request.post('/admin/role_list', $qs.stringify(data)).then((res: any) => {
+			this.request.post('/admin/role_list', $qs.stringify(data)).then((res) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
@@ -145,7 +142,19 @@ export default class extends Vue {
 	}
 	logout(data = {}) {
 		return new Promise((resolve, reject) => {
-			this.request.post('/main/out_login', $qs.stringify(data)).then((res: any) => {
+			this.request.post('/main/out_login', $qs.stringify(data)).then((res) => {
+				if (res.code === 200) {
+					resolve(res);
+				} else {
+					this.err(res.msg);
+					reject(res);
+				}
+			})
+		})
+	}
+	userList(data = {}) {
+		return new Promise((resolve, reject) => {
+			this.request.post('/user/user_list', $qs.stringify(data)).then((res) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
@@ -157,7 +166,7 @@ export default class extends Vue {
 	}
 	editRole(data = {}) {
 		return new Promise((resolve, reject) => {
-			this.request.post('/admin/edit_role', $qs.stringify(data)).then((res: any) => {
+			this.request.post('/admin/edit_role', $qs.stringify(data)).then((res) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
@@ -169,7 +178,7 @@ export default class extends Vue {
 	}
 	saveRole(data = {}) {
 		return new Promise((resolve, reject) => {
-			this.request.post('/admin/save_role', $qs.stringify(data)).then((res: any) => {
+			this.request.post('/admin/save_role', $qs.stringify(data)).then((res) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
@@ -181,7 +190,7 @@ export default class extends Vue {
 	}
 	delRole(data = {}) {
 		return new Promise((resolve, reject) => {
-			this.request.post('/admin/del_role', $qs.stringify(data)).then((res: any) => {
+			this.request.post('/admin/del_role', $qs.stringify(data)).then((res) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
@@ -193,91 +202,7 @@ export default class extends Vue {
 	}
 	adminList(data = {}) {
 		return new Promise((resolve, reject) => {
-			this.request.post('/admin/admin_list', $qs.stringify(data)).then((res: any) => {
-				if (res.code === 200) {
-					resolve(res);
-				} else {
-					this.err(res.msg);
-					reject(res);
-				}
-			})
-		})
-	}
-	saveAdmin(data={}){
-		return new Promise((resolve, reject) => {
-			this.request.post('/admin/add_admin', $qs.stringify(data)).then((res: any) => {
-				if (res.code === 200) {
-					resolve(res);
-				} else {
-					this.err(res.msg);
-					reject(res);
-				}
-			})
-		})
-	}
-	editAdmin(data={}){
-		return new Promise((resolve, reject) => {
-			this.request.post('/admin/edit_admin', $qs.stringify(data)).then((res: any) => {
-				if (res.code === 200) {
-					resolve(res);
-				} else {
-					this.err(res.msg);
-					reject(res);
-				}
-			})
-		})
-	}
-	adminRole(data={}){
-		return new Promise((resolve, reject) => {
-			this.request.post('/admin/role', $qs.stringify(data)).then((res: any) => {
-				if (res.code === 200) {
-					resolve(res);
-				} else {
-					this.err(res.msg);
-					reject(res);
-				}
-			})
-		})
-	}
-	delAdmin(data={}){
-		return new Promise((resolve, reject) => {
-			this.request.post('/admin/del_admin', $qs.stringify(data)).then((res: any) => {
-				if (res.code === 200) {
-					resolve(res);
-				} else {
-					this.err(res.msg);
-					reject(res);
-				}
-			})
-		})
-	}
-	userList(data={}){
-		return new Promise((resolve, reject) => {
-			this.request.get('/user/user_list',{params:data}).then((res: any) => {
-				if (res.code === 200) {
-					resolve(res);
-				} else {
-					this.err(res.msg);
-					reject(res);
-				}
-			})
-		})
-	}
-	editUser(data={}){
-		return new Promise((resolve, reject) => {
-			this.request.post('/user/edit_user',$qs.stringify(data)).then((res: any) => {
-				if (res.code === 200) {
-					resolve(res);
-				} else {
-					this.err(res.msg);
-					reject(res);
-				}
-			})
-		})
-	}
-	delUser(data={}){
-		return new Promise((resolve, reject) => {
-			this.request.post('/user/del_user',$qs.stringify(data)).then((res: any) => {
+			this.request.post('/admin/admin_list', $qs.stringify(data)).then((res) => {
 				if (res.code === 200) {
 					resolve(res);
 				} else {
@@ -289,3 +214,5 @@ export default class extends Vue {
 	}
 	
 }
+
+Vue.prototype.$api = new api();

@@ -22,12 +22,14 @@
 					<template slot-scope="scope">
 						<div>
 							<el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-								<el-button size="mini" @click="changeRole(scope.row)"><i
-										class="el-icon-edit-outline"></i></el-button>
+								<el-button size="mini" @click="changeAdmin(scope.row)">
+									<i class="el-icon-edit-outline"></i>
+								</el-button>
 							</el-tooltip>
 							<el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-								<el-button type="danger" size="mini" @click="delRole(scope.row)"><i
-										class="el-icon-delete-solid"></i></el-button>
+								<el-button type="danger" size="mini" @click="delAdmin(scope.row)">
+									<i class="el-icon-delete-solid"></i>
+								</el-button>
 							</el-tooltip>
 						</div>
 					</template>
@@ -37,22 +39,9 @@
 		<div class="foot_pagination">
 			<!-- <el-pagination layout="prev, pager, next" :total="1000"></el-pagination> -->
 		</div>
-		<el-dialog title="添加角色" :visible.sync="dialogVisible" width="50%">
-			<chose-admin >
-			</chose-admin>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="dialogVisible = false">取 消</el-button>
-				<el-button type="primary" @click="subRole">确 定</el-button>
-			</span>
-		</el-dialog>
-		<el-dialog title="修改角色" :visible.sync="dialogVisible2" width="50%">
-			<chose-role @changedAuths="changeAuth" @changedName="changedName" @emptyed='emptyed' :empty='emptyForm'
-				:nowid="nowshowid" :nowname="nowshowname"></chose-role>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="closeChangeRole">取 消</el-button>
-				<el-button type="primary" @click="editRole">确 定</el-button>
-			</span>
-		</el-dialog>
+		<chose-admin :dialogVisible.sync="dialogVisible" @saveSuccess="successFun('添加')"></chose-admin>
+		<chose-admin :dialogVisible.sync="dialogVisible2" @changeSuccess="successFun('修改')" :adminId="nowshowid" :adminName="nowshowname">
+		</chose-admin>
 	</div>
 </template>
 
@@ -60,6 +49,7 @@
 	import {
 		Component,
 		Vue,
+		Watch,
 	} from 'vue-property-decorator';
 	import $api from '@/plugins/request';
 	import choseAdmin from '@/components/choseAdmin.vue';
@@ -90,9 +80,6 @@
 		searchName: string = '';
 		dialogVisible: boolean = false;
 		dialogVisible2: boolean = false;
-		cas: any[] = [];
-		authName: string = '';
-		emptyForm: boolean = false;
 		nowshowid: string = '';
 		nowshowname: string = '';
 
@@ -104,75 +91,40 @@
 			http.adminList({
 				key: this.searchName
 			}).then((res: any) => {
-				this.tableData=[];
+				this.tableData = [];
 				res.data.forEach((r: any) => {
 					this.tableData.push(new Adminn(r))
 				});
 			})
 		}
-
-		emptyed() {
-			this.emptyForm = false;
-			this.nowshowid = '';
-		}
-		changedName(val: any) {
-			this.authName = val;
-		}
-		changeAuth(val: any) {
-			this.cas = val;
-		}
 		searchFun() {
 			this.getList();
 		}
-		subRole() {
-			http.saveRole({
-				name: this.authName,
-				role: this.cas.join(',')
-			}).then((res: any) => {
-				Notification({
-					title: '成功',
-					dangerouslyUseHTMLString: true,
-					message: '<strong style="color:#3CB371">添加成功</strong>',
-					showClose: false
-				});
-				this.getList();
-				this.emptyForm = true;
-				this.dialogVisible = false;
-			})
+
+		successFun(k: string) {
+			Notification({
+				title: '成功',
+				dangerouslyUseHTMLString: true,
+				message: '<strong style="color:#3CB371">' + k + '成功</strong>',
+				showClose: false
+			});
+			this.dialogVisible2 = this.dialogVisible = false;
+			this.getList();
 		}
-		editRole() {
-			http.saveRole({
-				id: this.nowshowid,
-				name: this.authName,
-				role: this.cas.join(',')
-			}).then((res: any) => {
-				Notification({
-					title: '成功',
-					dangerouslyUseHTMLString: true,
-					message: '<strong style="color:#3CB371">修改成功</strong>',
-					showClose: false
-				});
-				this.getList();
-				this.emptyForm = true;
-				this.dialogVisible2 = false;
-			})
-		}
-		closeChangeRole() {
-			this.dialogVisible2 = false;
-			this.emptyForm = true;
-		}
-		changeRole(row: any) {
+		changeAdmin(row: any) {
 			this.dialogVisible2 = true;
 			this.nowshowid = row.id;
-			this.nowshowname = row.name;
+			this.nowshowname = row.username;
 		}
-		delRole(row: any) {
-			MessageBox.confirm('确定删除角色：' + row.name + ' 吗？', '提示', {
+		delAdmin(row: any) {
+			MessageBox.confirm('确定删除账号：' + row.username + ' 的管理员吗？', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				http.delRole({id:row.id}).then((res: any) => {
+				http.delAdmin({
+					id: row.id
+				}).then((res: any) => {
 					this.getList();
 					Notification({
 						title: '成功',

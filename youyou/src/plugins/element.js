@@ -23,6 +23,9 @@ import {
 	FormItem,
 	Col,
 	CheckboxGroup,
+	Radio,
+	RadioGroup,
+	Loading
 } from 'element-ui';
 
 Vue.use(Button);
@@ -52,6 +55,11 @@ Vue.use(Dialog);
 Vue.use(Form);
 Vue.use(FormItem);
 
-Vue.use(Col)
+Vue.use(Col);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(Loading.directive);
+
+Vue.prototype.$loading = Loading.service;
 
 Vue.prototype.$notify = Notification;
